@@ -7,6 +7,10 @@ echo '<html><head><title>What2Watch</title>
     .container {
         width: 500px;
         clear: both;
+		margin: 0 auto;
+    }
+	.container img {
+        width: 500px;
     }
     .container input {
         width: 100%;
@@ -21,6 +25,26 @@ echo '<html><head><title>What2Watch</title>
 	vertical-align: middle;
 	margin: 5px 0;
 	border-width: 0;
+	}
+	.header {
+		letter-spacing: 1px;
+		color: #fff;
+		text-align: left;
+		background-color: #333;
+		font-weight: bold;
+		font-size: 12px;
+		font-family: Verdana, "Helvetica", sans-serif;
+		padding: 4px;
+	}
+	.footer {
+		color: #000;
+		background: #f5fafa;
+		border-right: 1px solid #d2ebe8;
+		border-bottom: 1px solid #d2ebe8;
+		border-left: 1px solid #d2ebe8;
+		font-size: 12px;
+		font-family: Verdana, "Helvetica", sans-serif;
+		padding: 4px;
 	}
     </style></head><body>';
 $config = false;
@@ -101,9 +125,9 @@ if ($config)
 		{
 			$search = file_get_contents('http://api.trakt.tv/search/episodes.json/' . $trakt_api . '?query="' . urlencode($value['next_episode']['title']) . '"');
 			$result_search = json_decode($search, true);
-			foreach ($result_search as $key => $value)
+			foreach ($result_search as $k => $v)
 			{
-				$find = $value['show']['tvdb_id'];
+				$find = $v['show']['tvdb_id'];
 				
 				if (in_array($find, $series))
 				{
@@ -120,21 +144,35 @@ if ($config)
 			continue;
 		}
 		// Put it all in a array
-		$eps[$tvdbid]['location'] = $result_eps['data']['location'];
+		// TODO put it in a cache
+		$eps[$tvdbid]['show_name'] = $shows[$tvdbid]['show_name'];
+		$eps[$tvdbid]['episode'] = $value['next_episode']['season'] . 'x' . sprintf('%02d', $value['next_episode']['number']);
 		$eps[$tvdbid]['name'] = $result_eps['data']['name'];
 		$eps[$tvdbid]['status'] = $result_eps['data']['status'];
-		$eps[$tvdbid]['show_name'] = $shows[$tvdbid]['show_name'];	
+		$eps[$tvdbid]['location'] = $result_eps['data']['location'];
+			
 		// Check if there are Dutch subs downloaded for this episode
 		$find_nlsub = str_replace('.mkv', '.nl.srt', $result_eps['data']['location']);
 		if (file_exists($find_nlsub))
 		{
-			$eps[$value['show']['tvdb_id']]['nlsub'] = true;
+			$eps[$tvdbid]['nlsub'] = true;
 		}
 		else
 		{
-			unset($eps[$value['show']['tvdb_id']]);
+			unset($eps[$tvdbid]);
 		}
 	}
+	echo '<div class="container">';
+	echo '<h4>What 2 Watch</h4>';
+	foreach ($eps as $a => $b)
+	{
+		echo '<div class="header">' . $b['show_name'] . '</div>';
+		$banner = $sickbeard . "/api/" . $sb_api . "/?cmd=show.getbanner&tvdbid=" . $a;
+		echo '<div><img src="' . $banner . '" /></div>';
+		echo '<div class="footer">' . $b['episode'] . ' - ' . $b['name'] . '</div>';
+		echo '<br />';
+	}
+	echo '</div>';
 	print_r($eps);
 	echo "</pre>";
 }
