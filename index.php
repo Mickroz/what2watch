@@ -154,7 +154,9 @@ if ($config)
 			}
 			if (!$y['next_episode'])
 			{
+				// We remove the result from $result_trakt and $result_series
 				unset($result_series[$x]);
+				unset($result_trakt[$x]);
 			}
 		}
 		foreach ($result_trakt as $key => $value)
