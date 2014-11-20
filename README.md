@@ -1,6 +1,4 @@
 ## what2watch
-___
-
 This script was created because i always had to check which episodes i had watched on trakt,
 and then see if SickBeard downloaded the next episode, and see if Auto-Sub downloaded the subs for it so i could watch it.
 With this script it collects all shows in Sickbeard, checks if there are any downloaded episodes for it, if so,
@@ -10,7 +8,6 @@ if not, it will skip the show and continue with the next show.
 This scripts has to be run on the machine where you have your downloaded shows.
 
 ## Issues
----
 This script relies heavily on api calls to SickBeard and Trakt.tv, therefor it could take a while to finish if you have a lot of shows in SickBeard.
 Therefor it will cache the created array for a half hour (1800) to speed things up a bit if you want to check it later.
 
@@ -18,5 +15,4 @@ The second issue is that because of the open_basedir setting in php, if you get 
 
 
 ## Todo
-___
 - [ ] Add some settings to config.php
