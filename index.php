@@ -145,6 +145,10 @@ if ($config)
 			$tvdbid = $value['show']['tvdb_id'];
 			$title = $value['next_episode']['title'];
 		
+			if ($value['next_episode'] == false)
+			{
+				unset($tvdbid);
+			}
 			if ($tvdbid == '0')
 			{
 				$search = curl('http://api.trakt.tv/search/episodes.json/' . $trakt_api . '?query="' . urlencode($title) . '"');
