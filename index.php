@@ -153,13 +153,18 @@ if ($config)
 					// We remove the result from $result_trakt
 					unset($result_trakt[$x]);
 				}
+				if (!$y['next_episode'])
+				{
+					// We remove the result from $result_trakt
+					unset($result_trakt[$x]);
+					if(($next = array_search($y['show']['tvdb_id'], $result_series)) !== false)
+					{
+						unset($result_series[$next]);
+					}
+				}
 			}
 			foreach ($result_trakt as $key => $value)
 			{
-				if (!$value['next_episode'])
-				{
-					continue;
-				}
 				$tvdbid = $value['show']['tvdb_id'];
 				$title = $value['next_episode']['title'];
 		
@@ -277,7 +282,7 @@ if ($config)
 		}
 	}
 	echo '</div>';
-	print_r($cached);
+	print_r($result_series);
 	echo "</pre>";
 }
 else
