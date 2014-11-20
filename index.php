@@ -122,7 +122,11 @@ if ($config)
 		$result_series = array_unique($series);
 		// Create a string for trakt and get user Progress
 		$comma_separated = implode(",", $result_series);
-		$buffer = curl("http://api.trakt.tv/user/progress/watched.json/" . $trakt_api . "/" . $trakt_username . "/" . $comma_separated);			
+		$buffer = curl("http://api.trakt.tv/user/progress/watched.json/" . $trakt_api . "/" . $trakt_username . "/" . $comma_separated);
+		if (!$buffer)
+		{
+			die('Trakt returned nothing');
+		}
 		$remove_pilots = $result_trakt = json_decode($buffer, true);
 		foreach ($remove_pilots as $x => $y)
 		{
@@ -144,6 +148,10 @@ if ($config)
 			if ($tvdbid == '0')
 			{
 				$search = curl('http://api.trakt.tv/search/episodes.json/' . $trakt_api . '?query="' . urlencode($title) . '"');
+				if (!$search)
+				{
+					die('Trakt search returned nothing');
+				}
 				$result_search = json_decode($search, true);
 				foreach ($result_search as $k => $v)
 				{
@@ -257,7 +265,8 @@ function curl($url)
 	curl_setopt($ch, CURLOPT_URL, $url);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
 	$data = curl_exec($ch);
+	$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 	curl_close($ch);
-	return $data;
+	return ($httpcode>=200 && $httpcode<300) ? $data : false;
 }
 ?>
