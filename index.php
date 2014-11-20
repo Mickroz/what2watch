@@ -147,7 +147,7 @@ if ($config)
 			// If true we get the first episode data from sickbeard
 			// Trakt api search for Pilot takes too long
 			// We also check here if there is a next episode planned
-			if (strpos($title, 'Pilot') !== false || $y['next_episode'] == false)
+			if (strpos($title, 'Pilot') !== false || !$y['next_episode'])
 			{
 				// We remove the result from $result_trakt
 				unset($result_trakt[$x]);
