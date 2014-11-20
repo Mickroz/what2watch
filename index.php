@@ -97,7 +97,6 @@ if ($config)
 	$filemtime = @filemtime($cache_file);  // returns FALSE if file does not exist
 	if (!$filemtime or (time() - $filemtime >= $cache_life))
 	{
-		echo "<pre>";
 		// We have a config, lets get started with grabbing all shows from sickbeard
 		$response = curl($sickbeard . "/api/" . $sb_api . "/?cmd=shows&sort=name");
 		if (!$response)
@@ -282,8 +281,6 @@ if ($config)
 		}
 	}
 	echo '</div>';
-	print_r($result_series);
-	echo "</pre>";
 }
 else
 {
