@@ -47,7 +47,7 @@ echo '<html><head><title>What2Watch</title>
 	}
     </style></head><body>';
 $config = $passed = false;
-$error = array();
+$cached = $error = array();
 if (file_exists('config.php'))
 {
 	include('config.php');
@@ -139,83 +139,83 @@ if ($config)
 		{
 			$error[] = "Trakt api returned no progress";
 		}
-		$remove_pilots = $result_trakt = json_decode($buffer, true);
-		foreach ($remove_pilots as $x => $y)
+		else
 		{
-			$title = $y['next_episode']['title'];
-			// Check if the episode title contains Pilot
-			// If true we get the first episode data from sickbeard
-			// Trakt api search for Pilot takes too long
-			// We also check here if there is a next episode planned
-			if (strpos($title, 'Pilot') !== false)
+			$remove_pilots = $result_trakt = json_decode($buffer, true);
+			foreach ($remove_pilots as $x => $y)
 			{
-				// We remove the result from $result_trakt
-				unset($result_trakt[$x]);
-			}
-			if (!$y['next_episode'])
-			{
-				// We remove the result from $result_trakt and $result_series
-				unset($result_series[$x]);
-				unset($result_trakt[$x]);
-			}
-		}
-		foreach ($result_trakt as $key => $value)
-		{
-			$tvdbid = $value['show']['tvdb_id'];
-			$title = $value['next_episode']['title'];
-		
-			if ($tvdbid == '0')
-			{
-				$search = curl('http://api.trakt.tv/search/episodes.json/' . $trakt_api . '?query="' . urlencode($title) . '"');
-				if (!$search)
+				$title = $y['next_episode']['title'];
+				// Check if the episode title contains Pilot
+				// If true we get the first episode data from sickbeard
+				// Trakt api search for Pilot takes too long
+				if (strpos($title, 'Pilot') !== false)
 				{
-					$error[] = "Trakt search returned nothing";
+					// We remove the result from $result_trakt
+					unset($result_trakt[$x]);
 				}
-				$result_search = json_decode($search, true);
-				foreach ($result_search as $k => $v)
+			}
+			foreach ($result_trakt as $key => $value)
+			{
+				if (!$value['next_episode'])
 				{
-					$find = $v['show']['tvdb_id'];
-				
-					if (in_array($find, $result_series))
+					continue;
+				}
+				$tvdbid = $value['show']['tvdb_id'];
+				$title = $value['next_episode']['title'];
+		
+				if ($tvdbid == '0')
+				{
+					$search = curl('http://api.trakt.tv/search/episodes.json/' . $trakt_api . '?query="' . urlencode($title) . '"');
+					if (!$search)
 					{
-						$tvdbid = $find;
+						$error[] = "Trakt search returned nothing";
+					}
+					$result_search = json_decode($search, true);
+					foreach ($result_search as $k => $v)
+					{
+						$find = $v['show']['tvdb_id'];
+				
+						if (in_array($find, $result_series))
+						{
+							$tvdbid = $find;
+						}
 					}
 				}
-			}
-			// We have to remove the tvdbid's from $result_series to get the remaining tvdbid's for the Pilot episodes
-			if(($remove = array_search($tvdbid, $result_series)) !== false)
-			{
-				unset($result_series[$remove]);
-			}
-			// Grab all episode data
-			$episode = curl($sickbeard . "/api/" . $sb_api . "/?cmd=episode&tvdbid=" . $tvdbid . "&season=" . $value['next_episode']['season'] . "&episode=" . $value['next_episode']['number'] . "&full_path=1");
-			if (!$episode)
-			{
-				$error[] = "SickBeard api returned no episode data";
-			}
-			$result_eps = json_decode($episode, true);
-			// Remove empty results
-			if ($result_eps['result'] == 'failure')
-			{
-				continue;
-			}
-			// Put it all in a array
-			// TODO put it in a cache
-			$eps[$tvdbid]['show_name'] = $shows[$tvdbid]['show_name'];
-			$eps[$tvdbid]['episode'] = $value['next_episode']['season'] . 'x' . sprintf('%02d', $value['next_episode']['number']);
-			$eps[$tvdbid]['name'] = $result_eps['data']['name'];
-			$eps[$tvdbid]['status'] = $result_eps['data']['status'];
-			$eps[$tvdbid]['location'] = $result_eps['data']['location'];
+				// We have to remove the tvdbid's from $result_series to get the remaining tvdbid's for the Pilot episodes
+				if(($remove = array_search($tvdbid, $result_series)) !== false)
+				{
+					unset($result_series[$remove]);
+				}
+				// Grab all episode data
+				$episode = curl($sickbeard . "/api/" . $sb_api . "/?cmd=episode&tvdbid=" . $tvdbid . "&season=" . $value['next_episode']['season'] . "&episode=" . $value['next_episode']['number'] . "&full_path=1");
+				if (!$episode)
+				{
+					$error[] = "SickBeard api returned no episode data";
+				}
+				$result_eps = json_decode($episode, true);
+				// Remove empty results
+				if ($result_eps['result'] == 'failure')
+				{
+					continue;
+				}
+				// Put it all in a array
+				// TODO put it in a cache
+				$eps[$tvdbid]['show_name'] = $shows[$tvdbid]['show_name'];
+				$eps[$tvdbid]['episode'] = $value['next_episode']['season'] . 'x' . sprintf('%02d', $value['next_episode']['number']);
+				$eps[$tvdbid]['name'] = $result_eps['data']['name'];
+				$eps[$tvdbid]['status'] = $result_eps['data']['status'];
+				$eps[$tvdbid]['location'] = $result_eps['data']['location'];
 			
-			// Check if there are Dutch subs downloaded for this episode
-			$find_nlsub = str_replace('.mkv', '.nl.srt', $result_eps['data']['location']);
-			if (file_exists($find_nlsub))
-			{
-				$eps[$tvdbid]['nlsub'] = true;
-			}
-			else
-			{
-				unset($eps[$tvdbid]);
+				// Check if there are Dutch subs downloaded for this episode
+				$find_nlsub = str_replace('.mkv', '.nl.srt', $result_eps['data']['location']);
+				if (file_exists($find_nlsub))
+				{
+					$eps[$tvdbid]['nlsub'] = true;
+				}
+				else
+				{
+					unset($eps[$tvdbid]);
+				}
 			}
 		}
 		foreach ($result_series as $c => $d)
