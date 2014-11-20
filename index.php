@@ -1,7 +1,6 @@
 <?php
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
-$config = false;
 echo '<html><head><title>What2Watch</title>
 	<style type="text/css">
     .container {
@@ -31,7 +30,7 @@ echo '<html><head><title>What2Watch</title>
 		text-align: left;
 		background-color: #333;
 		font-weight: bold;
-		font-size: 12px;
+		font-size: 14px;
 		font-family: Verdana, "Helvetica", sans-serif;
 		padding: 4px;
 	}
@@ -41,12 +40,14 @@ echo '<html><head><title>What2Watch</title>
 		border-right: 1px solid #d2ebe8;
 		border-bottom: 1px solid #d2ebe8;
 		border-left: 1px solid #d2ebe8;
-		font-size: 12px;
+		font-size: 14px;
 		font-family: Verdana, "Helvetica", sans-serif;
+		text-align: right;
 		padding: 4px;
 	}
     </style></head><body>';
-$config = false;
+$config = $passed = false;
+$error = array();
 if (file_exists('config.php'))
 {
 	include('config.php');
@@ -72,13 +73,13 @@ if (isset($_POST['submit']))
 
 	if (!($fp = @fopen('config.php', 'w')))
 	{
-		// Something went wrong ... 
-		echo "Cannot open config file";
+		// Something went wrong ...
+		$error[] = "Cannot open config file";
 	}
 	if (!(@fwrite($fp, $config_data)))
 	{
 		// Something went wrong ... 
-		echo "Cannot write to config file";
+		$error[] = "Cannot write to config file";
 	}
 	@fclose($fp);
 
@@ -88,6 +89,9 @@ if (isset($_POST['submit']))
 
 if ($config)
 {
+	echo '<div class="container">';
+	echo '<h4>What 2 Watch</h4>';
+	
 	$cache_file = 'cached.json';
 	$cache_life = '1800'; //caching time, in seconds
 	$filemtime = @filemtime($cache_file);  // returns FALSE if file does not exist
@@ -96,11 +100,19 @@ if ($config)
 		echo "<pre>";
 		// We have a config, lets get started with grabbing all shows from sickbeard
 		$response = curl($sickbeard . "/api/" . $sb_api . "/?cmd=shows&sort=name");
+		if (!$response)
+		{
+			$error[] = "SickBeard api returned no shows";
+		}
 		$result = json_decode($response, true);
 
 		foreach ($result['data'] as $show => $values)
 		{	
 			$show_id = curl($sickbeard . "/api/" . $sb_api . "/?cmd=show&tvdbid=" . $values['tvdbid']);
+			if (!$show_id)
+			{
+				$error[] = "SickBeard api returned nothing for" . $values['tvdbid'];
+			}
 			$result_show = json_decode($show_id, true);
 			// Checking which show actually has a episode downloaded
 			// and put all  tvdb id's in an array
@@ -125,7 +137,7 @@ if ($config)
 		$buffer = curl("http://api.trakt.tv/user/progress/watched.json/" . $trakt_api . "/" . $trakt_username . "/" . $comma_separated);
 		if (!$buffer)
 		{
-			die('Trakt returned nothing');
+			$error[] = "Trakt api returned no progress";
 		}
 		$remove_pilots = $result_trakt = json_decode($buffer, true);
 		foreach ($remove_pilots as $x => $y)
@@ -134,7 +146,8 @@ if ($config)
 			// Check if the episode title contains Pilot
 			// If true we get the first episode data from sickbeard
 			// Trakt api search for Pilot takes too long
-			if (strpos($title, 'Pilot') !== false)
+			// We also check here if there is a next episode planned
+			if (strpos($title, 'Pilot') !== false || $value['next_episode'] == false)
 			{
 				// We remove the result from $result_trakt
 				unset($result_trakt[$x]);
@@ -145,16 +158,12 @@ if ($config)
 			$tvdbid = $value['show']['tvdb_id'];
 			$title = $value['next_episode']['title'];
 		
-			if ($value['next_episode'] == false)
-			{
-				unset($tvdbid);
-			}
 			if ($tvdbid == '0')
 			{
 				$search = curl('http://api.trakt.tv/search/episodes.json/' . $trakt_api . '?query="' . urlencode($title) . '"');
 				if (!$search)
 				{
-					die('Trakt search returned nothing');
+					$error[] = "Trakt search returned nothing";
 				}
 				$result_search = json_decode($search, true);
 				foreach ($result_search as $k => $v)
@@ -174,6 +183,10 @@ if ($config)
 			}
 			// Grab all episode data
 			$episode = curl($sickbeard . "/api/" . $sb_api . "/?cmd=episode&tvdbid=" . $tvdbid . "&season=" . $value['next_episode']['season'] . "&episode=" . $value['next_episode']['number'] . "&full_path=1");
+			if (!$episode)
+			{
+				$error[] = "SickBeard api returned no episode data";
+			}
 			$result_eps = json_decode($episode, true);
 			// Remove empty results
 			if ($result_eps['result'] == 'failure')
@@ -202,6 +215,10 @@ if ($config)
 		foreach ($result_series as $c => $d)
 		{
 			$pilot = curl($sickbeard . "/api/" . $sb_api . "/?cmd=episode&tvdbid=" . $d . "&season=1&episode=1&full_path=1");
+			if (!$pilot)
+			{
+				$error[] = "SickBeard api returned no Pilot episode data";
+			}
 			$result_pilot = json_decode($pilot, true);
 		
 			// Put it all in a array
@@ -223,27 +240,35 @@ if ($config)
 				unset($eps[$d]);
 			}
 		}
-		
-		// Save array as json
-		file_put_contents($cache_file, json_encode($eps));
-		$cached = $eps;
+		if (!sizeof($error))
+		{
+			// Save array as json
+			file_put_contents($cache_file, json_encode($eps));
+			$cached = $eps;
+			$passed = true;
+		}
+		else
+		{
+			echo '<strong style="color:red">' . implode('<br />', $error) . '</strong>';
+		}
 	}
 	else
 	{
 		// Retrieve json and decode to array
 		$cached = json_decode(file_get_contents($cache_file), true);
+		$passed = true;
 	}
-	
-	echo '<div class="container">';
-	echo '<h4>What 2 Watch</h4>';
-	foreach ($cached as $a => $b)
+	if ($passed)
 	{
-		// Lets grab the banner
-		$banner = $sickbeard . "/api/" . $sb_api . "/?cmd=show.getbanner&tvdbid=" . $a;
-		echo '<div class="header">' . $b['show_name'] . '</div>';
-		echo '<div><img src="' . $banner . '" /></div>';
-		echo '<div class="footer">' . $b['episode'] . ' - ' . $b['name'] . '</div>';
-		echo '<br />';
+		foreach ($cached as $a => $b)
+		{
+			// Lets grab the banner
+			$banner = $sickbeard . "/api/" . $sb_api . "/?cmd=show.getbanner&tvdbid=" . $a;
+			echo '<div class="header">' . $b['show_name'] . '</div>';
+			echo '<div><img src="' . $banner . '" /></div>';
+			echo '<div class="footer">' . $b['episode'] . ' - ' . $b['name'] . '</div>';
+			echo '<br />';
+		}
 	}
 	echo '</div>';
 	print_r($cached);
@@ -254,7 +279,7 @@ else
 	// First run, let's create a config file
 	echo '<div class="container">';
 	echo '<form action="' . $_SERVER['PHP_SELF'] . '" method="post">';
-	echo '<h4>Setup</h4>';
+	echo '<h1>Setup</h1>';
 	echo '<label>Trakt.tv API key:</label> <input name="trakt_api" type="text" /><br />';
 	echo '<label>Trakt.tv Username:</label> <input name="trakt_username" type="text" /><br />';
 	echo '<label>SickBeard url:</label> <input name="sickbeard" type="text" placeholder="http://localhost:8081" /><br />';
