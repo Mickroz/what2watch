@@ -65,7 +65,7 @@ if (isset($_POST['submit']))
 		'sickbeard'			=> $_POST['sickbeard'],
 		'sb_api'			=> $_POST['sb_api'],
 		'cache_file' 		=> 'cached.json',
-		'cache_life' 		=> '1800',
+		'cache_life' 		=> '3600',
 	);
 
 	foreach ($config_data_array as $key => $value)
