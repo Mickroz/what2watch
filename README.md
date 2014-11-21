@@ -12,10 +12,12 @@ This script relies heavily on api calls to SickBeard and Trakt.tv, therefor it c
 Therefor it will cache the created array for a half hour (1800) to speed things up a bit if you want to check it later.
 
 The second issue is that because of the open_basedir setting in php, if you get this error, you have to add the location where you store your shows to php.ini.
-
+Read more on this on [php.net](http://php.net/manual/en/ini.core.php#ini.open-basedir) and [here](http://kb.mediatemple.net/questions/514/How+do+I+set+the+path+for+open_basedir%3F#gs) on how to add the location.
 
 ## Todo
 - [x] Add some settings to config.php
 - [ ] Grab naming pattern from SickBeard
 - [ ] Move subs extension to config for user configurable setting
 - [ ] Save banner on disk for later usage?
+
+thanks to @derkens for testing :grin:
