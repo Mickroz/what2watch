@@ -58,11 +58,14 @@ if (isset($_POST['submit']))
 {
 	$config_data = "<?php\n";
 	$config_data .= "// sickbeard should be with http:// and port\n";
+	$config_data .= "// cache_life is caching time, in seconds\n";
 	$config_data_array = array(
 		'trakt_api'			=> $_POST['trakt_api'],
 		'trakt_username'	=> $_POST['trakt_username'],
 		'sickbeard'			=> $_POST['sickbeard'],
 		'sb_api'			=> $_POST['sb_api'],
+		'cache_file' 		=> 'cached.json',
+		'cache_life' 		=> '1800',
 	);
 
 	foreach ($config_data_array as $key => $value)
@@ -91,9 +94,7 @@ if ($config)
 {
 	echo '<div class="container">';
 	echo '<h4>What 2 Watch</h4>';
-	
-	$cache_file = 'cached.json';
-	$cache_life = '1800'; //caching time, in seconds
+
 	$filemtime = @filemtime($cache_file);  // returns FALSE if file does not exist
 	if (!$filemtime or (time() - $filemtime >= $cache_life))
 	{
@@ -166,7 +167,7 @@ if ($config)
 			{
 				$tvdbid = $value['show']['tvdb_id'];
 				$title = $value['next_episode']['title'];
-		
+				// If the tvdbdid == 0 we search for the episode name on trakt and compare that tvdbid result against our series array
 				if ($tvdbid == '0')
 				{
 					$search = curl('http://api.trakt.tv/search/episodes.json/' . $trakt_api . '?query="' . urlencode($title) . '"');
@@ -203,7 +204,6 @@ if ($config)
 					continue;
 				}
 				// Put it all in a array
-				// TODO put it in a cache
 				$eps[$tvdbid]['show_name'] = $shows[$tvdbid]['show_name'];
 				$eps[$tvdbid]['episode'] = $value['next_episode']['season'] . 'x' . sprintf('%02d', $value['next_episode']['number']);
 				$eps[$tvdbid]['name'] = $result_eps['data']['name'];
@@ -211,6 +211,7 @@ if ($config)
 				$eps[$tvdbid]['location'] = $result_eps['data']['location'];
 			
 				// Check if there are Dutch subs downloaded for this episode
+				// TODO move to config for user configurable setting
 				$find_nlsub = str_replace('.mkv', '.nl.srt', $result_eps['data']['location']);
 				if (file_exists($find_nlsub))
 				{
@@ -232,7 +233,6 @@ if ($config)
 			$result_pilot = json_decode($pilot, true);
 		
 			// Put it all in a array
-			// TODO put it in a cache
 			$eps[$d]['show_name'] = $shows[$d]['show_name'];
 			$eps[$d]['episode'] = '1x01';
 			$eps[$d]['name'] = $result_pilot['data']['name'];
@@ -273,6 +273,7 @@ if ($config)
 		foreach ($cached as $a => $b)
 		{
 			// Lets grab the banner
+			// TODO save banner on disk for later usage?
 			$banner = $sickbeard . "/api/" . $sb_api . "/?cmd=show.getbanner&tvdbid=" . $a;
 			echo '<div class="header">' . $b['show_name'] . '</div>';
 			echo '<div><img src="' . $banner . '" /></div>';
