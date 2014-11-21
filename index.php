@@ -66,6 +66,7 @@ if (isset($_POST['submit']))
 		'sb_api'			=> $_POST['sb_api'],
 		'cache_file' 		=> 'cached.json',
 		'cache_life' 		=> '3600',
+		'sub_ext'			=> '.nl.srt',
 	);
 
 	foreach ($config_data_array as $key => $value)
@@ -217,12 +218,12 @@ if ($config)
 				$eps[$tvdbid]['status'] = $result_eps['data']['status'];
 				$eps[$tvdbid]['location'] = $result_eps['data']['location'];
 			
-				// Check if there are Dutch subs downloaded for this episode
-				// TODO move to config for user configurable setting
-				$find_nlsub = str_replace('.mkv', '.nl.srt', $result_eps['data']['location']);
-				if (file_exists($find_nlsub))
+				// Check if there are subs downloaded for this episode
+				$search = array('.mkv', '.avi', '.mpeg');
+				$find_sub = str_replace($search, $sub_ext, $result_eps['data']['location']);
+				if (file_exists($find_sub))
 				{
-					$eps[$tvdbid]['nlsub'] = true;
+					$eps[$tvdbid]['sub'] = true;
 				}
 				else
 				{
@@ -246,11 +247,12 @@ if ($config)
 			$eps[$d]['status'] = $result_pilot['data']['status'];
 			$eps[$d]['location'] = $result_pilot['data']['location'];
 			
-			// Check if there are Dutch subs downloaded for this episode
-			$find_nlsub = str_replace('.mkv', '.nl.srt', $result_pilot['data']['location']);
-			if (file_exists($find_nlsub))
+			// Check if there are subs downloaded for this episode
+			$search = array('.mkv', '.avi', '.mpeg');
+			$find_sub = str_replace($search, $sub_ext, $result_pilot['data']['location']);
+			if (file_exists($find_sub))
 			{
-				$eps[$d]['nlsub'] = true;
+				$eps[$d]['sub'] = true;
 			}
 			else
 			{
