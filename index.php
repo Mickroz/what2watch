@@ -1,51 +1,56 @@
 <?php
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
-echo '<html><head><title>What2Watch</title>
-	<style type="text/css">
-    .container {
-        width: 500px;
-        clear: both;
-    }
-	.container img {
-        width: 500px;
-    }
-    .container input {
-        width: 100%;
-        clear: both;
-    }
-	input.button {
-		width: auto;
-		margin: 0 auto;
-	}
-	fieldset.submit-buttons {
-		text-align: center;
-		vertical-align: middle;
-		margin: 5px 0;
-		border-width: 0;
-	}
-	.header {
-		letter-spacing: 1px;
-		color: #fff;
-		text-align: left;
-		background-color: #333;
-		font-weight: bold;
-		font-size: 14px;
-		font-family: Verdana, "Helvetica", sans-serif;
-		padding: 4px;
-	}
-	.footer {
-		color: #000;
-		background: #f5fafa;
-		border-right: 1px solid #d2ebe8;
-		border-bottom: 1px solid #d2ebe8;
-		border-left: 1px solid #d2ebe8;
-		font-size: 14px;
-		font-family: Verdana, "Helvetica", sans-serif;
-		text-align: right;
-		padding: 4px;
-	}
-    </style></head><body>';
+echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>What2Watch</title>
+<style type="text/css">
+.container {
+	width: 500px;
+	clear: both;
+}
+.container img {
+	width: 500px;
+}
+.container input {
+	width: 100%;
+	clear: both;
+}
+input.button {
+	width: auto;
+	margin: 0 auto;
+}
+fieldset.submit-buttons {
+	text-align: center;
+	vertical-align: middle;
+	margin: 5px 0;
+	border-width: 0;
+}
+.header {
+	letter-spacing: 1px;
+	color: #fff;
+	text-align: left;
+	background-color: #333;
+	font-weight: bold;
+	font-size: 14px;
+	font-family: Verdana, "Helvetica", sans-serif;
+	padding: 4px;
+}
+.footer {
+	color: #000;
+	background: #f5fafa;
+	border-right: 1px solid #d2ebe8;
+	border-bottom: 1px solid #d2ebe8;
+	border-left: 1px solid #d2ebe8;
+	font-size: 14px;
+	font-family: Verdana, "Helvetica", sans-serif;
+	text-align: right;
+	padding: 4px;
+}
+</style>
+</head>
+<body>' . "\n";
 $config = $passed = false;
 $cached = $error = array();
 if (file_exists('config.php'))
@@ -93,8 +98,8 @@ if (isset($_POST['submit']))
 
 if ($config)
 {
-	echo '<div class="container">';
-	echo '<h4>What 2 Watch | <a href="?cache=purge">Clear Cache!</a></h4>';
+	echo '<div class="container">' . "\n";
+	echo '<h4>What 2 Watch | <a href="?cache=purge">Clear Cache!</a></h4>' . "\n";
 
 	if (isset($_GET['cache']) && $_GET['cache'] == 'purge')
     {
@@ -268,7 +273,7 @@ if ($config)
 		}
 		else
 		{
-			echo '<strong style="color:red">' . implode('<br />', $error) . '</strong>';
+			echo '<strong style="color:red">' . implode('<br />', $error) . '</strong>' . "\n";
 		}
 	}
 	else
@@ -284,13 +289,13 @@ if ($config)
 			// Lets grab the banner
 			// TODO save banner on disk for later usage?
 			$banner = $sickbeard . "/api/" . $sb_api . "/?cmd=show.getbanner&tvdbid=" . $a;
-			echo '<div class="header">' . $b['show_name'] . '</div>';
-			echo '<div><img src="' . $banner . '" /></div>';
-			echo '<div class="footer">' . $b['episode'] . ' - ' . $b['name'] . '</div>';
-			echo '<br />';
+			echo '<div class="header">' . $b['show_name'] . '</div>' . "\n";
+			echo '<div><img src="' . $banner . '" /></div>' . "\n";
+			echo '<div class="footer">' . $b['episode'] . ' - ' . $b['name'] . '</div>' . "\n";
+			echo '<br />' . "\n";
 		}
 	}
-	echo '</div>';
+	echo '</div>' . "\n";
 }
 else
 {
@@ -305,7 +310,8 @@ else
 	echo '<fieldset class="submit-buttons"><input type="submit" name="submit" value="Create config.php" class="button" /></fieldset>';
 	echo '</form></div>';
 }
-echo '</body></html>';
+echo '</body>
+</html>';
 function curl($url)
 {
 	$ch = curl_init();
