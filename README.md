@@ -15,4 +15,7 @@ The second issue is that because of the open_basedir setting in php, if you get 
 
 
 ## Todo
-- [ ] Add some settings to config.php
+- [x] Add some settings to config.php
+- [ ] Grab naming pattern from SickBeard
+- [ ] Move subs extension to config for user configurable setting
+- [ ] Save banner on disk for later usage?
