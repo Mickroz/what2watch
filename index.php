@@ -93,8 +93,15 @@ if (isset($_POST['submit']))
 if ($config)
 {
 	echo '<div class="container">';
-	echo '<h4>What 2 Watch</h4>';
+	echo '<h4>What 2 Watch | <a href="?cache=purge">Clear Cache!</a></h4>';
 
+	if (isset($_GET['cache']) && $_GET['cache'] == 'purge')
+    {
+        unlink($cache_file);
+		header("refresh:5; url=index.php"); 
+		echo 'Cache cleared, You\'ll be redirected in about 5 secs. If not, click <a href="index.php">here</a>.';
+		exit;
+    }
 	$filemtime = @filemtime($cache_file);  // returns FALSE if file does not exist
 	if (!$filemtime or (time() - $filemtime >= $cache_life))
 	{
@@ -287,7 +294,7 @@ else
 {
 	// First run, let's create a config file
 	echo '<div class="container">';
-	echo '<form action="' . $_SERVER['PHP_SELF'] . '" method="post">';
+	echo '<form action="' . $_SERVER['SCRIPT_NAME'] . '" method="post">';
 	echo '<h1>Setup</h1>';
 	echo '<label>Trakt.tv API key:</label> <input name="trakt_api" type="text" /><br />';
 	echo '<label>Trakt.tv Username:</label> <input name="trakt_username" type="text" /><br />';
