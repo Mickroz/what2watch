@@ -9,7 +9,7 @@ This scripts has to be run on the machine where you have your downloaded shows.
 
 ## Issues
 This script relies heavily on api calls to SickBeard and Trakt.tv, therefor it could take a while to finish if you have a lot of shows in SickBeard.
-Therefor it will cache the created array for a half hour (1800) to speed things up a bit if you want to check it later.
+Therefor it will cache the created array for a half hour (3600) to speed things up a bit if you want to check it later.
 
 The second issue is that because of the open_basedir setting in php, if you get this error, you have to add the location where you store your shows to php.ini.
 Read more on this on [php.net](http://php.net/manual/en/ini.core.php#ini.open-basedir) and [here](http://kb.mediatemple.net/questions/514/How+do+I+set+the+path+for+open_basedir%3F#gs) on how to add the location.
