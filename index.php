@@ -1,54 +1,13 @@
 <?php
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
-echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+<meta http-equiv="content-type" content="text/html; charset=iso-8859-15">
+<meta name="viewport" content="width=device-width">
 <title>What2Watch</title>
-<style type="text/css">
-.container {
-	width: 500px;
-	clear: both;
-}
-.container img {
-	width: 500px;
-}
-.container input {
-	width: 100%;
-	clear: both;
-}
-input.button {
-	width: auto;
-	margin: 0 auto;
-}
-fieldset.submit-buttons {
-	text-align: center;
-	vertical-align: middle;
-	margin: 5px 0;
-	border-width: 0;
-}
-.header {
-	letter-spacing: 1px;
-	color: #fff;
-	text-align: left;
-	background-color: #333;
-	font-weight: bold;
-	font-size: 14px;
-	font-family: Verdana, "Helvetica", sans-serif;
-	padding: 4px;
-}
-.footer {
-	color: #000;
-	background: #f5fafa;
-	border-right: 1px solid #d2ebe8;
-	border-bottom: 1px solid #d2ebe8;
-	border-left: 1px solid #d2ebe8;
-	font-size: 14px;
-	font-family: Verdana, "Helvetica", sans-serif;
-	text-align: right;
-	padding: 4px;
-}
-</style>
+<link rel="stylesheet" href="style.css" type="text/css" media="screen, handheld, projection">
 </head>
 <body>' . "\n";
 $config = $passed = false;
