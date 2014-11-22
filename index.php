@@ -179,6 +179,7 @@ if ($config)
 				$eps[$tvdbid]['show_name'] = $shows[$tvdbid]['show_name'];
 				$eps[$tvdbid]['episode'] = $value['next_episode']['season'] . 'x' . sprintf('%02d', $value['next_episode']['number']);
 				$eps[$tvdbid]['name'] = $result_eps['data']['name'];
+				$eps[$tvdbid]['description'] = $result_eps['data']['description'];
 				$eps[$tvdbid]['status'] = $result_eps['data']['status'];
 				$eps[$tvdbid]['location'] = $result_eps['data']['location'];
 			
@@ -208,6 +209,7 @@ if ($config)
 			$eps[$d]['show_name'] = $shows[$d]['show_name'];
 			$eps[$d]['episode'] = '1x01';
 			$eps[$d]['name'] = $result_pilot['data']['name'];
+			$eps[$d]['description'] = $result_pilot['data']['description'];
 			$eps[$d]['status'] = $result_pilot['data']['status'];
 			$eps[$d]['location'] = $result_pilot['data']['location'];
 			
@@ -249,9 +251,22 @@ if ($config)
 			// TODO save banner on disk for later usage?
 			$banner = $sickbeard . "/api/" . $sb_api . "/?cmd=show.getbanner&tvdbid=" . $a;
 			echo '<div class="header">' . $b['show_name'] . '</div>' . "\n";
-			echo '<div><img src="' . $banner . '" /></div>' . "\n";
+			echo '<div><a id="displayText' . $a . '" href="javascript:toggle' . $a . '();"><img src="' . $banner . '" /></a></div>' . "\n";
+			echo '<div id="toggleText' . $a . '" class="description" style="display: none">' . $b['description'] . '</div>' . "\n";
 			echo '<div class="footer">' . $b['episode'] . ' - ' . $b['name'] . '</div>' . "\n";
 			echo '<br />' . "\n";
+			echo '<script type="text/javascript" > ' . "\n";
+			echo 'function toggle' . $a . '() {' . "\n";
+			echo '	var ele = document.getElementById("toggleText' . $a . '");' . "\n";
+			echo '	var text = document.getElementById("displayText' . $a . '");' . "\n";
+			echo '	if(ele.style.display == "block") {' . "\n";
+			echo '    		ele.style.display = "none";' . "\n";
+			echo '  	}' . "\n";
+			echo '	else {' . "\n";
+			echo '		ele.style.display = "block";' . "\n";
+			echo '	}' . "\n";
+			echo '} ' . "\n";
+			echo '</script>' . "\n";
 		}
 	}
 	echo '</div>' . "\n";

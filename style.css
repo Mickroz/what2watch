@@ -30,6 +30,17 @@ fieldset.submit-buttons {
 	font-family: Verdana, "Helvetica", sans-serif;
 	padding: 4px;
 }
+.description {
+	color: #444;
+	background: #f5fafa;
+	border-right: 1px solid #d2ebe8;
+	border-left: 1px solid #d2ebe8;
+	font-size: 12px;
+	font-family: Monaco, "Andale Mono","Courier New", Courier, mono;
+	font-style: italic;
+	text-align: left;
+	padding: 4px;
+}
 .footer {
 	color: #000;
 	background: #f5fafa;
