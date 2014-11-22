@@ -17,7 +17,7 @@ Read more on this on [php.net](http://php.net/manual/en/ini.core.php#ini.open-ba
 ## Todo
 - [x] Add some settings to config.php
 - [ ] Grab naming pattern from SickBeard
-- [ ] Move subs extension to config for user configurable setting
+- [x] Move subs extension to config for user configurable setting
 - [ ] Save banner on disk for later usage?
 
 thanks to @derkens for testing :grin:
