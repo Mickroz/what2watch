@@ -1,0 +1,90 @@
+.container {
+	max-width: 500px;
+	clear: both;
+}
+.container img {
+	max-width: 500px;
+	height: auto;
+}
+.container input {
+	width: 100%;
+	clear: both;
+}
+input.button {
+	width: auto;
+	margin: 0 auto;
+}
+fieldset.submit-buttons {
+	text-align: center;
+	vertical-align: middle;
+	margin: 5px 0;
+	border-width: 0;
+}
+.header {
+	letter-spacing: 1px;
+	color: #fff;
+	text-align: left;
+	background-color: #333;
+	font-weight: bold;
+	font-size: 14px;
+	font-family: Verdana, "Helvetica", sans-serif;
+	padding: 4px;
+}
+.footer {
+	color: #000;
+	background: #f5fafa;
+	border-right: 1px solid #d2ebe8;
+	border-bottom: 1px solid #d2ebe8;
+	border-left: 1px solid #d2ebe8;
+	font-size: 14px;
+	font-family: Verdana, "Helvetica", sans-serif;
+	text-align: right;
+	padding: 4px;
+}
+
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen 
+and (max-width: 1000px),
+and (max-device-width: 1000px) and (orientation: portrait),
+and (max-device-width: 767px) and (orientation: landscape) {
+/* Styles */
+.container {
+	max-width: 500px;
+	clear: both;
+}
+.container img {
+	max-width: 500px;
+	height: auto;
+}
+}
+
+/* Smartphones (landscape) ----------- */
+@media only screen 
+and (max-width: 767px),
+and (max-device-width: 767px) and (orientation: portrait),
+and (max-device-width: 499px) and (orientation: landscape) {
+/* Styles */
+.container {
+	max-width: 100%;
+	clear: both;
+}
+.container img {
+	max-width: 100%;
+	height: auto;
+}
+}
+
+/* Smartphones (portrait) ----------- */
+@media only screen 
+and (max-width: 499px)
+and (max-device-width: 499px) and (orientation: portrait) {
+/* Styles */
+.container {
+	max-width: 100%;
+	clear: both;
+}
+.container img {
+	max-width: 100%;
+	height: auto;
+}
+}
