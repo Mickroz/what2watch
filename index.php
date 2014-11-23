@@ -10,7 +10,8 @@ echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www
 <link rel="stylesheet" href="style.css" type="text/css" media="screen, handheld, projection">
 </head>
 <body>' . "\n";
-$config = $passed = false;
+$output = '';
+$skip = $config = $passed = false;
 $cached = $error = array();
 if (file_exists('config.php'))
 {
@@ -58,11 +59,12 @@ if (isset($_POST['submit']))
 if ($config)
 {
 	echo '<div class="container">' . "\n";
-	echo '<h4>What 2 Watch | <a href="?cache=purge">Clear Cache!</a></h4>' . "\n";
-
 	if (isset($_GET['cache']) && $_GET['cache'] == 'purge')
     {
-        unlink($cache_file);
+		if (!isset($_GET['skip']))
+		{
+			unlink($cache_file);
+		}
 		header("refresh:5; url=index.php"); 
 		echo 'Cache cleared, You\'ll be redirected in about 5 secs. If not, click <a href="index.php">here</a>.';
 		exit;
@@ -75,6 +77,8 @@ if ($config)
 		if (!$response)
 		{
 			$error[] = "SickBeard api returned no shows";
+			$skip = true;
+			goto skip;
 		}
 		$result = json_decode($response, true);
 
@@ -110,6 +114,8 @@ if ($config)
 		if (!$buffer)
 		{
 			$error[] = "Trakt api returned no progress";
+			$skip = true;
+			goto skip;
 		}
 		else
 		{
@@ -225,24 +231,58 @@ if ($config)
 				unset($eps[$d]);
 			}
 		}
-		if (!sizeof($error))
+		// Save array as json
+		if (file_put_contents($cache_file, json_encode($eps)))
 		{
-			// Save array as json
-			file_put_contents($cache_file, json_encode($eps));
 			$cached = $eps;
 			$passed = true;
 		}
 		else
 		{
-			echo '<strong style="color:red">' . implode('<br />', $error) . '</strong>' . "\n";
+			$error[] = "Could not create $cache_file";
+		}
+		skip:
+		// We have errors
+		if (sizeof($error))
+		{
+			// We unset cached here, because of errors, we also delete the $cache_file because it will not be complete
+			$output .= '<strong style="color:red">' . implode('<br />', $error) . '</strong>' . "\n";
+			unset($cached);
+			$passed = false;
+			if ($skip === false)
+			{
+				unlink($cache_file);
+			}
 		}
 	}
 	else
 	{
 		// Retrieve json and decode to array
-		$cached = json_decode(file_get_contents($cache_file), true);
-		$passed = true;
+		// we use clearstatcache() here because the result of file_exists() is cached
+		clearstatcache();
+		if (file_exists($cache_file))
+		{
+			if ('' == file_get_contents($cache_file))
+			{
+				$error[] = "$cache_file is empty";
+			}
+		}
+		else
+		{
+			$error[] = "Couldn't find $cache_file";
+		}
+		if (!sizeof($error))
+		{
+			$cached = json_decode(file_get_contents($cache_file), true);
+			$passed = true;
+		}
+		else
+		{
+			$output .= '<strong style="color:red">' . implode('<br />', $error) . '</strong>' . "\n";
+		}
 	}
+	echo '<h4>What 2 Watch | <a href="?cache=purge' . ((!empty($skip)) ? '&skip=1' : '') . '">Clear Cache!</a></h4>' . "\n";
+	echo $output;
 	if ($passed)
 	{
 		foreach ($cached as $a => $b)
