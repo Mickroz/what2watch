@@ -288,10 +288,13 @@ if ($config)
 		foreach ($cached as $a => $b)
 		{
 			// Lets grab the banner
-			// TODO save banner on disk for later usage?
-			$banner = $sickbeard . "/api/" . $sb_api . "/?cmd=show.getbanner&tvdbid=" . $a;
+			if (!file_exists('images/' . $a . '.banner.jpg'))
+			{
+				$banner = file_get_contents($sickbeard . "/api/" . $sb_api . "/?cmd=show.getbanner&tvdbid=" . $a);
+				file_put_contents('images/' . $a . '.banner.jpg', $banner);
+			}
 			echo '<div class="header">' . $b['show_name'] . '</div>' . "\n";
-			echo '<div><a id="displayText' . $a . '" href="javascript:toggle' . $a . '();"><img src="' . $banner . '" /></a></div>' . "\n";
+			echo '<div><a id="displayText' . $a . '" href="javascript:toggle' . $a . '();"><img src="images/' . $a . '.banner.jpg' . '" /></a></div>' . "\n";
 			echo '<div id="toggleText' . $a . '" class="description" style="display: none">' . $b['description'] . '</div>' . "\n";
 			echo '<div class="footer">' . $b['episode'] . ' - ' . $b['name'] . '</div>' . "\n";
 			echo '<br />' . "\n";
