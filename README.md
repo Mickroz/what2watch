@@ -18,6 +18,6 @@ Read more on this on [php.net](http://php.net/manual/en/ini.core.php#ini.open-ba
 - [x] Add some settings to config.php
 - [ ] Grab naming pattern from SickBeard
 - [x] Move subs extension to config for user configurable setting
-- [ ] Save banner on disk for later usage?
+- [x] Save banner on disk for later usage?
 
 thanks to @derkens for testing :grin:
