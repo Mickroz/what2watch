@@ -288,10 +288,16 @@ if ($config)
 		foreach ($cached as $a => $b)
 		{
 			// Lets grab the banner
-			if (!file_exists('images/' . $a . '.banner.jpg'))
+			// First check if the folder exists, if not create it.
+			$dir_to_save = __DIR__ . '/images/';
+			if (!is_dir($dir_to_save))
+			{
+				mkdir($dir_to_save);
+			}
+			if (!file_exists($dir_to_save . $a . '.banner.jpg'))
 			{
 				$banner = file_get_contents($sickbeard . "/api/" . $sb_api . "/?cmd=show.getbanner&tvdbid=" . $a);
-				file_put_contents('images/' . $a . '.banner.jpg', $banner);
+				file_put_contents($dir_to_save . $a . '.banner.jpg', $banner);
 			}
 			echo '<div class="header">' . $b['show_name'] . '</div>' . "\n";
 			echo '<div><a id="displayText' . $a . '" href="javascript:toggle' . $a . '();"><img src="images/' . $a . '.banner.jpg' . '" /></a></div>' . "\n";
@@ -312,7 +318,7 @@ if ($config)
 			echo '</script>' . "\n";
 		}
 	}
-	echo '</div>' . "\n";
+	echo $_SERVER['DOCUMENT_ROOT'] . '</div>' . "\n";
 }
 else
 {
