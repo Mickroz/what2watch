@@ -148,7 +148,7 @@ if ($config)
 				// If the tvdbdid == 0 we search for the episode name on trakt and compare that tvdbid result against our series array
 				if ($tvdbid == '0')
 				{
-					$search = curl('http://api.trakt.tv/search/episodes.json/' . $trakt_api . '?query="' . urlencode($title) . '"');
+					$search = curl('http://api.trakt.tv/search/episodes.json/' . $trakt_api . '?query=' . urlencode($title) . '&limit=200');
 					if (!$search)
 					{
 						$error[] = "Trakt search returned nothing for: $title";
