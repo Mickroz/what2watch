@@ -151,7 +151,8 @@ if ($config)
 					$search = curl('http://api.trakt.tv/search/episodes.json/' . $trakt_api . '?query="' . urlencode($title) . '"');
 					if (!$search)
 					{
-						$error[] = "Trakt search returned nothing";
+						$error[] = "Trakt search returned nothing for: $title";
+						continue;
 					}
 					$result_search = json_decode($search, true);
 					foreach ($result_search as $k => $v)
@@ -173,7 +174,8 @@ if ($config)
 				$episode = curl($sickbeard . "/api/" . $sb_api . "/?cmd=episode&tvdbid=" . $tvdbid . "&season=" . $value['next_episode']['season'] . "&episode=" . $value['next_episode']['number'] . "&full_path=1");
 				if (!$episode)
 				{
-					$error[] = "SickBeard api returned no episode data";
+					$error[] = "SickBeard api returned no episode data for tvdbid: $tvdbid";
+					continue;
 				}
 				$result_eps = json_decode($episode, true);
 				// Remove empty results
@@ -207,7 +209,8 @@ if ($config)
 			$pilot = curl($sickbeard . "/api/" . $sb_api . "/?cmd=episode&tvdbid=" . $d . "&season=1&episode=1&full_path=1");
 			if (!$pilot)
 			{
-				$error[] = "SickBeard api returned no Pilot episode data";
+				$error[] = "SickBeard api returned no Pilot episode data for tvdbid: $d";
+				continue;
 			}
 			$result_pilot = json_decode($pilot, true);
 		
@@ -220,7 +223,7 @@ if ($config)
 			$eps[$d]['location'] = $result_pilot['data']['location'];
 			
 			// Check if there are subs downloaded for this episode
-			$search = array('.mkv', '.avi', '.mpeg');
+			$search = array('.mkv', '.avi', '.mpeg', 'mp4');
 			$find_sub = str_replace($search, $sub_ext, $result_pilot['data']['location']);
 			if (file_exists($find_sub))
 			{
@@ -318,7 +321,7 @@ if ($config)
 			echo '</script>' . "\n";
 		}
 	}
-	echo $_SERVER['DOCUMENT_ROOT'] . '</div>' . "\n";
+	echo '</div>' . "\n";
 }
 else
 {
