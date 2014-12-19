@@ -178,8 +178,9 @@ if ($config)
 					continue;
 				}
 				$result_eps = json_decode($episode, true);
+				
 				// Remove empty results
-				if ($result_eps['result'] == 'failure' || $result_eps['result'] == 'error')
+				if ($result_eps['result'] == 'failure' || $result_eps['result'] == 'error' || $result_eps['result'] == 'fatal')
 				{
 					continue;
 				}
