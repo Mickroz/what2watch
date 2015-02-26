@@ -6,10 +6,11 @@ if (!defined('IN_W2W'))
 
 $submit	= (isset($_POST['submit'])) ? true : false;
 $mode = (isset($_GET['mode'])) ? $_GET['mode'] : '';
-$post_data = $lang_pack = array();
-$trakt_token = $trakt_expires_in = $sickbeard = $sb_api = $cache_life = $sub_ext = $language = $config_version = '';
+$post_data = $lang_pack = $error = array();
+$trakt_token = $trakt_expires_in = $sickbeard = $sb_api = $cache_life = $sub_ext = $movies_folder = $language = $config_version = '';
 $install_version = '1.0.0';
 $first_run = true;
+
 if (file_exists('config.php'))
 {
 	require('config.php');
@@ -21,6 +22,9 @@ if (!$config_version || $config_version != $install_version)
 	require('includes/functions.php');
 	require('includes/template.php');
 
+	$template_path = 'default';
+	set_lang('en');
+	$version = version_check();
 	if($mode == 'config_file')
 	{
 		create_config_file();
@@ -38,6 +42,7 @@ if (!$config_version || $config_version != $install_version)
 		$post_data['sub_ext'] = (isset($_POST['sub_ext']) ? $_POST['sub_ext'] : $sub_ext);
 		$post_data['movies_folder'] = (isset($_POST['movies_folder']) ? $_POST['movies_folder'] : $movies_folder);
 		$post_data['language'] = (isset($_POST['language']) ? $_POST['language'] : $language);
+		$post_data['template_path'] = (isset($_POST['template_path']) ? $_POST['template_path'] : $template_path);
 		$post_data['config_version'] = $install_version;
 		
 		$directory = 'language/';
@@ -60,19 +65,18 @@ if (!$config_version || $config_version != $install_version)
 			);
 			unset($file);
 		}
-
-		$s_lang_options = '<option class="sep" value="0">' . $lang['SELECT_OPTION'] . '</option>';
+		$s_lang_options = '';
 		foreach ($lang_pack as $iso => $value)
 		{
-			$selected = ($iso == $data['language']) ? ' selected="selected"' : '';
-			$s_lang_options .= '<option value="' . $iso . '"' . $selected . '>' . $value['name'] . ' (' . $value['local_name'] . ')</option>';
+			$selected = ($iso == $post_data['language']) ? ' selected="selected"' : '';
+			$s_lang_options .= '<option value="' . $iso . '"' . $selected . '>' . $value['name'] . '</option>';
 		}
 		
 		$install = new template();
 		$install->set_template();
 		$install->set_filename('install_body.html');
 		
-		$template->assign_vars(array(
+		$install->assign_vars(array(
 			'SICKBEARD'			=> $post_data['sickbeard'],
 			'SB_API'			=> $post_data['sb_api'],
 			'TRAKT_TOKEN'		=> $post_data['trakt_token'],
@@ -81,12 +85,16 @@ if (!$config_version || $config_version != $install_version)
 			'SUB_EXT'			=> $post_data['sub_ext'],
 			'MOVIES_FOLDER'		=> $post_data['movies_folder'],
 			'LANGUAGE'			=> $post_data['language'],
-			'CONFIG_VERSION'	=> $post_data['config_version']
+			'CONFIG_VERSION'	=> $post_data['config_version'],
+			'S_LANGUAGE_OPTIONS'	=> $s_lang_options
 		));
-		
+		$template = new template();
+		$template->set_template();
 		$template->assign_vars(array(
+			'STYLESHEET_LINK'	=> 'styles/' . $template_path . '/style.css',
 			'ERROR'		=> (sizeof($error)) ? '<p class="error">' . implode('<br />', $error) . '</p>' : '',
 			'CONTENT'	=> $install->output(),
+			'VERSION'	=> '<p' . $version['style'] . '><strong>' . $version['message'] . '</strong></p>',
 		));
 		
 		page_header($lang['INDEX']);

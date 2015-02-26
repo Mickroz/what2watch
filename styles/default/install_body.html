@@ -3,26 +3,26 @@
 <fieldset>
 <dl>
 	<dt><label for="sickbeard">{L_SICKBEARD_URL}:</label><br /><span>{L_SICKBEARD_URL_EXPLAIN}</span></dt>
-	<dd><input type="text" name="sickbeard" id="sickbeard" value="{SICKBEARD}"/></dd>
+	<dd><input type="text" name="sickbeard" id="sickbeard" maxlength="255" value="{SICKBEARD}" class="inputbox" /></dd>
 </dl>
 <dl>
 	<dt><label for="sb_api">{L_SICKBEARD_API_KEY}:</label></dt>
-	<dd><input type="text" name="sb_api" id="sb_api" value="{SB_API}"/></dd>
+	<dd><input type="text" name="sb_api" id="sb_api" maxlength="255" value="{SB_API}" class="inputbox" /></dd>
 </dl>
 <dl>
 	<dt><label for="cache_life">{L_CACHE_LIFE}:</label><br /><span>{L_CACHE_LIFE_EXPLAIN}</span></dt>
-	<dd><input type="text" name="cache_life" id="cache_life" value="{CACHE_LIFE}"/></dd>
+	<dd><input type="text" name="cache_life" id="cache_life" maxlength="255" value="{CACHE_LIFE}" class="inputbox" /></dd>
 </dl>
 <dl>
 	<dt><label for="sub_ext">{L_SUBTITLE_EXTENSION}:</label><br /><span>{L_SUBTITLE_EXTENSION_EXPLAIN}</span></dt>
-	<dd><input type="text" name="sub_ext" id="sub_ext" value="{SUB_EXT}"/></dd>
+	<dd><input type="text" name="sub_ext" id="sub_ext" maxlength="255" value="{SUB_EXT}" class="inputbox" /></dd>
 </dl>
 <dl>
 	<dt><label for="movies_folder">{L_MOVIES_FOLDER}:</label><br /><span>{L_MOVIES_FOLDER_EXPLAIN}</span></dt>
-	<dd><input type="text" name="movies_folder" id="movies_folder" value="{MOVIES_FOLDER}"/></dd>
+	<dd><input type="text" name="movies_folder" id="movies_folder" maxlength="255" value="{MOVIES_FOLDER}" class="inputbox" /></dd>
 </dl>
 <dl>
-	<dt><label for="language">{L_LANGUAGE_SELECT}:</label><br /><span>{L_LANGUAGE_SELECT_EXPLAIN}</span></dt>
+	<dt><label for="language">{L_LANGUAGE_SELECT}:</label></dt>
 	<dd><select id="language" name="language">{S_LANGUAGE_OPTIONS}</select></dd>
 </dl>
 </fieldset>

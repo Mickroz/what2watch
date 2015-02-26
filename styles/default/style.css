@@ -21,11 +21,49 @@ body {
 fieldset {
 	border-width: 0;
 	font-family: Verdana, Helvetica, Arial, sans-serif;
-	font-size: 1.1em;
+	font-size: 1em;
+}
+
+input {
+	font-weight: normal;
+	cursor: pointer;
+	vertical-align: middle;
+	padding: 0 3px;
+	font-size: 1em;
+	font-family: Verdana, Helvetica, Arial, sans-serif;
+}
+
+select {
+	font-family: Verdana, Helvetica, Arial, sans-serif;
+	font-weight: normal;
+	cursor: pointer;
+	vertical-align: middle;
+	border: 1px solid #666666;
+	padding: 1px;
+	background-color: #FAFAFA;
+	font-size: 1em;
+}
+
+option {
+	padding-right: 1em;
+}
+
+label {
+	cursor: default;
+	padding-right: 5px;
+	color: #676767;
+}
+
+label input {
+	vertical-align: middle;
+}
+
+fieldset dl {
+	padding: 4px 0;
 }
 
 fieldset dt {
-	float: left;
+	float: left;	
 	width: 40%;
 	text-align: left;
 	display: block;
@@ -40,17 +78,43 @@ fieldset dd {
 dt label {
 	font-weight: bold;
 	text-align: left;
+}
+
+dd label {
+	white-space: nowrap;
+	color: #333;
+}
+
+dd input, dd textarea {
+	margin-right: 3px;
+}
+
+dd select {
+	width: auto;
+}
+
+fieldset dl:hover dt label {
 	color: #000000;
 }
 
-input {
-	font-weight: normal;
-	cursor: pointer;
-	vertical-align: middle;
-	padding: 0 3px;
-	font-size: 1em;
-	font-family: Verdana, Helvetica, Arial, sans-serif;
+.inputbox {
+	background-color: #FFFFFF;
+	border: 1px solid #c0c0c0;
+	color: #333333;
+	padding: 2px;
+	cursor: text;
 }
+
+.inputbox:hover {
+	border: 1px solid #eaeaea;
+}
+
+.inputbox:focus {
+	border: 1px solid #eaeaea;
+	color: #4b4b4b;
+}
+
+input.inputbox	{ width: 85%; }
 input.button {
 	width: auto;
 	margin: 0 auto;

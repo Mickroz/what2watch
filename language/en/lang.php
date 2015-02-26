@@ -38,9 +38,12 @@ $lang = array_merge($lang, array(
 	'SICKBEARD_API_KEY'				=> 'Sickbeard Api key',
 	'CACHE_LIFE'					=> 'Cache life',
 	'CACHE_LIFE_EXPLAIN'			=> 'cache life in seconds',
+	'SUBTITLE_EXTENSION'			=> 'Subtitle extension',
 	'SUBTITLE_EXTENSION_EXPLAIN'	=> 'with leading period i.e. .nl.srt',
+	'MOVIES_FOLDER'					=> 'Movies folder',
 	'MOVIES_FOLDER_EXPLAIN'			=> 'absolute path, don\'t forget open_basedir settings',
 	'CREATE_CONFIG'					=> 'Create config',
+	'LANGUAGE_SELECT'				=> 'Select language',
 	'FIRST_RUN'						=> 'First run, Authorize with trakt first, You\'ll be redirected in about 5 secs. If not, click <a href="%s">here</a>.',
 ));
 

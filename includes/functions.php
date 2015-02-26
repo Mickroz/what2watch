@@ -60,8 +60,9 @@ function version_check()
 	if ($current_commits !== false)
 	{
 		$commits = json_decode($current_commits);
-		$ref_commit = "1ff4460f4d3d14d013626603465317137b4fce51";
+		$ref_commit = "fda07d3dcb7d727bea790db3675fb3529ad46dc6";
 		$current_commit_minus1 = $commits[1]->sha;
+		$commit_message = $commits[0]->commit->message;
 		
 		if (!strcmp($current_commit_minus1, $ref_commit)) {
 			$version['style'] = ' style="color: #228822;"';
