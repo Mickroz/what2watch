@@ -1,0 +1,35 @@
+<form action="index.php?mode=config_file" method="post">
+<h1>{L_SETUP}</h1>
+<fieldset>
+<dl>
+	<dt><label for="sickbeard">{L_SICKBEARD_URL}:</label><br /><span>{L_SICKBEARD_URL_EXPLAIN}</span></dt>
+	<dd><input type="text" name="sickbeard" id="sickbeard" value="{SICKBEARD}"/></dd>
+</dl>
+<dl>
+	<dt><label for="sb_api">{L_SICKBEARD_API_KEY}:</label></dt>
+	<dd><input type="text" name="sb_api" id="sb_api" value="{SB_API}"/></dd>
+</dl>
+<dl>
+	<dt><label for="cache_life">{L_CACHE_LIFE}:</label><br /><span>{L_CACHE_LIFE_EXPLAIN}</span></dt>
+	<dd><input type="text" name="cache_life" id="cache_life" value="{CACHE_LIFE}"/></dd>
+</dl>
+<dl>
+	<dt><label for="sub_ext">{L_SUBTITLE_EXTENSION}:</label><br /><span>{L_SUBTITLE_EXTENSION_EXPLAIN}</span></dt>
+	<dd><input type="text" name="sub_ext" id="sub_ext" value="{SUB_EXT}"/></dd>
+</dl>
+<dl>
+	<dt><label for="movies_folder">{L_MOVIES_FOLDER}:</label><br /><span>{L_MOVIES_FOLDER_EXPLAIN}</span></dt>
+	<dd><input type="text" name="movies_folder" id="movies_folder" value="{MOVIES_FOLDER}"/></dd>
+</dl>
+<dl>
+	<dt><label for="language">{L_LANGUAGE_SELECT}:</label><br /><span>{L_LANGUAGE_SELECT_EXPLAIN}</span></dt>
+	<dd><select id="language" name="language">{S_LANGUAGE_OPTIONS}</select></dd>
+</dl>
+</fieldset>
+<fieldset class="submit-buttons">
+	<input type="hidden" name="trakt_token" value="{TRAKT_TOKEN}" />
+	<input type="hidden" name="trakt_expires_in" value="{TRAKT_EXPIRES_IN}" />
+	<input type="hidden" name="config_version" value="{CONFIG_VERSION}" />
+	<input type="submit" name="submit" value="{L_CREATE_CONFIG}" class="button" />
+</fieldset>
+</form>

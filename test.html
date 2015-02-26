@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <!--
+Copyright (c) 2015 by Scott Bolinger (http://codepen.io/scottb/pen/javhr)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+
+  <title>CodePen - Simple Responsive Off Canvas Navigation Menu</title>
+
+  <link rel="stylesheet" href="/assets/reset/normalize.css">
+
+  <link rel='stylesheet prefetch' href='http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css'>
+
+  <style>
+  /* Setting things up */
+a {
+  text-decoration: none;
+  color: #555;
+}
+
+#page {
+  padding: 1em;
+  background: #fafafa;
+}
+
+#content {
+  clear: both;
+  padding-top: 1em;
+}
+
+nav a {
+  color: #fff;
+}
+
+/* Important stuff */
+ul.menu {
+  padding: 0;
+  width: 100%;
+}
+ul.menu li {
+  list-style-type: none;
+  display: block;
+  float: left;
+  background: #777;
+  margin: 0;
+  padding: .5em 0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  /* Fixes Firefox bug */
+  box-sizing: border-box;
+  width: 20%;
+  text-align: center;
+}
+ul.menu li:hover {
+  background: #888;
+}
+
+a.open-panel, a.close-panel {
+  display: none;
+}
+
+@media only screen and (max-width: 55em) {
+  #content {
+    padding-top: 0;
+  }
+
+  /* Move nav off screen, setup transitions */
+  nav {
+    width: 70%;
+    position: absolute;
+    left: -70%;
+    top: 0;
+    height: 100%;
+    background: #777;
+  }
+
+  /* Display nav items vertically */
+  ul.menu {
+    border-top: 1px solid #888;
+  }
+  ul.menu li {
+    float: none;
+    width: 100%;
+    text-align: left;
+    padding: .5em 1em;
+    box-sizing: border-box;
+    border-bottom: 1px solid #888;
+  }
+
+  /* Reveal open/close buttons */
+  a.open-panel, a.close-panel {
+    display: inline;
+  }
+
+  .close-panel {
+    position: relative;
+    top: .5em;
+    left: 1em;
+  }
+
+  .openNav #page {
+    left: 0;
+    -webkit-transform: translate3d(70%, 0, 0);
+    -moz-transform: translate3d(70%, 0, 0);
+    -ms-transform: translate3d(70%, 0, 0);
+    -o-transform: translate3d(70%, 0, 0);
+    transform: translate3d(70%, 0, 0);
+    -webkit-transition: -webkit-transform 500ms ease;
+    -moz-transition: -moz-transform 500ms ease;
+    -o-transition: -o-transform 500ms ease;
+    transition: transform 500ms ease;
+  }
+
+  /* When the panel is closed, transition the page back to the left */
+  #page {
+    left: 0;
+    -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+    -ms-transform: translate3d(0, 0, 0);
+    -o-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    -webkit-transition: -webkit-transform 500ms ease;
+    -moz-transition: -moz-transform 500ms ease;
+    -o-transition: -o-transform 500ms ease;
+    transition: transform 500ms ease;
+  }
+}
+
+  </style>
+
+  <script>
+    window.console = window.console || function(t) {};
+    window.open = function(){ console.log('window.open is disabled.'); };
+    window.print = function(){ console.log('window.print is disabled.'); };
+    // Support hover state for mobile.
+    if (false) {
+      window.ontouchstart = function(){};
+    }
+  </script>
+
+</head>
+
+<body>
+
+  <div id="page">
+
+  <a href="#" class="open-panel"><i class="icon-reorder icon-2x"></i></a>
+
+<nav>
+  <a href="#" class="close-panel"><i class="icon-remove-sign icon-large"></i></a>
+  <ul class="menu">
+    <li><a href="#">Menu Item</a></li>
+    <li><a href="#">Menu Item</a></li>
+    <li><a href="#">Menu Item</a></li>
+    <li><a href="#">Menu Item</a></li>
+    <li><a href="#">Menu Item</a></li>
+  </ul>
+</nav>
+
+<div id="content">
+  <h2>Page content</h2>
+  <p>Make the browser smaller, then click the hamburger icon to see it in action. For some reason the media queries aren't working on the Codepen Details page, so view it in editor mode.</p>
+  <p>Ducimus provident recusandae magnam omnis minima cumque nemo consequuntur ea aliquid amet distinctio sint iure molestiae necessitatibus quia nulla quasi dolorum tempora voluptas quaerat qui labore aspernatur atque fugiat quis vero fugit.</p>
+  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptas tempore porro optio unde dignissimos nam? Reiciendis minus molestias quia delectus.</p>
+  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus provident recusandae magnam omnis minima cumque nemo consequuntur ea aliquid amet distinctio sint iure molestiae necessitatibus quia nulla quasi dolorum tempora voluptas quaerat qui labore aspernatur atque fugiat quis vero fugit.</p>
+  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptas tempore porro optio unde dignissimos nam? Reiciendis minus molestias quia delectus.</p>
+  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Necessitatibus magni quasi possimus soluta quam dolores maiores hic voluptas deleniti amet harum iste voluptatibus minus cum praesentium eius odio atque assumenda reiciendis vel qui dolorem sapiente aperiam corporis explicabo adipisci voluptatum optio mollitia ipsum rerum. Numquam repudiandae maxime eveniet sed. Modi.</p>
+</div>
+
+</div><!-- #page -->
+
+  <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+
+  <script>
+    $('.open-panel').click(function () {
+    $('html').addClass('openNav');
+});
+$('.close-panel, #content').click(function () {
+    $('html').removeClass('openNav');
+});
+    //@ sourceURL=pen.js
+  </script>
+
+</body>
+
+</html>

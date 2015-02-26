@@ -1,0 +1,20 @@
+<div class="header"><span style="float: right;">[{MPAA}]</span>{TITLE} - {YEAR}</div>
+<div><a id="displayText{MOVIEID}" href="javascript:toggle{MOVIEID}();"><img src="images/{BANNER}" /></a></div>
+<div id="toggleText{MOVIEID}" class="description" style="display: none">{PLOT}</div>
+<div class="footer">{GENRE} - ({RUNTIME})</div>
+<div style="text-align: right; padding: 5px;"><a href="#top" class="back-to-top" style="display: inline;">
+<i class="fa fa-arrow-circle-up"></i>
+</a></div>
+<script type="text/javascript" > 
+function toggle{MOVIEID}() {
+	var ele = document.getElementById("toggleText{MOVIEID}");
+	var text = document.getElementById("displayText{MOVIEID}");
+	if(ele.style.display == "block") {
+    		ele.style.display = "none";
+  	}
+	else {
+		ele.style.display = "block";
+	}
+} 
+</script>
+{BREAK}

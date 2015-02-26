@@ -1,0 +1,333 @@
+* {
+	margin: 0;
+}
+html {
+	font-size: 100%;
+	/* Always show a scrollbar for short pages - stops the jump when the scrollbar appears. non-IE browsers */
+	height: 100%;
+}
+
+body {
+	/* Text-Sizing with ems: http://www.clagnut.com/blog/348/ */
+	font-family: Verdana, Helvetica, Arial, sans-serif;
+	color: #828282;
+	background-color: #282828;
+	/*font-size: 62.5%;			 This sets the default font size to be equivalent to 10px */
+	font-size: 14px;
+	margin: 0;
+	height: 100%;
+}
+
+fieldset {
+	border-width: 0;
+	font-family: Verdana, Helvetica, Arial, sans-serif;
+	font-size: 1.1em;
+}
+
+fieldset dt {
+	float: left;
+	width: 40%;
+	text-align: left;
+	display: block;
+}
+
+fieldset dd {
+	margin-left: 41%;
+	vertical-align: top;
+	margin-bottom: 3px;
+}
+
+dt label {
+	font-weight: bold;
+	text-align: left;
+	color: #000000;
+}
+
+input {
+	font-weight: normal;
+	cursor: pointer;
+	vertical-align: middle;
+	padding: 0 3px;
+	font-size: 1em;
+	font-family: Verdana, Helvetica, Arial, sans-serif;
+}
+input.button {
+	width: auto;
+	margin: 0 auto;
+}
+fieldset.submit-buttons {
+	text-align: center;
+	vertical-align: middle;
+	margin: 5px 0;
+	border-width: 0;
+}
+.logo {
+	font-weight: bold;
+	font-size: 20px;
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+	margin: 3px;
+	float: right;
+	text-align: left;
+	width: 100%;
+	padding-left: 5px;
+}
+.logo a {
+	text-decoration: none;
+	color: #F7F1F2;
+}
+.header {
+	letter-spacing: 1px;
+	color: #fff;
+	text-align: left;
+	background-color: #333;
+	font-weight: bold;
+	font-size: 14px;
+	font-family: Verdana, "Helvetica", sans-serif;
+	padding: 4px;
+}
+.description {
+	color: #444;
+	background: #f5fafa;
+	border-right: 1px solid #d2ebe8;
+	border-left: 1px solid #d2ebe8;
+	font-size: 12px;
+	font-family: Monaco, "Andale Mono","Courier New", Courier, mono;
+	font-style: italic;
+	text-align: left;
+	padding: 4px;
+}
+.footer {
+	color: #000;
+	background: #f5fafa;
+	border-right: 1px solid #d2ebe8;
+	border-bottom: 1px solid #d2ebe8;
+	border-left: 1px solid #d2ebe8;
+	font-size: 14px;
+	font-family: Verdana, "Helvetica", sans-serif;
+	text-align: right;
+	padding: 4px;
+}
+
+.back-to-top {
+	background: none;
+	margin: 0;
+	width: 20px;
+	height: 20px;
+	display: none;
+	text-decoration: none;
+
+}
+
+.back-to-top i {
+	font-size: 16px;
+}
+/* Setting things up */
+a {
+	text-decoration: none;
+	color: #444444;
+}
+
+/* Back to top of page */
+a.back-to-top {
+	color: #BD131A;
+}
+
+/* a.back-to-top:visited { color: #105289; } */
+
+a.back-to-top:hover {
+	color: #333;
+}
+
+a.back-to-top:active {
+	color: #BD131A;
+}
+
+#page {
+	background: #fafafa;
+	min-height: calc(100% - 30px);
+}
+#header {
+	width: 100%;
+	box-sizing: border-box;
+	height: 50px;
+	padding: 5px 5px 5px 10px;
+	background: #BD131A;
+	font-size: 20px;
+}
+#content {
+	clear: both;
+	padding: 1em;
+	max-width: 100%;
+}
+
+#content img {
+	max-width: 100%;
+	height: auto;
+}
+#version {
+	padding-left: 5px;
+	height: 30px;
+	line-height: 30px;
+	background: #fafafa;
+}
+
+nav a {
+	color: #F7F1F2;
+	font-size: 1.3em;
+}
+/* Important stuff */
+ul.menu {
+	padding: 0;
+	width: 100%;
+	display:table;
+	height: 42px;
+	background: #242525;
+}
+ul.menu li {
+	cursor: pointer;
+	list-style-type: none;
+	display: block;
+	float: left;
+	background: #242525;
+	margin: 0;
+	padding: 0.7em 0;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	/* Fixes Firefox bug */
+	box-sizing: border-box;
+	width: 20%;
+	text-align: center;
+	font-family: arial,helvetica,"Liberation Sans",sans-serif;
+}
+ul.menu li:hover {
+	background: #353535;
+}
+
+a.open-panel, a.close-panel {
+	display: none;
+}
+.navigatie {
+	display: none;
+}
+
+/*	SECTIONS	*/
+.section {
+	clear: both;
+	padding: 0px;
+	margin: 0px;
+}
+
+/*	COLUMN SETUP	*/
+.col {
+	display: block;
+	float:left;
+	margin: 1% 0 1% 1.6%;
+}
+.col:first-child { margin-left: 0; }
+
+/*	GROUPING	*/
+.group:before,
+.group:after { content:""; display:table; }
+.group:after { clear:both;}
+.group { zoom:1; /* For IE 6/7 */ }
+/*	GRID OF TWO	*/
+.span_2_of_2 {
+	width: 100%;
+}
+.span_1_of_2 {
+	width: 49.2%;
+}
+
+@media only screen and (max-width: 55em) {
+	#content {
+		padding-top: 0;
+	}
+	.col { 
+		margin: 1% 0 1% 0%;
+	}
+	
+	.span_2_of_2, .span_1_of_2 { width: 100%; }
+	
+	.logo {
+		position: fixed;
+		left: 50px;
+		top: 10px;
+		margin: 0 !important;
+	}
+	.navigatie {
+		display: block;
+		left: -250px;
+		text-align: center;
+		color: #fafafa;
+		width: 240px;
+		margin: 0;
+		height: 40px;
+		background: #242525;
+		padding: 5px;
+		font-size: 18px;
+	}
+	/* Move nav off screen, setup transitions */
+	nav {
+		width: 250px;
+		position: absolute;
+		left: -250px;
+		top: 0;
+		height: 100%;
+		background: #282828;
+	}
+	ul.menu {
+		margin: 0;
+	}
+	/* Display nav items vertically */
+	ul.menu li {
+		cursor: pointer;
+		float: none;
+		width: 100%;
+		text-align: left;
+		padding: 1.3em;
+		box-sizing: border-box;
+		border-top: 1px solid #373a3a;
+		border-bottom: 1px solid #292c2c;
+		background: #2f3232;
+	}
+
+	/* Reveal open/close buttons */
+	a.open-panel, a.close-panel {
+		display: inline;
+		color: #F7F1F2;
+	}
+
+	.close-panel {
+		position: relative;
+		top: 0.1em;
+		left: 1em;
+	
+	}
+
+	.openNav #page, .openNav #version {
+		left: 0;
+		-webkit-transform: translate3d(250px, 0, 0);
+		-moz-transform: translate3d(250px, 0, 0);
+		-ms-transform: translate3d(250px, 0, 0);
+		-o-transform: translate3d(250px, 0, 0);
+		transform: translate3d(250px, 0, 0);
+		-webkit-transition: -webkit-transform 500ms ease;
+		-moz-transition: -moz-transform 500ms ease;
+		-o-transition: -o-transform 500ms ease;
+		transition: transform 500ms ease;
+	}
+
+	/* When the panel is closed, transition the page back to the left */
+	#page, #header, #version {
+		left: 0;
+		-webkit-transform: translate3d(0, 0, 0);
+		-moz-transform: translate3d(0, 0, 0);
+		-ms-transform: translate3d(0, 0, 0);
+		-o-transform: translate3d(0, 0, 0);
+		transform: translate3d(0, 0, 0);
+		-webkit-transition: -webkit-transform 500ms ease;
+		-moz-transition: -moz-transform 500ms ease;
+		-o-transition: -o-transform 500ms ease;
+		transition: transform 500ms ease;
+	}
+}
