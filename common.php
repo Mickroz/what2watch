@@ -14,6 +14,10 @@ $first_run = true;
 if (file_exists('config.php'))
 {
 	require('config.php');
+	if($mode == 'config_file')
+	{
+		header('Location: index.php');
+	}
 }
 
 if (!$config_version || $config_version != $install_version)
@@ -25,6 +29,8 @@ if (!$config_version || $config_version != $install_version)
 	$template_path = 'default';
 	set_lang('en');
 	$version = version_check();
+	$template	= new template();
+	$template->set_template();
 	if($mode == 'config_file')
 	{
 		create_config_file();
@@ -85,6 +91,7 @@ if (!$config_version || $config_version != $install_version)
 			'SUB_EXT'			=> $post_data['sub_ext'],
 			'MOVIES_FOLDER'		=> $post_data['movies_folder'],
 			'LANGUAGE'			=> $post_data['language'],
+			'TEMPLATE_PATH'		=> $post_data['template_path'],
 			'CONFIG_VERSION'	=> $post_data['config_version'],
 			'S_LANGUAGE_OPTIONS'	=> $s_lang_options
 		));

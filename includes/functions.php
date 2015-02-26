@@ -123,9 +123,9 @@ function create_config_file()
 	global $lang, $template;
 	$data = get_submitted_data();
 	$written = false;
-		
+	$config_options = $data;
 	$config_data = create_config_file_data($data);
-		
+	
 	// Attempt to write out the config file directly. If it works, this is the easiest way to do it ...
 	if (file_exists('config.php') && is_writable('config.php'))
 	{
@@ -164,8 +164,14 @@ function create_config_file()
 			$written = true;
 		}
 	}
+	
 	if (!$written)
 	{
+		$s_hidden_fields = '';
+		foreach ($data as $config_key => $config_value)
+		{
+			$s_hidden_fields .= '<input type="hidden" name="' . $config_key . '" value="' . $config_value . '" />';
+		}
 		$first_run = false;
 		// OK, so it didn't work let's try the alternatives
 
@@ -181,6 +187,11 @@ function create_config_file()
 		// The option to download the config file is always available, so output it here
 		page_header($lang['INDEX'] . ' - ' . $lang['DL_CONFIG']);
 		$template->set_filename('install_dlconfig.html');
+		$template->assign_vars(array(
+			'STYLESHEET_LINK'	=> 'styles/default/style.css',
+			'VERSION'	=> '',
+			'S_HIDDEN'				=> $s_hidden_fields,
+		));
 		page_footer();
 	}
 	else
@@ -207,8 +218,9 @@ function get_submitted_data()
 		'sb_api'			=> $_POST['sb_api'],
 		'cache_life'		=> $_POST['cache_life'],
 		'sub_ext'			=> $_POST['sub_ext'],
-		'template_path'		=> $_POST['template_path'],
+		'movies_folder'		=> $_POST['movies_folder'],
 		'language'			=> $_POST['language'],
+		'template_path'		=> $_POST['template_path'],
 		'config_version'	=> $_POST['config_version'],
 	);
 }
