@@ -17,6 +17,15 @@ else
 
 	foreach ($scanned_directory as $key => $value) 
 	{
+		$filename = basename($movies_folder . '/' . $value . '/', '.mkv');
+		$new_string = preg_replace("/(19|20)\d{2}/", '', $value);
+		$new_string = slugify($new_string);
+		$saved_xml = $filename . '.xml';
+		$xml = "http://www.omdbapi.com/?t=$new_string&y=&plot=short&r=xml";
+		if (file_put_contents($movies_folder . '/' . $value . '/' . $saved_xml, fopen($xml, 'r')))
+		{
+			$error[] = 'Saved xml file from OMDBAPI for ' . $new_string;
+		}
 		if ($handle = opendir($movies_folder . '/' . $value)) {
 
 			while (false !== ($file = readdir($handle)))
@@ -167,6 +176,7 @@ foreach ($data as $film)
 * Merges all our movies templates into a single variable.
 * This will allow us to use it in the main template.
 */
+$moviescontents = '';
 $moviescontents = template::merge($moviestemplates);
 
 $movieslist = new template();

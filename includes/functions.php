@@ -34,6 +34,7 @@ function get_progress($slug, $trakt_token)
 	curl_setopt($ch, CURLOPT_URL, "https://api.trakt.tv/shows/$slug/progress/watched");
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 	curl_setopt($ch, CURLOPT_HEADER, FALSE);
+	curl_setopt($ch, CURLOPT_FAILONERROR, TRUE);
 
 	curl_setopt($ch, CURLOPT_HTTPHEADER, array(
 		"Content-Type: application/json",
@@ -43,8 +44,12 @@ function get_progress($slug, $trakt_token)
 	));
 
 	$response = curl_exec($ch);
+	if(curl_errno($ch))
+	{
+		$error[] = curl_error($ch);
+	}
 	curl_close($ch);
-
+	
 	return $response;
 }
 
@@ -60,7 +65,7 @@ function version_check()
 	if ($current_commits !== false)
 	{
 		$commits = json_decode($current_commits);
-		$ref_commit = "a3f0b67426ddb8e5673babef1e679bdd2e23853d";
+		$ref_commit = "a63a0e68e8f944cfc004c57f904daa253c723add";
 		$current_commit_minus1 = $commits[1]->sha;
 		$commit_message = $commits[0]->commit->message;
 		
