@@ -21,10 +21,17 @@ else
 		$new_string = preg_replace("/(19|20)\d{2}/", '', $value);
 		$new_string = slugify($new_string);
 		$saved_xml = $filename . '.xml';
-		$xml = "http://www.omdbapi.com/?t=$new_string&y=&plot=short&r=xml";
-		if (file_put_contents($movies_folder . '/' . $value . '/' . $saved_xml, fopen($xml, 'r')))
+		if (!file_exists($movies_folder . '/' . $value . '/' . $saved_xml))
 		{
-			$error[] = 'Saved xml file from OMDBAPI for ' . $new_string;
+			$xml = "http://www.omdbapi.com/?t=$new_string&y=&plot=short&r=xml";
+			if (file_put_contents($movies_folder . '/' . $value . '/' . $saved_xml, fopen($xml, 'r')))
+			{
+				$error[] = 'Saved xml file from OMDBAPI for ' . $new_string;
+			}
+			else
+			{
+				$error[] = 'Failed saving xml file from OMDBAPI for ' . $new_string;
+			}
 		}
 		if ($handle = opendir($movies_folder . '/' . $value)) {
 
