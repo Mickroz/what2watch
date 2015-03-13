@@ -23,17 +23,17 @@ if (file_exists('config.php'))
 if (!$config_version || $config_version != $install_version)
 {
 	// Redirect the user to the installer
+	require('includes/logger.php');
 	require('includes/functions.php');
 	require('includes/template.php');
-	require('includes/logger.php');
 
 	$template_path = 'default';
 	set_lang('en');
-	$version = version_check();
 	$template	= new template();
 	$template->set_template();
 	$log = new PHPLogger("error.log");
     $tag = "INSTALLER";
+	$version = version_check();
 	if($mode == 'config_file')
 	{
 		create_config_file();
@@ -130,10 +130,11 @@ if (!$config_version || $config_version != $install_version)
 	exit;
 }
 // Include files
+require('includes/logger.php');
 require('includes/cache.php');
 require('includes/template.php');
 require('includes/functions.php');
-require('includes/logger.php');
+
 
 // Instantiate some basic classes
 $log = new PHPLogger("error.log");
