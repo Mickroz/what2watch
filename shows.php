@@ -6,6 +6,7 @@ if (!defined('IN_W2W'))
 
 // Initial var setup
 $series = $data = array();
+$tag = "Shows";
 
 if ($data = $cache->get('shows'))
 {
@@ -14,97 +15,89 @@ if ($data = $cache->get('shows'))
 else
 {
 	// Lets get started with grabbing all shows from sickbeard
-	$shows = curl($sickbeard . "/api/" . $sb_api . "/?cmd=shows&sort=name");
+	$shows = getUrl($sickbeard . "/api/" . $sb_api . "/?cmd=shows&sort=name", 'getShows');
 	if (!$shows)
 	{
 		$error[] = "SickBeard api returned no shows";
+		$log->error($tag, "SickBeard api returned no shows");
 	}
 
 	$result = json_decode($shows, true);
-
 	foreach ($result['data'] as $show => $values)
-	{	
-		$show_id = curl($sickbeard . "/api/" . $sb_api . "/?cmd=show&tvdbid=" . $values['tvdbid']);
-		if (!$show_id)
-		{
-			$error[] = "SickBeard api returned nothing for" . $values['tvdbid'];
-		}
-		$result_show = json_decode($show_id, true);
-		// Checking which show actually has a episode downloaded
-		// and put all  tvdb id's in an array
-		// TODO grab naming pattern
-		$season_list = $result_show['data']['season_list'];
-		foreach ($season_list as $id => $season)
-		{
-			$padded = sprintf('%02d', $season); 
-			$dir = $result_show['data']['location'] . "/Season " .  $padded;
-			if (!is_dir($dir))
-			{
-				continue;
-			}
-			$show_name[$values['tvdbid']]['show_name'] = $result_show['data']['show_name'];
-			$show_name[$values['tvdbid']]['show_slug'] = slugify($result_show['data']['show_name']);
-			$show_name[$values['tvdbid']]['tvrage_slug'] = slugify($result_show['data']['tvrage_name']);
-		}
-	}
-
-	foreach ($show_name as $tvdbid => $value)
 	{
-		$trakt = get_progress($value['tvrage_slug'], $trakt_token);
+		$tvdbid = $values['tvdbid'];
+		$show_id = getShow($tvdbid);
+		if(empty($show_id))
+		{
+			continue;
+		}
+		$trakt = getProgress($show_id[$tvdbid]['show_slug'], $trakt_token);
+		
 		$progress = json_decode($trakt, true);
 		// We check here if the seasons list is empty, maybe the slug is incorrect
 		if(empty($progress['seasons']))
 		{
-			// We try the show name slug
-			$trakt2 = get_progress($value['show_slug'], $trakt_token);
-			$progress2 = json_decode($trakt2, true);
-			
-			if (empty($progress2['seasons']))
-			{
-				$error[] = 'Trakt api returned nothing for: ' . $value['show_name'] . '(' . $value['tvrage_slug'] . ' or ' . $value['show_slug'] . ')';
-				continue;
-			}
-			$progress['next_episode'] = $progress2['next_episode'];
+			$log->error('getProgress',  "Failed to get progress for " . $show_id[$tvdbid]['show_slug']);
+			$log->debug('getProgress', 'dumping for debug ' . $trakt);
 		}
 		if ($progress['next_episode'] == '')
 		{
+			$error[] = 'Trakt api returned nothing for: ' . $show_id[$tvdbid]['show_name'] . '(' . $show_id[$tvdbid]['show_slug'] . ')';
+			$log->error('getProgress', 'Trakt api returned nothing for: ' . $show_id[$tvdbid]['show_name'] . '(' . $show_id[$tvdbid]['show_slug'] . ')');
+			$log->debug('getProgress', 'dumping for debug ' . $trakt);
 			continue;
 		}
 		// Grab all episode data
-		$episode = curl($sickbeard . "/api/" . $sb_api . "/?cmd=episode&tvdbid=" . $tvdbid . "&season=" . $progress['next_episode']['season'] . "&episode=" . $progress['next_episode']['number'] . "&full_path=1");
-		if (!$episode)
-		{
-			$error[] = "SickBeard api returned no episode data for tvdbid: $tvdbid";
-			continue;
-		}
-		$result_eps = json_decode($episode, true);
-			
-		// Remove empty results
-		if ($result_eps['result'] == 'failure' || $result_eps['result'] == 'error' || $result_eps['result'] == 'fatal')
-		{
-			continue;
-		}
+		$episode = getEpisode($tvdbid, $progress['next_episode']['season'], $progress['next_episode']['number']);
+		
 		// Put it all in a array
 		$series[$tvdbid]['tvdbid'] = $tvdbid;
-		$series[$tvdbid]['show_name'] = $value['show_name'];
-		$series[$tvdbid]['tvrage_slug'] = $value['tvrage_slug'];
-		$series[$tvdbid]['show_slug'] = $value['show_slug'];
+		$series[$tvdbid]['show_name'] = $show_id[$tvdbid]['show_name'];
+		//$series[$tvdbid]['tvrage_slug'] = $show_id[$tvdbid]['tvrage_slug'];
+		$series[$tvdbid]['show_slug'] = $show_id[$tvdbid]['show_slug'];
 		$series[$tvdbid]['episode'] = $progress['next_episode']['season'] . 'x' . sprintf('%02d', $progress['next_episode']['number']);
 		$series[$tvdbid]['name'] = $progress['next_episode']['title'];
-		$series[$tvdbid]['description'] = $result_eps['data']['description'];
-		$series[$tvdbid]['status'] = $result_eps['data']['status'];
-		$series[$tvdbid]['location'] = $result_eps['data']['location'];
+		$series[$tvdbid]['description'] = $episode['data']['description'];
+		$series[$tvdbid]['status'] = $episode['data']['status'];
+		$series[$tvdbid]['location'] = $episode['data']['location'];
 	
 		// Check if there are subs downloaded for this episode
 		$search = array('.mkv', '.avi', '.mpeg', '.mp4');
-		$find_sub = str_replace($search, $sub_ext, $result_eps['data']['location']);
+		$find_sub = str_replace($search, $sub_ext, $episode['data']['location']);
 		if (file_exists($find_sub))
 		{
+			$log->debug('checkSub', "found a subtitle for " . $series[$tvdbid]['show_name'] . ' ' . $series[$tvdbid]['episode']);
 			$series[$tvdbid]['subbed'] = true;
+			$create_image = true;
 		}
 		else
 		{
+			$log->debug('checkSub', "no subtitle was found for " . $series[$tvdbid]['show_name'] . ' ' . $series[$tvdbid]['episode']);
 			unset($series[$tvdbid]);
+			$create_image = false;
+		}
+		if ($create_image)
+		{
+			$banner = $series[$tvdbid]['tvdbid'] . '.banner.jpg';
+			$background = $series[$tvdbid]['tvdbid'] . '.background.jpg';
+			$string = $show_id[$tvdbid]['location'];
+			$explode = explode( '/', $string );
+			$location = str_replace('/' . $explode[3], '', $string);
+			
+			if (!file_exists($string . '/' . $banner))
+			{
+				$image = getFanart('tv', $location, $explode[3], $series[$tvdbid]['tvdbid'], $banner, $background);
+			
+				if ($image['grabbed'] == false)
+				{
+					$rsr_org = $image['rsr_org'];
+					$im = $image['im'];
+					$got_bg = $image['got_bg'];
+					createImage($location, $explode[3], $series[$tvdbid]['show_name'], $banner, $rsr_org, $im, $got_bg);
+				}
+			}
+			$url = $string . '/' . $banner;
+			saveImage($url, $banner, $series[$tvdbid]['show_name']);
 		}
 	}
 	// Save array as json
@@ -127,19 +120,7 @@ foreach ($data as $show)
 	{
 		$row->assign_var('BREAK', '');
 	}
-	// Lets grab the banner
-	// First check if the folder exists, if not create it.
-	$dir_to_save = __DIR__ . '/images/';
-	if (!is_dir($dir_to_save))
-	{
-		mkdir($dir_to_save);
-	}
-	if (!file_exists($dir_to_save . $show['tvdbid'] . '.banner.jpg'))
-	{
-		$banner = file_get_contents($sickbeard . "/api/" . $sb_api . "/?cmd=show.getbanner&tvdbid=" . $show['tvdbid']);
-		file_put_contents($dir_to_save . $show['tvdbid'] . '.banner.jpg', $banner);
-	}
-		
+	
 	foreach ($show as $key => $value)
 	{
 		$row->assign_var($key, $value);

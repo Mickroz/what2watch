@@ -1,3 +1,4 @@
 config.php
+error.log
 images/
 cache/*.cache

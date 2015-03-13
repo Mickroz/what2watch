@@ -4,8 +4,236 @@ if (!defined('IN_W2W'))
 	exit;
 }
 
-function curl($url)
+function getEpisode($tvdbid, $season, $episode)
 {
+	global $sickbeard, $sb_api, $log;
+	
+	$tag = 'getEpisode';
+	$get_episode = getUrl($sickbeard . "/api/" . $sb_api . "/?cmd=episode&tvdbid=" . $tvdbid . "&season=" . $season . "&episode=" . $episode . "&full_path=1", $tag);
+	if (!$get_episode)
+	{
+		$error[] = "SickBeard api returned no episode data for tvdbid: $tvdbid";
+		$log->error($tag, "SickBeard api returned no episode data for tvdbid: $tvdbid");
+		return;
+	}
+	$result = json_decode($get_episode, true);
+		
+	// Remove empty results
+	if ($result['result'] == 'failure' || $result['result'] == 'error' || $result['result'] == 'fatal')
+	{
+		return;
+	}
+	return $result;
+}
+
+function createXml($filename)
+{
+	$tag = 'createXml';
+	global $log;
+	
+	$beforeBracket = current(explode('[', $filename));
+	$beforeBracket = str_replace('.xml', '', $beforeBracket);
+	$new_string = preg_replace("/(19|20)\d{2}/", '', $beforeBracket);
+	$new_string = slugify($new_string);
+	$json = "http://www.omdbapi.com/?t=$new_string&y=&plot=short&r=json";
+	$log->info($tag, 'Opening URL ' . $json);
+	$jsonstring = file_get_contents($json);
+	$jsonarray = json_decode($jsonstring, true);
+	if ($jsonarray['Response'] == 'False')
+	{
+		$error[] = 'Movie not found from OMDBAPI for ' . $new_string;
+		$log->error($tag, 'Movie not found on OMDBAPI for ' . $new_string);
+	}
+	else
+	{
+		$jsonarray = array_change_key_case($jsonarray, CASE_LOWER);
+		$jsonarray = array_flip($jsonarray);
+		$xml = new SimpleXMLElement('<movie/>');
+		array_walk_recursive($jsonarray, array ($xml, 'addChild'));
+						
+		if (file_put_contents($movies_folder . '/' . $value . '/' . $filename, $xml->asXML()))
+		{
+			$error[] = 'Saved xml file from OMDBAPI for ' . $new_string;
+			$log->info($tag, 'Saved xml file from OMDBAPI for ' . $new_string);
+		}
+		else
+		{
+			$error[] = 'Failed saving xml file from OMDBAPI for ' . $new_string;
+			$log->error($tag, 'Failed saving xml file from OMDBAPI for ' . $new_string);
+		}
+	}
+}
+
+function getFanart($cat, $location, $name, $id, $banner, $background)
+{
+	global $log;
+	$tag = 'getFanart';
+
+	$cat_banner = ($cat == 'tv' ? 'tvbanner' : 'moviebanner');
+	$cat_bg = ($cat == 'tv' ? 'showbackground' : 'moviebackground');
+	$grabbed = false;
+	$fanart = getUrl("http://webservice.fanart.tv/v3/$cat/$id?api_key=b28b14e9be662e027cfbc7c3dd600405", $tag);
+
+	$result = json_decode($fanart, true);
+
+	if(isset($result[$cat_banner]))
+	{
+		if (file_put_contents($location . '/' . $name . '/' . $banner, fopen($result[$cat_banner][0]['url'], 'r')))
+		{
+			$grabbed = true;
+			$log->debug($tag, 'grabbing ' . $cat_banner . ' ' . $result[$cat_banner][0]['url']);
+			$error[] = 'Saved ' . $cat_banner . ' from fanart.tv for ' . $result['name'];
+			$log->info($tag, 'Saved ' . $cat_banner . ' from fanart.tv for ' . $result['name']);
+		}
+		else
+		{
+			$error[] = 'Failed saving ' . $cat_banner . ' from fanart.tv for ' . $result['name'];
+			$log->error($tag, 'Failed saving ' . $cat_banner . ' from fanart.tv for ' . $result['name']);
+		}
+	}
+	if (!isset($result[$cat_banner]) && isset($result[$cat_bg]))
+	{
+		if (file_put_contents($location . '/' . $name . '/' . $background, fopen($result[$cat_bg][0]['url'], 'r')))
+		{
+			$log->debug($tag, 'grabbing ' . $cat_bg . ' ' . $result[$cat_bg][0]['url']);
+			$error[] = 'Saved ' . $cat_bg . ' from fanart.tv for ' . $result['name'];
+			$log->info($tag, 'Saved ' . $cat_bg . ' from fanart.tv for ' . $result['name']);
+		}
+		else
+		{
+			$error[] = 'Failed saving ' . $cat_bg . ' from fanart.tv for ' . $result['name'];
+			$log->error($tag, 'Failed saving ' . $cat_bg . ' from fanart.tv for ' . $result['name']);
+		}
+	}
+	if (!isset($result[$cat_banner]) && file_exists($location . '/' . $name . '/' . $background))
+	{
+		$log->debug($tag, 'creating image from ' . $cat_bg . ' ' . $location . '/' . $name . '/' . $background);
+		$rsr_org = imagecreatefromjpeg($location . '/' . $name . '/' . $background);
+		$im = imagescale($rsr_org, 1000, 185,  IMG_BICUBIC_FIXED);
+		$got_bg = true;
+	}
+	else
+	{
+		// Create the image
+		$rsr_org = '';
+		$im = imagecreatetruecolor(1000, 185);
+		$got_bg = false;
+	}
+	$array = array(
+		'rsr_org'	=> $rsr_org,
+		'im'		=> $im,
+		'got_bg'	=> $got_bg,
+		'grabbed'	=> $grabbed,
+	);
+	return $array;
+}
+
+function createImage($location, $name, $title, $banner, $rsr_org, $im, $got_bg)
+{
+	global $log;
+	
+	$tag = 'createImage';
+	// Create some colors
+	$white = imagecolorallocate($im, 255, 255, 255);
+	$grey = imagecolorallocate($im, 128, 128, 128);
+	$black = imagecolorallocate($im, 0, 0, 0);
+	$text_color = imagecolorallocate($im, 233, 14, 91);
+	//imagefilledrectangle($im, 0, 0, 399, 29, $white);
+
+	// The text to draw
+	$text = $title;
+	// Replace path by your own font path
+	$font = 'movie.ttf';
+
+	// Add some shadow to the text
+	imagettftext($im, 72, 0, 19, 129, $grey, $font, $text);
+
+	// Add the text
+	imagettftext($im, 72, 0, 20, 128, $text_color, $font, $text);
+
+	// Save the image
+	imagejpeg($im, $location . '/' . $name . '/' . $banner);
+
+	// Free up memory
+	imagedestroy($im);
+	if ($got_bg)
+	{
+		imagedestroy($rsr_org);
+	}
+	$error[] = 'Created banner for ' . $title;
+	$log->info($tag, 'Created banner for ' . $title);
+}
+
+function saveImage($url, $banner, $name)
+{
+	global $log;
+	
+	$tag = 'saveImage';
+	
+	$dir_to_save = $_SERVER['DOCUMENT_ROOT'] . '/what2watch/images/';
+	if (!is_dir($dir_to_save))
+	{
+		$log->debug($tag, 'Cannot find ' . $dir_to_save);
+		mkdir($dir_to_save);
+	}
+	if (!file_exists($dir_to_save . $banner))
+	{
+		$get_banner = file_get_contents($url);
+		file_put_contents($dir_to_save . $banner, $get_banner);
+		$log->info($tag, 'Saved banner for ' . $name . ' (' . $dir_to_save . $banner . ')');
+	}
+	return;
+}
+
+function getShow($tvdbid)
+{
+	$tag = 'getShow';
+	global $sickbeard, $sb_api, $log;
+	
+	$show_id = getUrl($sickbeard . "/api/" . $sb_api . "/?cmd=show&tvdbid=" . $tvdbid, $tag);
+	if (!$show_id)
+	{
+		$error[] = "SickBeard api returned nothing for" . $tvdbid;
+		$log->error($tag, "SickBeard api returned nothing for" . $tvdbid);
+	}
+	$result_show = json_decode($show_id, true);
+	$log->debug($tag, "SickBeard returned " . $result_show['data']['show_name']);
+	// Checking which show actually has a episode downloaded
+	// and put all  tvdb id's in an array
+	// TODO grab naming pattern
+	$season_list = $result_show['data']['season_list'];
+	// We reverse the list for logging only
+	$season_list = array_reverse($season_list);
+	$show_name = array();
+	$numItems = count($season_list);
+	$i = 0;
+	$s = 0;
+	foreach ($season_list as $id => $season)
+	{
+		$padded = sprintf('%02d', $season); 
+		$dir = $result_show['data']['location'] . "/Season " .  $padded;
+		if (!file_exists($dir) && !is_dir($dir))
+		{
+			if(++$i === $numItems && $s == 0)
+			{
+				$log->debug('getSeason', "no seasons found for " . $result_show['data']['show_name']);
+			}
+			continue;
+		}
+		$s++;
+		$log->debug('getSeason', "found season $padded for " . $result_show['data']['show_name']);
+		$show_name[$tvdbid]['show_name'] = $result_show['data']['show_name'];
+		$show_name[$tvdbid]['show_slug'] = slugify($result_show['data']['show_name']);
+		$show_name[$tvdbid]['location'] = $result_show['data']['location'];
+		//$show_name[$tvdbid]['tvrage_slug'] = slugify($result_show['data']['tvrage_name']);
+	}
+	return $show_name;
+}
+function getUrl($url, $tag='getUrl')
+{
+	global $log;
+	
+	$log->info($tag, "Opening URL " . $url);
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, $url);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -27,8 +255,15 @@ function slugify($phrase)
     
     return $result;
 }
-function get_progress($slug, $trakt_token)
+
+function getProgress($slug, $trakt_token)
 {
+	global $log;
+	
+	$tag = 'getProgress';
+	$log->debug($tag, "trying to get progress for " . $slug);
+	$log->info($tag, "Opening URL https://api.trakt.tv/shows/$slug/progress/watched");
+	
 	$ch = curl_init();
 
 	curl_setopt($ch, CURLOPT_URL, "https://api.trakt.tv/shows/$slug/progress/watched");
@@ -60,12 +295,13 @@ function get_progress($slug, $trakt_token)
 function version_check()
 {
 	global $lang;
-	$current_commits = curl("https://api.github.com/repos/Mickroz/what2watch/commits");
+	$tag = 'versionCheck';
+	$current_commits = getUrl("https://api.github.com/repos/Mickroz/what2watch/commits", $tag);
 
 	if ($current_commits !== false)
 	{
 		$commits = json_decode($current_commits);
-		$ref_commit = "a63a0e68e8f944cfc004c57f904daa253c723add";
+		$ref_commit = "a55e89c84e08bc368c789c760ed257e5888d11c1";
 		$current_commit_minus1 = $commits[1]->sha;
 		$commit_message = $commits[0]->commit->message;
 		

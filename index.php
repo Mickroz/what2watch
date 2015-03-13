@@ -10,7 +10,17 @@ include('common.php');
 // Initial var setup
 $mode = (isset($_GET['mode']) ? $_GET['mode'] : '');
 $error = array();
-$version = version_check();
+$purge_cache = false;
+if ($version = $cache->get('version_check'))
+{
+    $version = json_decode($version, true);
+}
+else
+{
+	$version = version_check();
+	// Save array as json
+	$cache->put('version_check', json_encode($version));
+}
 
 switch ($mode)
 {
@@ -22,12 +32,33 @@ switch ($mode)
 		include('movies.php');
 	break;
 	
+	case 'viewlog':
+		include('log.php');
+	break;
+	
 	case 'purge_cache':
 		$cache->purge();
 		$referer = $_SERVER['HTTP_REFERER'];
-		header("refresh:5; url=" . $referer); 
+		header("refresh:5; url=" . $referer);
+		$tag = 'Cache';
+		$log->info($tag, $lang['CACHE_PURGED']);
 		$error[] = $lang['CACHE_PURGED'];
 		$cache_message = sprintf($lang['CACHE_PURGED_EXPLAIN'], $referer);
+		$purge_cache = true;
+	
+	case 'purge_log':
+		if (!$purge_cache)
+		{
+			$lines_array = file('error.log');
+			$new_output = "";
+			file_put_contents('error.log', $new_output);
+			$referer = $_SERVER['HTTP_REFERER'];
+			header("refresh:5; url=" . $referer);
+			$tag = 'Log';
+			$log->info($tag, $lang['LOG_PURGED']);
+			$error[] = $lang['LOG_PURGED'];
+			$cache_message = sprintf($lang['LOG_PURGED_EXPLAIN'], $referer);
+		}
 	
 	default:
 		/**
