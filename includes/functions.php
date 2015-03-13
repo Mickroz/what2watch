@@ -232,7 +232,7 @@ function getShow($tvdbid)
 function getUrl($url, $tag='getUrl')
 {
 	global $log;
-	
+
 	$log->info($tag, "Opening URL " . $url);
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, $url);
@@ -301,7 +301,7 @@ function version_check()
 	if ($current_commits !== false)
 	{
 		$commits = json_decode($current_commits);
-		$ref_commit = "13175ce8f1a12a80041088396837bfb534167a74";
+		$ref_commit = "c8e6d5a81644a69a548fa36e3a4e0f78925cae6d";
 		$current_commit_minus1 = $commits[1]->sha;
 		$commit_message = $commits[0]->commit->message;
 		
