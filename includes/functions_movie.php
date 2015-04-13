@@ -4,8 +4,10 @@ if (!defined('IN_W2W'))
 	exit;
 }
 
-function trakt_movie_checkin()
+function trakt_movie_checkin($imdb_id, $message)
 {
+	global $trakt_token;
+	
 	$ch = curl_init();
 
 	curl_setopt($ch, CURLOPT_URL, "https://api-v2launch.trakt.tv/checkin");
@@ -16,13 +18,8 @@ function trakt_movie_checkin()
 
 	curl_setopt($ch, CURLOPT_POSTFIELDS, "{
 		\"movie\": {
-		\"title\": \"Guardians of the Galaxy\",
-		\"year\": 2014,
 		\"ids\": {
-			\"trakt\": 28,
-			\"slug\": \"guardians-of-the-galaxy-2014\",
-			\"imdb\": \"tt2015381\",
-			\"tmdb\": 118340
+			\"imdb\": \"$imdb_id\"
 		}
 	},
 		\"sharing\": {
@@ -30,16 +27,16 @@ function trakt_movie_checkin()
 			\"twitter\": true,
 			\"tumblr\": false
 		},
-		\"message\": \"Guardians of the Galaxy FTW!\",
+		\"message\": \"$message\",
 		\"app_version\": \"1.0\",
-		\"app_date\": \"2014-09-22\"
+		\"app_date\": \"2015-03-18\"
 	}");
 
 	curl_setopt($ch, CURLOPT_HTTPHEADER, array(
 		"Content-Type: application/json",
-		"Authorization: Bearer [token]",
+		"Authorization: Bearer $trakt_token",
 		"trakt-api-version: 2",
-		"trakt-api-key: [client_id]"
+		"trakt-api-key: dfca522ce536a330d25737752dc8a26e2a5ac09e9067409669f3456db4089b7b"
 	));
 
 	$response = curl_exec($ch);

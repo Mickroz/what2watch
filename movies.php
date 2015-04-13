@@ -9,6 +9,29 @@ include('includes/functions_movie.php');
 // Initial var setup
 $movies = $data = array();
 $tag = "Movies";
+$checkin = (isset($_GET['checkin'])) ? $_GET['checkin'] : '';
+$getfanart = (isset($_GET['getfanart'])) ? $_GET['getfanart'] : '';
+
+if ($checkin)
+{
+	if ($submit)
+	{
+		$message = $_POST['message'];
+		$imdb_id = $_POST['imdb_id'];
+		$trakt_checkin = trakt_show_checkin($imdb_id, $message);
+		$trakt_show_checkin = json_decode($trakt_checkin, true);
+		
+		if (!isset($trakt_show_checkin['expires_at']))
+		{
+			$movie_title = $trakt_show_checkin['movie']['title'];
+			$error[] = "aangemeld bij $movie_title op trakt";
+		}
+		else
+		{
+			$error[] = "Communication with trakt is not possible, try again later.";
+		}
+	}
+}
 
 if ($data = $cache->get('movies'))
 {
@@ -98,6 +121,27 @@ else
 	$cache->put('movies', json_encode($movies));
     $data = $movies;
 }
+
+if ($getfanart)
+{
+	$banner = $data[$getfanart]['banner'];
+	unlink(CACHE_IMAGES . '/' . $banner);
+	$background = str_replace('.banner.jpg', '.background.jpg', $banner);
+	$string = $data[$getfanart]['location'];
+	$explode = explode( '/', $string );
+	$location = str_replace('/' . $explode[3], '', $string);
+	$image = getFanart('movies', $location, $explode[3], $data[$getfanart]['movieid'], $banner, $background);
+	
+	if ($image['grabbed'] == false)
+	{
+		$rsr_org = $image['rsr_org'];
+		$im = $image['im'];
+		$got_bg = $image['got_bg'];
+		createImage($data[$getfanart]['title'], $banner, $rsr_org, $im, $got_bg);
+	}
+	header('Location: index.php?mode=movies');
+}
+
 $count = count($data);
 $divider = ceil($count / 2);
 $i = 1;
