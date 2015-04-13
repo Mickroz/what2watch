@@ -1,11 +1,36 @@
-<div class="header">{SHOW_NAME}</div>
+<div class="header"><span style="float: right;"><a id="displayCheckin{TVDBID}" href="javascript:checkin{TVDBID}();"><i class="fa fa-check-square-o"></i> CHECK IN</a></span>{SHOW_NAME}</div>
+<div id="toggleCheckin{TVDBID}" class="description" style="display: none">
+<form id="postform{TVDBID}" action="index.php?mode=shows&checkin=true" method="post">
+<fieldset>
+<dl>
+	<dt><label for="message">{L_MESSAGE}:</label></dt>
+	<dd><input type="text" name="message" id="message" maxlength="255" value="{MESSAGE}" placeholder="{L_MESSAGE_EXPLAIN}" class="inputbox" /></dd>
+</dl>
+</fieldset>
+<fieldset class="submit-buttons">
+	<input type="hidden" name="trakt_id" value="{TRAKT_ID}" />
+	<input type="button" name="fill" value="{L_FILL}" class="button" onclick="javascript:fill{TVDBID}()" />
+	<input type="button" name="reset" value="{L_RESET}" class="button" onclick="javascript:reset{TVDBID}()" />
+	<input type="submit" name="submit" value="{L_SUBMIT}" class="button" />
+</fieldset>
+</form>
+</div>
 <div><a id="displayText{TVDBID}" href="javascript:toggle{TVDBID}();"><img src="images/{TVDBID}.banner.jpg" /></a></div>
 <div id="toggleText{TVDBID}" class="description" style="display: none">{DESCRIPTION}</div>
-<div class="footer">{EPISODE} - {NAME}</div>
-<div style="text-align: right; padding: 5px;"><a href="#top" class="back-to-top" style="display: inline;">
-<i class="fa fa-arrow-circle-up"></i>
-</a></div>
-<script type="text/javascript" > 
+<div class="footer"><span style="float:left"><a id="displayUpdate{TVDBID}" href="javascript:update{TVDBID}();"><i class="fa fa-cog"></i> Options</a></span>{EPISODE} - {NAME}
+
+<div id="toggleUpdate{TVDBID}" style="display: none;text-align:left">
+<a href="?mode=shows&getfanart={TVDBID}"><i class="fa fa-refresh"></i> Refresh banner</a><br />
+<a href="?mode=shows&getbanner={TVDBID}"><i class="fa fa-download"></i> Download thetvdb.com banner</a>
+</div></div>
+<br />
+<script type="text/javascript" >
+function fill{TVDBID}() {
+	document.getElementById("message").value = "{MESSAGE}";
+}
+function reset{TVDBID}() {
+	document.getElementById("message").value = "";
+}
 function toggle{TVDBID}() {
 	var ele = document.getElementById("toggleText{TVDBID}");
 	var text = document.getElementById("displayText{TVDBID}");
@@ -15,6 +40,27 @@ function toggle{TVDBID}() {
 	else {
 		ele.style.display = "block";
 	}
-} 
+}
+
+function checkin{TVDBID}() {
+	var ele = document.getElementById("toggleCheckin{TVDBID}");
+	var text = document.getElementById("displayCheckin{TVDBID}");
+	if(ele.style.display == "block") {
+    		ele.style.display = "none";
+  	}
+	else {
+		ele.style.display = "block";
+	}
+}
+function update{TVDBID}() {
+	var ele = document.getElementById("toggleUpdate{TVDBID}");
+	var text = document.getElementById("displayUpdate{TVDBID}");
+	if(ele.style.display == "block") {
+    		ele.style.display = "none";
+  	}
+	else {
+		ele.style.display = "block";
+	}
+}
 </script>
 {BREAK}

@@ -4,6 +4,8 @@ if (!defined('IN_W2W'))
 	exit;
 }
 
+include('includes/functions_movie.php');
+
 // Initial var setup
 $movies = $data = array();
 $tag = "Movies";
@@ -22,77 +24,70 @@ else
 
 			while (false !== ($file = readdir($handle)))
 			{
-				$search = array('.mkv', '.avi', '.mpeg', '.mp4');
-				$filename = str_replace($search, '.xml', $file);
-				if (!file_exists($movies_folder . '/' . $value . '/' . $filename))
-				{
-					createXml($filename);
-				}
-				
 				if ($file != "." && $file != ".." && strtolower(substr($file, strrpos($file, '.') + 1)) == 'xml')
 				{
-					$array = array(
-						'movieid' 	=> '',
-						'title' 	=> '',
-						'runtime' 	=> '',
-						'year' 		=> '',
-						'mpaa' 		=> '',
-						'plot' 		=> '',
-						'genre' 	=> '',
-						'banner' 	=> '',
-					);
-					$movie = simplexml_load_file($movies_folder . '/' . $value . '/' . $file);
-					$log->info('openXml', 'Opening XML ' . $movies_folder . '/' . $value . '/' . $file);
-					$json = json_encode($movie);
-					$array = json_decode($json, true);
-					$array = array_change_key_case($array, CASE_LOWER);
-					$movie_id = (isset($array['id'])) ? $array['id'] : $array['imdbid'];
-					$banner = str_replace('.xml', '.banner.jpg', $file);
-					$background = str_replace('.xml', '.background.jpg', $file);
-					if (!file_exists($movies_folder . '/' . $value . '/' . $banner))
+					$search = array('.mkv', '.avi', '.mpeg', '.mp4');
+					$filename = str_replace($search, '.xml', $file);
+					// First we check if there is a xml file in cache
+					if (!file_exists(CACHE_XML . '/' . $filename))
 					{
-						$image = getFanart('movies', $movies_folder, $value, $movie_id, $banner, $background);
-						if ($image['grabbed'] == false)
+						// If there is no xml file in cache, we try to grab it from movie folder
+						if (file_exists($movies_folder . '/' . $value . '/' . $filename))
 						{
-							$rsr_org = $image['rsr_org'];
-							$im = $image['im'];
-							$got_bg = $image['got_bg'];
-							createImage($movies_folder, $value, $movie->title, $banner, $rsr_org, $im, $got_bg);
+							createXml($filename, $movies_folder . '/' . $value);
+						}
+						else
+						{
+							createXml($filename);
 						}
 					}
-					$url = $movies_folder . '/' . $value . '/' . $banner;
-					saveImage($url, $banner, $movie->title);
+				
+					if (file_exists(CACHE_XML . '/' . $filename))
+					{
+						$movie = array(
+							'movieid' 	=> '',
+							'title' 	=> '',
+							'runtime' 	=> '',
+							'year' 		=> '',
+							'mpaa' 		=> '',
+							'plot' 		=> '',
+							'genre' 	=> '',
+							'banner' 	=> '',
+						);
+						$movie = readXml(CACHE_XML . '/' . $filename);
+						$movie_id = $movie['movieid'];
+						$banner = str_replace('.xml', '.banner.jpg', $file);
+						$background = str_replace('.xml', '.background.jpg', $file);
+						if (!file_exists($movies_folder . '/' . $value . '/' . $banner))
+						{
+							$image = getFanart('movies', $movies_folder, $value, $movie_id, $banner, $background);
+							if ($image['grabbed'] == false)
+							{
+								$rsr_org = $image['rsr_org'];
+								$im = $image['im'];
+								$got_bg = $image['got_bg'];
+								createImage($movie['title'], $banner, $rsr_org, $im, $got_bg);
+							}
+						}
+						else
+						{
+							$url = $movies_folder . '/' . $value . '/' . $banner;
+							saveImage($url, $banner, $movie['title']);
+						}
 					
-					if (!isset($array['mpaa']))
-					{
-						$array['mpaa'] = 'Not Rated';
-					}
-					$moviemeter = file_get_contents("http://mickroz.nl/moviemeter.php?imdbid=" . $movie_id);
-					$log->info('movieMeterAPI', 'Opening URL http://mickroz.nl/moviemeter.php?imdbid=' . $movie_id);
-					if (strpos($moviemeter, 'error:') !== 0)
-					{
-						$plot = utf8_encode($moviemeter);
-					}
-					else
-					{
-						$plot = $array['plot'];
-					}
-					if (!isset($plot))
-					{
-						$plot = 'No plot';
-					}
-					$movies[$movie_id]['movieid'] = $movie_id;
-					$movies[$movie_id]['title'] = $array['title'];
-					$movies[$movie_id]['runtime'] = $array['runtime'];
-					$movies[$movie_id]['year'] = $array['year'];
-					$movies[$movie_id]['mpaa'] = $array['mpaa'];
-					$movies[$movie_id]['plot'] = $plot;
-					$movies[$movie_id]['genre'] = is_array($array['genre']) ? implode(",", $array['genre']) : $array['genre'];
-					$movies[$movie_id]['banner'] = $banner;
+						$movies[$movie_id]['movieid'] = $movie['movieid'];
+						$movies[$movie_id]['title'] = $movie['title'];
+						$movies[$movie_id]['runtime'] = $movie['runtime'];
+						$movies[$movie_id]['year'] = $movie['year'];
+						$movies[$movie_id]['mpaa'] = $movie['mpaa'];
+						$movies[$movie_id]['plot'] = $movie['plot'];
+						$movies[$movie_id]['genre'] = $movie['genre'];
+						$movies[$movie_id]['banner'] = $banner;
 
-					if (empty($movie_id) || empty($array['title']) || empty($array['runtime']) || empty($array['year']) || empty($array['genre']) || empty($banner))
-					{
-						$log->debug($tag, 'Dumping movie info for debug ' . json_encode($movies[$movie_id]));
+						if (empty($movie_id) || empty($movie['title']) || empty($movie['runtime']) || empty($movie['year']) || empty($movie['genre']) || empty($banner))
+						{
+							$log->debug($tag, 'Dumping movie info for debug ' . json_encode($movies[$movie_id]));
+						}
 					}
 				}
 			}

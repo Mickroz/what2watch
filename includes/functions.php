@@ -4,66 +4,6 @@ if (!defined('IN_W2W'))
 	exit;
 }
 
-function getEpisode($tvdbid, $season, $episode)
-{
-	global $sickbeard, $sb_api, $log;
-	
-	$tag = 'getEpisode';
-	$get_episode = getUrl($sickbeard . "/api/" . $sb_api . "/?cmd=episode&tvdbid=" . $tvdbid . "&season=" . $season . "&episode=" . $episode . "&full_path=1", $tag);
-	if (!$get_episode)
-	{
-		$error[] = "SickBeard api returned no episode data for tvdbid: $tvdbid";
-		$log->error($tag, "SickBeard api returned no episode data for tvdbid: $tvdbid");
-		return;
-	}
-	$result = json_decode($get_episode, true);
-		
-	// Remove empty results
-	if ($result['result'] == 'failure' || $result['result'] == 'error' || $result['result'] == 'fatal')
-	{
-		return;
-	}
-	return $result;
-}
-
-function createXml($filename)
-{
-	$tag = 'createXml';
-	global $log;
-	
-	$beforeBracket = current(explode('[', $filename));
-	$beforeBracket = str_replace('.xml', '', $beforeBracket);
-	$new_string = preg_replace("/(19|20)\d{2}/", '', $beforeBracket);
-	$new_string = slugify($new_string);
-	$json = "http://www.omdbapi.com/?t=$new_string&y=&plot=short&r=json";
-	$log->info($tag, 'Opening URL ' . $json);
-	$jsonstring = file_get_contents($json);
-	$jsonarray = json_decode($jsonstring, true);
-	if ($jsonarray['Response'] == 'False')
-	{
-		$error[] = 'Movie not found from OMDBAPI for ' . $new_string;
-		$log->error($tag, 'Movie not found on OMDBAPI for ' . $new_string);
-	}
-	else
-	{
-		$jsonarray = array_change_key_case($jsonarray, CASE_LOWER);
-		$jsonarray = array_flip($jsonarray);
-		$xml = new SimpleXMLElement('<movie/>');
-		array_walk_recursive($jsonarray, array ($xml, 'addChild'));
-						
-		if (file_put_contents($movies_folder . '/' . $value . '/' . $filename, $xml->asXML()))
-		{
-			$error[] = 'Saved xml file from OMDBAPI for ' . $new_string;
-			$log->info($tag, 'Saved xml file from OMDBAPI for ' . $new_string);
-		}
-		else
-		{
-			$error[] = 'Failed saving xml file from OMDBAPI for ' . $new_string;
-			$log->error($tag, 'Failed saving xml file from OMDBAPI for ' . $new_string);
-		}
-	}
-}
-
 function getFanart($cat, $location, $name, $id, $banner, $background)
 {
 	global $log;
@@ -78,7 +18,7 @@ function getFanart($cat, $location, $name, $id, $banner, $background)
 
 	if(isset($result[$cat_banner]))
 	{
-		if (file_put_contents($location . '/' . $name . '/' . $banner, fopen($result[$cat_banner][0]['url'], 'r')))
+		if (file_put_contents(CACHE_IMAGES . '/' . $banner, fopen($result[$cat_banner][0]['url'], 'r')))
 		{
 			$grabbed = true;
 			$log->debug($tag, 'grabbing ' . $cat_banner . ' ' . $result[$cat_banner][0]['url']);
@@ -93,7 +33,7 @@ function getFanart($cat, $location, $name, $id, $banner, $background)
 	}
 	if (!isset($result[$cat_banner]) && isset($result[$cat_bg]))
 	{
-		if (file_put_contents($location . '/' . $name . '/' . $background, fopen($result[$cat_bg][0]['url'], 'r')))
+		if (file_put_contents(CACHE_IMAGES . '/' . $background, fopen($result[$cat_bg][0]['url'], 'r')))
 		{
 			$log->debug($tag, 'grabbing ' . $cat_bg . ' ' . $result[$cat_bg][0]['url']);
 			$error[] = 'Saved ' . $cat_bg . ' from fanart.tv for ' . $result['name'];
@@ -105,10 +45,10 @@ function getFanart($cat, $location, $name, $id, $banner, $background)
 			$log->error($tag, 'Failed saving ' . $cat_bg . ' from fanart.tv for ' . $result['name']);
 		}
 	}
-	if (!isset($result[$cat_banner]) && file_exists($location . '/' . $name . '/' . $background))
+	if (!isset($result[$cat_banner]) && file_exists(CACHE_IMAGES . '/' . $background))
 	{
 		$log->debug($tag, 'creating image from ' . $cat_bg . ' ' . $location . '/' . $name . '/' . $background);
-		$rsr_org = imagecreatefromjpeg($location . '/' . $name . '/' . $background);
+		$rsr_org = imagecreatefromjpeg(CACHE_IMAGES . '/' . $background);
 		$im = imagescale($rsr_org, 1000, 185,  IMG_BICUBIC_FIXED);
 		$got_bg = true;
 	}
@@ -128,7 +68,7 @@ function getFanart($cat, $location, $name, $id, $banner, $background)
 	return $array;
 }
 
-function createImage($location, $name, $title, $banner, $rsr_org, $im, $got_bg)
+function createImage($title, $banner, $rsr_org, $im, $got_bg)
 {
 	global $log;
 	
@@ -152,7 +92,7 @@ function createImage($location, $name, $title, $banner, $rsr_org, $im, $got_bg)
 	imagettftext($im, 72, 0, 20, 128, $text_color, $font, $text);
 
 	// Save the image
-	imagejpeg($im, $location . '/' . $name . '/' . $banner);
+	imagejpeg($im, CACHE_IMAGES . '/' . $banner);
 
 	// Free up memory
 	imagedestroy($im);
@@ -170,65 +110,29 @@ function saveImage($url, $banner, $name)
 	
 	$tag = 'saveImage';
 	
-	$dir_to_save = $_SERVER['DOCUMENT_ROOT'] . '/what2watch/images/';
+	$dir_to_save = CACHE_IMAGES;
 	if (!is_dir($dir_to_save))
 	{
 		$log->debug($tag, 'Cannot find ' . $dir_to_save);
 		mkdir($dir_to_save);
 	}
-	if (!file_exists($dir_to_save . $banner))
+	if (!file_exists($dir_to_save . '/' . $banner))
 	{
-		$get_banner = file_get_contents($url);
-		file_put_contents($dir_to_save . $banner, $get_banner);
-		$log->info($tag, 'Saved banner for ' . $name . ' (' . $dir_to_save . $banner . ')');
+		//$get_banner = file_get_contents($url);
+		$get_banner = imagecreatefromjpeg($url);
+		$save_banner = imagescale($get_banner, 1000, 185,  IMG_BICUBIC_FIXED);
+		// Save the image
+		imagejpeg($save_banner, CACHE_IMAGES . '/' . $banner);
+
+		// Free up memory
+		imagedestroy($get_banner);
+		imagedestroy($save_banner);
+		//file_put_contents($dir_to_save . '/' . $banner, $save_banner);
+		$log->info($tag, 'Saved banner for ' . $name . ' (' . $dir_to_save . '/' . $banner . ')');
 	}
 	return;
 }
 
-function getShow($tvdbid)
-{
-	$tag = 'getShow';
-	global $sickbeard, $sb_api, $log;
-	
-	$show_id = getUrl($sickbeard . "/api/" . $sb_api . "/?cmd=show&tvdbid=" . $tvdbid, $tag);
-	if (!$show_id)
-	{
-		$error[] = "SickBeard api returned nothing for" . $tvdbid;
-		$log->error($tag, "SickBeard api returned nothing for" . $tvdbid);
-	}
-	$result_show = json_decode($show_id, true);
-	$log->debug($tag, "SickBeard returned " . $result_show['data']['show_name']);
-	// Checking which show actually has a episode downloaded
-	// and put all  tvdb id's in an array
-	// TODO grab naming pattern
-	$season_list = $result_show['data']['season_list'];
-	// We reverse the list for logging only
-	$season_list = array_reverse($season_list);
-	$show_name = array();
-	$numItems = count($season_list);
-	$i = 0;
-	$s = 0;
-	foreach ($season_list as $id => $season)
-	{
-		$padded = sprintf('%02d', $season); 
-		$dir = $result_show['data']['location'] . "/Season " .  $padded;
-		if (!file_exists($dir) && !is_dir($dir))
-		{
-			if(++$i === $numItems && $s == 0)
-			{
-				$log->debug('getSeason', "no seasons found for " . $result_show['data']['show_name']);
-			}
-			continue;
-		}
-		$s++;
-		$log->debug('getSeason', "found season $padded for " . $result_show['data']['show_name']);
-		$show_name[$tvdbid]['show_name'] = $result_show['data']['show_name'];
-		$show_name[$tvdbid]['show_slug'] = slugify($result_show['data']['show_name']);
-		$show_name[$tvdbid]['location'] = $result_show['data']['location'];
-		//$show_name[$tvdbid]['tvrage_slug'] = slugify($result_show['data']['tvrage_name']);
-	}
-	return $show_name;
-}
 function getUrl($url, $tag='getUrl')
 {
 	global $log;
@@ -254,38 +158,6 @@ function slugify($phrase)
     $result = preg_replace("/\s/", "-", $result);
     
     return $result;
-}
-
-function getProgress($slug, $trakt_token)
-{
-	global $log;
-	
-	$tag = 'getProgress';
-	$log->debug($tag, "trying to get progress for " . $slug);
-	$log->info($tag, "Opening URL https://api.trakt.tv/shows/$slug/progress/watched");
-	
-	$ch = curl_init();
-
-	curl_setopt($ch, CURLOPT_URL, "https://api.trakt.tv/shows/$slug/progress/watched");
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-	curl_setopt($ch, CURLOPT_HEADER, FALSE);
-	curl_setopt($ch, CURLOPT_FAILONERROR, TRUE);
-
-	curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-		"Content-Type: application/json",
-		"Authorization: Bearer $trakt_token",
-		"trakt-api-version: 2",
-		"trakt-api-key: dfca522ce536a330d25737752dc8a26e2a5ac09e9067409669f3456db4089b7b"
-	));
-
-	$response = curl_exec($ch);
-	if(curl_errno($ch))
-	{
-		$error[] = curl_error($ch);
-	}
-	curl_close($ch);
-	
-	return $response;
 }
 
 /*
@@ -346,6 +218,10 @@ function create_config_file_data($data)
 		'cache_life' 		=> $data['cache_life'],
 		'sub_ext'			=> $data['sub_ext'],
 		'movies_folder'		=> $data['movies_folder'],
+		'web_username'		=> $data['web_username'],
+		'web_password'		=> $data['web_password'],
+		'ignore_words'		=> $data['ignore_words'],
+		'skip_shows'		=> $data['skip_shows'],
 		'template_path'		=> $data['template_path'],
 		'language'			=> $data['language'],
 		'config_version'	=> $data['config_version'],
@@ -460,6 +336,10 @@ function get_submitted_data()
 		'cache_life'		=> $_POST['cache_life'],
 		'sub_ext'			=> $_POST['sub_ext'],
 		'movies_folder'		=> $_POST['movies_folder'],
+		'web_username'		=> $_POST['web_username'],
+		'web_password'		=> $_POST['web_password'],
+		'ignore_words'		=> $_POST['ignore_words'],
+		'skip_shows'		=> $_POST['skip_shows'],
 		'language'			=> $_POST['language'],
 		'template_path'		=> $_POST['template_path'],
 		'config_version'	=> $_POST['config_version'],
@@ -497,9 +377,11 @@ function set_lang($language)
 */
 function page_header($page_title = '')
 {
-	global $lang, $template;
+	global $lang, $template, $template_path;
 	// The following assigns all _common_ variables that may be used at any point in a template.
 	$template->assign_vars(array(
+		'STYLESHEET_LINK'	=> 'styles/' . $template_path . '/style.css',
+		'TEMPLATE_PATH'	=> 'styles/' . $template_path,
 		'PAGE_TITLE'	=> $page_title,
 	));
 }

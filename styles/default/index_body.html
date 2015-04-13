@@ -11,7 +11,9 @@
 <link rel='stylesheet prefetch' href='http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css'>
 <link rel="stylesheet" id="font-awesome-css" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" type="text/css" media="screen">
 <link rel="stylesheet" href="{STYLESHEET_LINK}" type="text/css" media="screen, handheld, projection">
-<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+<link href="{TEMPLATE_PATH}/nprogress.css" rel="stylesheet" />
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="{TEMPLATE_PATH}/nprogress.js"></script>
 </head>
 
 <body>
@@ -30,6 +32,7 @@
 			<li><a href="?mode=movies">{L_MOVIES}</a></li>
 			<li><a href="?mode=purge_cache">{L_PURGE_CACHE}</a></li>
 			<li><a href="?mode=viewlog">{L_LOG}</a></li>
+			<li><a href="?mode=config">{L_CONFIG}</a></li>
 		</ul>
 	</nav>
 
@@ -39,21 +42,47 @@
 	</div>
 	
 </div><!-- #page -->
-
+<a href="#" class="back-to-top" style="display: inline;">
+<i class="fa fa-chevron-circle-up"></i>
+</a>
 <div id="version">
 	{VERSION}
 </div>
 
 <script>
-
 $('.open-panel').click(function () {
 $('html').addClass('openNav');
 });
 $('.close-panel, #content').click(function () {
     $('html').removeClass('openNav');
 });
-</script>
 
+$(window).bind('beforeunload', function() {
+	NProgress.start();
+});
+
+$(window).load(function() {
+	NProgress.done(true);
+});
+$('.back-to-top').css({"display": "none"});
+jQuery(document).ready(function() {
+    var offset = 250;
+    var duration = 300;
+    jQuery(window).scroll(function() {
+        if (jQuery(this).scrollTop() > offset) {
+            jQuery('.back-to-top').fadeIn(duration);
+        } else {
+            jQuery('.back-to-top').fadeOut(duration);
+        }
+    });
+
+    jQuery('.back-to-top').click(function(event) {
+        event.preventDefault();
+        jQuery('html, body').animate({scrollTop: 0}, duration);
+        return false;
+    })
+});
+</script>
 </body>
 
 </html>

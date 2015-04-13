@@ -170,6 +170,11 @@ fieldset.submit-buttons {
 	font-family: Verdana, "Helvetica", sans-serif;
 	padding: 4px;
 }
+
+.header span a {
+	color: #fff;
+}
+	
 .description {
 	color: #444;
 	background: #f5fafa;
@@ -181,6 +186,7 @@ fieldset.submit-buttons {
 	text-align: left;
 	padding: 4px;
 }
+
 .footer {
 	color: #000;
 	background: #f5fafa;
@@ -196,35 +202,25 @@ fieldset.submit-buttons {
 .back-to-top {
 	background: none;
 	margin: 0;
-	width: 20px;
-	height: 20px;
+	position: fixed;
+	bottom: 10px;
+	right: 15px;
+	opacity: 0.8;
+    filter: alpha(opacity=80);
+	z-index: 100;
 	display: none;
 	text-decoration: none;
-
+	color: #000000;
 }
 
 .back-to-top i {
-	font-size: 16px;
+  font-size: 48px;
 }
+
 /* Setting things up */
 a {
 	text-decoration: none;
 	color: #444444;
-}
-
-/* Back to top of page */
-a.back-to-top {
-	color: #BD131A;
-}
-
-/* a.back-to-top:visited { color: #105289; } */
-
-a.back-to-top:hover {
-	color: #333;
-}
-
-a.back-to-top:active {
-	color: #BD131A;
 }
 
 #page {
@@ -327,6 +323,7 @@ a.open-panel, a.close-panel {
 	#content {
 		padding-top: 0;
 	}
+
 	.col { 
 		margin: 1% 0 1% 0%;
 	}

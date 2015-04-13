@@ -7,23 +7,20 @@ if (!defined('IN_W2W'))
 $submit	= (isset($_POST['submit'])) ? true : false;
 $mode = (isset($_GET['mode'])) ? $_GET['mode'] : '';
 $post_data = $lang_pack = $error = array();
-$trakt_token = $trakt_expires_in = $sickbeard = $sb_api = $cache_life = $sub_ext = $movies_folder = $language = $config_version = '';
-$install_version = '1.0.0';
+$trakt_token = $trakt_expires_in = $sickbeard = $sb_api = $cache_life = $sub_ext = $movies_folder = $language = $config_version = $web_username = $web_password = $ignore_words = $skip_shows = '';
+$install_version = '1.0.1';
 $first_run = true;
 
 if (file_exists('config.php'))
 {
 	require('config.php');
-	if($mode == 'config_file')
-	{
-		header('Location: index.php');
-	}
 }
 
-if (!$config_version || $config_version != $install_version)
+if (!$config_version || $config_version != $install_version || $mode == 'config')
 {
 	// Redirect the user to the installer
 	require('includes/logger.php');
+	require('includes/cache.php');
 	require('includes/functions.php');
 	require('includes/template.php');
 
@@ -32,26 +29,56 @@ if (!$config_version || $config_version != $install_version)
 	$template	= new template();
 	$template->set_template();
 	$log = new PHPLogger("error.log");
+	$cache		= new cache();
     $tag = "INSTALLER";
-	$version = version_check();
-	if($mode == 'config_file')
+	if ($version = $cache->get('version_check'))
 	{
-		create_config_file();
+		$version = json_decode($version, true);
+	}
+	else
+	{
+		$version = version_check();
+		// Save array as json
+		$cache->put('version_check', json_encode($version));
+	}
+	
+	if($submit)
+	{
+		if (!empty($_POST['web_username']) && empty($_POST['web_password']))
+		{
+			$error[] = 'Password field cannot be empty';
+		}
+		if (empty($_POST['web_username']) && !empty($_POST['web_password']))
+		{
+			$error[] = 'Username field cannot be empty';
+		}
+		if (!sizeof($error))
+		{
+			create_config_file();
+		}
 		$first_run = false;
 	}
 
-	if(isset($_GET['access_token']))
+	if(isset($_GET['access_token']) || $config_version != $install_version || $mode == 'config')
 	{
+		if ($config_version != $install_version)
+		{
+			$error[] = 'Config version not up to date, you can update your config here';
+		}
 		$first_run = false;
 		$post_data['sickbeard'] = (isset($_POST['sickbeard']) ? $_POST['sickbeard'] : $sickbeard);
 		$post_data['sb_api'] = (isset($_POST['sb_api']) ? $_POST['sb_api'] : $sb_api);
-		$post_data['trakt_token'] = (isset($_POST['trakt_token']) ? $_POST['trakt_token'] : $_GET['access_token']);
-		$post_data['trakt_expires_in'] = (isset($_POST['trakt_expires_in']) ? $_POST['trakt_expires_in'] : $_GET['expires_in']);
+		$post_data['trakt_token'] = (isset($_POST['trakt_token']) ? $_POST['trakt_token'] : (isset($_GET['access_token']) ? $_GET['access_token'] : $trakt_token));
+		$post_data['trakt_expires_in'] = (isset($_POST['trakt_expires_in']) ? $_POST['trakt_expires_in'] : (isset($_GET['expires_in']) ? $_GET['expires_in'] : $trakt_expires_in));
 		$post_data['cache_life'] = (isset($_POST['cache_life']) ? $_POST['cache_life'] : $cache_life);
 		$post_data['sub_ext'] = (isset($_POST['sub_ext']) ? $_POST['sub_ext'] : $sub_ext);
 		$post_data['movies_folder'] = (isset($_POST['movies_folder']) ? $_POST['movies_folder'] : $movies_folder);
 		$post_data['language'] = (isset($_POST['language']) ? $_POST['language'] : $language);
 		$post_data['template_path'] = (isset($_POST['template_path']) ? $_POST['template_path'] : $template_path);
+		$post_data['web_username'] = (isset($_POST['web_username']) ? $_POST['web_username'] : $web_username);
+		$post_data['web_password'] = (isset($_POST['web_password']) ? $_POST['web_password'] : $web_password);
+		$post_data['ignore_words'] = (isset($_POST['ignore_words']) ? $_POST['ignore_words'] : $ignore_words);
+		$post_data['skip_shows'] = (isset($_POST['skip_shows']) ? $_POST['skip_shows'] : $skip_shows);
 		$post_data['config_version'] = $install_version;
 		
 		$directory = 'language/';
@@ -93,6 +120,10 @@ if (!$config_version || $config_version != $install_version)
 			'CACHE_LIFE'		=> $post_data['cache_life'],
 			'SUB_EXT'			=> $post_data['sub_ext'],
 			'MOVIES_FOLDER'		=> $post_data['movies_folder'],
+			'WEB_USERNAME'		=> $post_data['web_username'],
+			'WEB_PASSWORD'		=> $post_data['web_password'],
+			'IGNORE_WORDS'		=> $post_data['ignore_words'],
+			'SKIP_SHOWS'		=> $post_data['skip_shows'],
 			'LANGUAGE'			=> $post_data['language'],
 			'TEMPLATE_PATH'		=> $post_data['template_path'],
 			'CONFIG_VERSION'	=> $post_data['config_version'],
@@ -102,7 +133,7 @@ if (!$config_version || $config_version != $install_version)
 		$template->set_template();
 		$template->assign_vars(array(
 			'STYLESHEET_LINK'	=> 'styles/' . $template_path . '/style.css',
-			'ERROR'		=> (sizeof($error)) ? '<p class="error">' . implode('<br />', $error) . '</p>' : '',
+			'ERROR'		=> (sizeof($error)) ? '<strong style="color:red">' . implode('<br />', $error) . '</strong>' : '',
 			'CONTENT'	=> $install->output(),
 			'VERSION'	=> '<p' . $version['style'] . '><strong>' . $version['message'] . '</strong></p>',
 		));
@@ -134,6 +165,7 @@ require('includes/logger.php');
 require('includes/cache.php');
 require('includes/template.php');
 require('includes/functions.php');
+require('includes/constants.php');
 
 
 // Instantiate some basic classes

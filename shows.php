@@ -4,9 +4,45 @@ if (!defined('IN_W2W'))
 	exit;
 }
 
+include('includes/functions_show.php');
+
 // Initial var setup
 $series = $data = array();
 $tag = "Shows";
+$checkin = (isset($_GET['checkin'])) ? $_GET['checkin'] : '';
+$getbanner = (isset($_GET['getbanner'])) ? $_GET['getbanner'] : '';
+$getfanart = (isset($_GET['getfanart'])) ? $_GET['getfanart'] : '';
+
+if ($getbanner)
+{
+	getBanner($getbanner);
+	header('Location: index.php?mode=shows');
+}
+
+if ($checkin)
+{
+	if ($submit)
+	{
+		$message = $_POST['message'];
+		$trakt_id = $_POST['trakt_id'];
+		$trakt_checkin = trakt_show_checkin($trakt_id, $message);
+		$trakt_show_checkin = json_decode($trakt_checkin, true);
+		
+		if (!isset($trakt_show_checkin['expires_at']))
+		{
+			$show_name = $trakt_show_checkin['show']['title'];
+			$episode_season = $trakt_show_checkin['episode']['season'];
+			$episode_number = sprintf('%02d', $trakt_show_checkin['episode']['number']);
+			$episode_short = $episode_season . 'x' . $episode_number;
+			$episode_name = $trakt_show_checkin['episode']['title'];
+			$error[] = "aangemeld bij $show_name $episode_short $episode_name op trakt";
+		}
+		else
+		{
+			$error[] = "Communication with trakt is not possible, try again later.";
+		}
+	}
+}
 
 if ($data = $cache->get('shows'))
 {
@@ -55,8 +91,10 @@ else
 		$series[$tvdbid]['show_name'] = $show_id[$tvdbid]['show_name'];
 		//$series[$tvdbid]['tvrage_slug'] = $show_id[$tvdbid]['tvrage_slug'];
 		$series[$tvdbid]['show_slug'] = $show_id[$tvdbid]['show_slug'];
+		$series[$tvdbid]['trakt_id'] = $progress['next_episode']['ids']['trakt'];
+		$series[$tvdbid]['message'] = $show_id[$tvdbid]['show_name'] . ' ' . $progress['next_episode']['season'] . 'x' . sprintf('%02d', $progress['next_episode']['number']) . ' ' . $progress['next_episode']['title'];;
 		$series[$tvdbid]['episode'] = $progress['next_episode']['season'] . 'x' . sprintf('%02d', $progress['next_episode']['number']);
-		$series[$tvdbid]['name'] = $progress['next_episode']['title'];
+		$series[$tvdbid]['name'] = (!empty($progress['next_episode']['title']) ? $progress['next_episode']['title'] : $episode['data']['name']);
 		$series[$tvdbid]['description'] = $episode['data']['description'];
 		$series[$tvdbid]['status'] = $episode['data']['status'];
 		$series[$tvdbid]['location'] = $episode['data']['location'];
@@ -72,6 +110,30 @@ else
 		}
 		else
 		{
+			$ignore_words_array = explode(",", strtolower($ignore_words));
+			$skip_shows_array = explode(",", strtolower($skip_shows));
+			
+			foreach ($ignore_words_array as $ignore_word)
+			{
+				if (strpos(strtolower($episode['data']['location']), $ignore_word) !== false)
+				{
+					$log->debug('checkSub', "found $ignore_word, ignoring " . $series[$tvdbid]['show_name'] . ' ' . $series[$tvdbid]['episode']);
+					$series[$tvdbid]['subbed'] = true;
+					$create_image = true;
+				}
+			}
+			foreach ($skip_shows_array as $skip_show)
+			{
+				if (strpos($series[$tvdbid]['tvdbid'], $skip_show) !== false)
+				{
+					$log->debug('checkSub', "found $skip_show, skipping " . $series[$tvdbid]['show_name'] . ' ' . $series[$tvdbid]['episode']);
+					$series[$tvdbid]['subbed'] = true;
+					$create_image = true;
+				}
+			}
+		}
+		if (!isset($series[$tvdbid]['subbed']))
+		{
 			$log->debug('checkSub', "no subtitle was found for " . $series[$tvdbid]['show_name'] . ' ' . $series[$tvdbid]['episode']);
 			unset($series[$tvdbid]);
 			$create_image = false;
@@ -84,7 +146,7 @@ else
 			$explode = explode( '/', $string );
 			$location = str_replace('/' . $explode[3], '', $string);
 			
-			if (!file_exists($string . '/' . $banner))
+			if (!file_exists(CACHE_IMAGES . '/' . $banner))
 			{
 				$image = getFanart('tv', $location, $explode[3], $series[$tvdbid]['tvdbid'], $banner, $background);
 			
@@ -93,17 +155,40 @@ else
 					$rsr_org = $image['rsr_org'];
 					$im = $image['im'];
 					$got_bg = $image['got_bg'];
-					createImage($location, $explode[3], $series[$tvdbid]['show_name'], $banner, $rsr_org, $im, $got_bg);
+					createImage($series[$tvdbid]['show_name'], $banner, $rsr_org, $im, $got_bg);
 				}
 			}
-			$url = $string . '/' . $banner;
-			saveImage($url, $banner, $series[$tvdbid]['show_name']);
+			else
+			{
+				$url = $string . '/' . $banner;
+				saveImage($url, $banner, $series[$tvdbid]['show_name']);
+			}
 		}
 	}
 	// Save array as json
 	$cache->put('shows', json_encode($series));
     $data = $series;
 }
+if ($getfanart)
+{
+	$banner = $data[$getfanart]['tvdbid'] . '.banner.jpg';
+	unlink(CACHE_IMAGES . '/' . $banner);
+	$background = $data[$getfanart]['tvdbid'] . '.background.jpg';
+	$string = $data[$getfanart]['location'];
+	$explode = explode( '/', $string );
+	$location = str_replace('/' . $explode[3], '', $string);
+	$image = getFanart('tv', $location, $explode[3], $data[$getfanart]['tvdbid'], $banner, $background);
+	
+	if ($image['grabbed'] == false)
+	{
+		$rsr_org = $image['rsr_org'];
+		$im = $image['im'];
+		$got_bg = $image['got_bg'];
+		createImage($data[$getfanart]['show_name'], $banner, $rsr_org, $im, $got_bg);
+	}
+	header('Location: index.php?mode=shows');
+}
+
 $count = count($data);
 $divider = ceil($count / 2);
 $i = 1;
