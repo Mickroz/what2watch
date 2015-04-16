@@ -7,20 +7,9 @@ if (!defined('IN_W2W'))
 $error_log = file('error.log', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
 $log_lines = '<form method="post" action="?mode=viewlog" id="searchform"> 
-	<div class="input-group">
-      <div class="input-group-btn">
-		<button type="button" class="btn btn-default" onClick="location.href=\'?mode=viewlog&level=all\'">All</button>
-		<button type="button" class="btn btn-default" onClick="location.href=\'?mode=viewlog&level=info\'">Info</button>
-		<button type="button" class="btn btn-default" onClick="location.href=\'?mode=viewlog&level=debug\'">Debug</button>
-		<button type="button" class="btn btn-default" onClick="location.href=\'?mode=viewlog&level=error\'">Error</button>
-		<button type="button" class="btn btn-default" onClick="location.href=\'?mode=viewlog&level=warning\'">Warning</button>
-		<button type="button" class="btn btn-default" onClick="location.href=\'?mode=purge_log\'">Purge Log</button>
-	</div><!-- /btn-group -->
-	<input type="text" name="message" id="message" maxlength="255" class="form-control" placeholder="Search for...">
-	<span class="input-group-btn">
-        <button type="submit" name="submit" class="btn btn-default"><i class="fa fa-search fa-lg"></i> Search</button>
-      </span>
-	</div><!-- /input-group -->
+	<a href="?mode=viewlog&level=all">All</a> | <a href="?mode=viewlog&level=info">Info</a> | <a href="?mode=viewlog&level=debug">Debug</a>  | <a href="?mode=viewlog&level=error">Error</a> | <a href="?mode=viewlog&level=warning">Warning</a> | <a href="?mode=purge_log">Purge Log</a><br /><br />
+	<input type="text" name="message" id="message" maxlength="255" style="width: 200px;" placeholder="Search for..." class="inputbox" />
+	<input type="submit" name="submit" value="{L_SEARCH}" class="button" />
 	</form>
 	<br />';
 if ($submit)
