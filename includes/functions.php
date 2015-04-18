@@ -160,6 +160,43 @@ function slugify($phrase)
     return $result;
 }
 
+function get_slug($id, $trakt_token)
+{
+	global $log;
+	
+	$type = '';
+	if (substr( $id, 0, 2 ) === "tt")
+	{
+		$type = 'imdb';
+	}
+	else
+	{
+		$type = 'tvdb';
+	}
+	$log->info('getSlug', "grabbing slug for " . $id);
+	$ch = curl_init();
+
+	curl_setopt($ch, CURLOPT_URL, "https://api-v2launch.trakt.tv/search?id_type=$type&id=$id");
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+	curl_setopt($ch, CURLOPT_HEADER, FALSE);
+	curl_setopt($ch, CURLOPT_FAILONERROR, TRUE);
+	
+	curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+		"Content-Type: application/json",
+		"trakt-api-version: 2",
+		"trakt-api-key: $trakt_token"
+	));
+
+	$response = curl_exec($ch);
+	if(curl_errno($ch))
+	{
+		$error[] = curl_error($ch);
+	}
+	curl_close($ch);
+	
+	return $response['ids']['slug'];
+}
+
 /*
 * This code was created by Philippe MC
 * https://github.com/xaccrocheur/
@@ -173,7 +210,7 @@ function version_check()
 	if ($current_commits !== false)
 	{
 		$commits = json_decode($current_commits);
-		$ref_commit = "ed22f8fea4a3141127c74c26ff8b446891719ad0";
+		$ref_commit = "679d565592d9b6923e3e24c74bd96cb171fd4861";
 		$current_commit_minus1 = $commits[1]->sha;
 		$commit_message = $commits[0]->commit->message;
 		

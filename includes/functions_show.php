@@ -114,7 +114,7 @@ function getShow($tvdbid)
 		$s++;
 		$log->debug('getSeason', "found season $padded for " . $result_show['data']['show_name']);
 		$show_name[$tvdbid]['show_name'] = $result_show['data']['show_name'];
-		$show_name[$tvdbid]['show_slug'] = slugify($result_show['data']['show_name']);
+		$show_name[$tvdbid]['show_slug'] = get_slug($tvdbid);
 		$show_name[$tvdbid]['location'] = $result_show['data']['location'];
 		//$show_name[$tvdbid]['tvrage_slug'] = slugify($result_show['data']['tvrage_name']);
 	}
