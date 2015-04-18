@@ -89,7 +89,7 @@ else
 		// Put it all in a array
 		$series[$tvdbid]['tvdbid'] = $tvdbid;
 		$series[$tvdbid]['show_name'] = $show_id[$tvdbid]['show_name'];
-		//$series[$tvdbid]['tvrage_slug'] = $show_id[$tvdbid]['tvrage_slug'];
+		$series[$tvdbid]['tvrage_id'] = $show_id[$tvdbid]['tvrage_id'];
 		$series[$tvdbid]['show_slug'] = $show_id[$tvdbid]['show_slug'];
 		$series[$tvdbid]['trakt_id'] = $progress['next_episode']['ids']['trakt'];
 		$series[$tvdbid]['message'] = $show_id[$tvdbid]['show_name'] . ' ' . $progress['next_episode']['season'] . 'x' . sprintf('%02d', $progress['next_episode']['number']) . ' ' . $progress['next_episode']['title'];;

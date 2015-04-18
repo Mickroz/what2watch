@@ -79,7 +79,7 @@ function getProgress($slug, $trakt_token)
 function getShow($tvdbid)
 {
 	$tag = 'getShow';
-	global $sickbeard, $sb_api, $log;
+	global $sickbeard, $sb_api, $log, $trakt_token;
 	
 	$show_id = getUrl($sickbeard . "/api/" . $sb_api . "/?cmd=show&tvdbid=" . $tvdbid, $tag);
 	if (!$show_id)
@@ -111,12 +111,17 @@ function getShow($tvdbid)
 			}
 			continue;
 		}
+		$slug = get_slug($tvdbid, $trakt_token);
+		if (empty($slug))
+		{
+			$slug = slugify($result_show['data']['show_name']);
+		}
 		$s++;
 		$log->debug('getSeason', "found season $padded for " . $result_show['data']['show_name']);
 		$show_name[$tvdbid]['show_name'] = $result_show['data']['show_name'];
-		$show_name[$tvdbid]['show_slug'] = get_slug($tvdbid);
+		$show_name[$tvdbid]['show_slug'] = $slug;
 		$show_name[$tvdbid]['location'] = $result_show['data']['location'];
-		//$show_name[$tvdbid]['tvrage_slug'] = slugify($result_show['data']['tvrage_name']);
+		$show_name[$tvdbid]['tvrage_id'] = $result_show['data']['tvrage_id'];
 	}
 	return $show_name;
 }

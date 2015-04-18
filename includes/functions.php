@@ -164,15 +164,9 @@ function get_slug($id, $trakt_token)
 {
 	global $log;
 	
-	$type = '';
-	if (substr( $id, 0, 2 ) === "tt")
-	{
-		$type = 'imdb';
-	}
-	else
-	{
 		$type = 'tvdb';
-	}
+		$return = 'show';
+		
 	$log->info('getSlug', "grabbing slug for " . $id);
 	$ch = curl_init();
 
@@ -194,7 +188,16 @@ function get_slug($id, $trakt_token)
 	}
 	curl_close($ch);
 	
-	return $response['ids']['slug'];
+	$result = json_decode($response, true);
+	if (!empty($result))
+	{
+		$key = array_search('show', $result);
+		return $result[$key][$return]['ids']['slug'];
+	}
+	else
+	{
+		return false;
+	}
 }
 
 /*
@@ -210,7 +213,7 @@ function version_check()
 	if ($current_commits !== false)
 	{
 		$commits = json_decode($current_commits);
-		$ref_commit = "679d565592d9b6923e3e24c74bd96cb171fd4861";
+		$ref_commit = "84bd395691a7657791d4624bc041840c281b6d3b";
 		$current_commit_minus1 = $commits[1]->sha;
 		$commit_message = $commits[0]->commit->message;
 		
