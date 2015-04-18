@@ -75,8 +75,9 @@ else
 		{
 			$log->error('getProgress',  "Failed to get progress for " . $show_id[$tvdbid]['show_slug']);
 			$log->debug('getProgress', 'dumping for debug ' . $trakt);
+			continue;
 		}
-		if ($progress['next_episode'] == '')
+		if (empty($progress['next_episode']))
 		{
 			$error[] = 'Trakt api returned nothing for: ' . $show_id[$tvdbid]['show_name'] . '(' . $show_id[$tvdbid]['show_slug'] . ')';
 			$log->error('getProgress', 'Trakt api returned nothing for: ' . $show_id[$tvdbid]['show_name'] . '(' . $show_id[$tvdbid]['show_slug'] . ')');
