@@ -114,22 +114,28 @@ else
 			$ignore_words_array = explode(",", strtolower($ignore_words));
 			$skip_shows_array = explode(",", strtolower($skip_shows));
 			
-			foreach ($ignore_words_array as $ignore_word)
+			if (!empty($ignore_words)
 			{
-				if (strpos(strtolower($episode['data']['location']), $ignore_word) !== false)
+				foreach ($ignore_words_array as $ignore_word)
 				{
-					$log->debug('checkSub', "found $ignore_word, ignoring " . $series[$tvdbid]['show_name'] . ' ' . $series[$tvdbid]['episode']);
-					$series[$tvdbid]['subbed'] = true;
-					$create_image = true;
+					if (strpos(strtolower($episode['data']['location']), $ignore_word) !== false)
+					{
+						$log->debug('checkSub', "found $ignore_word, ignoring " . $series[$tvdbid]['show_name'] . ' ' . $series[$tvdbid]['episode']);
+						$series[$tvdbid]['subbed'] = true;
+						$create_image = true;
+					}
 				}
 			}
-			foreach ($skip_shows_array as $skip_show)
+			if (!empty($skip_show)
 			{
-				if (strpos($series[$tvdbid]['tvdbid'], $skip_show) !== false)
+				foreach ($skip_shows_array as $skip_show)
 				{
-					$log->debug('checkSub', "found $skip_show, skipping " . $series[$tvdbid]['show_name'] . ' ' . $series[$tvdbid]['episode']);
-					$series[$tvdbid]['subbed'] = true;
-					$create_image = true;
+					if (strpos($series[$tvdbid]['tvdbid'], $skip_show) !== false)
+					{
+						$log->debug('checkSub', "found $skip_show, skipping " . $series[$tvdbid]['show_name'] . ' ' . $series[$tvdbid]['episode']);
+						$series[$tvdbid]['subbed'] = true;
+						$create_image = true;
+					}
 				}
 			}
 		}
