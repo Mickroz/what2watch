@@ -114,7 +114,7 @@ else
 			$ignore_words_array = explode(",", strtolower($ignore_words));
 			$skip_shows_array = explode(",", strtolower($skip_shows));
 			
-			if (!empty($ignore_words)
+			if (!empty($ignore_words))
 			{
 				foreach ($ignore_words_array as $ignore_word)
 				{
@@ -126,7 +126,7 @@ else
 					}
 				}
 			}
-			if (!empty($skip_show)
+			if (!empty($skip_show))
 			{
 				foreach ($skip_shows_array as $skip_show)
 				{
