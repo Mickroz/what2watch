@@ -83,6 +83,10 @@ switch ($mode)
 		include('log.php');
 	break;
 	
+	case 'viewlog':
+		include('test.php');
+	break;
+	
 	case 'purge_cache':
 		$cache->purge();
 		$referer = $_SERVER['HTTP_REFERER'];
