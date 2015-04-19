@@ -14,6 +14,7 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	'LOG'				=> 'Log',
+	'TESTING'			=> 'Testing',
 	'LOG_PURGED'		=> 'Log cleared!',
 	'LOG_PURGED_EXPLAIN'	=> 'You\'ll be redirected in about 5 secs. If not, click <a href="%s">here</a>.',
 	'NAVIGATION' 		=> 'Navigation',

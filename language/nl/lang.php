@@ -14,6 +14,7 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	'LOG'				=> 'Log',
+	'TESTING'			=> 'Testing',
 	'LOG_PURGED'		=> 'Log geleegd!',
 	'LOG_PURGED_EXPLAIN'	=> 'Je wordt doorgestuurd in ongeveer 5 seconden, zo niet, klik dan <a href="%s">hier</a>.',
 	'NAVIGATION' 		=> 'Navigatie',

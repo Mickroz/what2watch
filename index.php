@@ -82,6 +82,11 @@ switch ($mode)
 	case 'viewlog':
 		include('log.php');
 	break;
+
+	case 'config_file':
+		create_config_file();
+		header('Location: index.php');
+	break;
 	
 	case 'test':
 		include('test.php');

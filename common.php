@@ -41,7 +41,7 @@ if (!$config_version || $config_version != $install_version || $mode == 'config'
 		// Save array as json
 		$cache->put('version_check', json_encode($version));
 	}
-	
+
 	if($submit)
 	{
 		if (!empty($_POST['web_username']) && empty($_POST['web_password']))
