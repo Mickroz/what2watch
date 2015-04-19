@@ -8,7 +8,7 @@ if (!defined('IN_W2W'))
 {
 	exit;
 }
-include('common.php');
+
 include('includes/functions_show.php');
 
 $trakt = getProgress('hell-on-wheels', $trakt_token);
