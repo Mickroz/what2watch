@@ -18,7 +18,7 @@ if ($checkin)
 	{
 		$message = $_POST['message'];
 		$imdb_id = $_POST['imdb_id'];
-		$trakt_checkin = trakt_show_checkin($imdb_id, $message);
+		$trakt_checkin = trakt_movie_checkin($imdb_id, $message);
 		$trakt_show_checkin = json_decode($trakt_checkin, true);
 		
 		if (!isset($trakt_show_checkin['expires_at']))
