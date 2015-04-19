@@ -1,4 +1,4 @@
-<div class="header"><span style="float: right;"><a id="displayCheckin{MOVIEID}" href="javascript:checkin{MOVIEID}();"><i class="fa fa-check-square-o"></i> CHECK IN</a></span>{TITLE} - {YEAR} [{MPAA}]</div>
+<div class="header"><span style="float: right;"><a id="displayCheckin{MOVIEID}" href="javascript:checkin{MOVIEID}();"><i class="fa fa-check-square-o"></i> {L_CHECKIN}</a></span>{TITLE} - {YEAR} [{MPAA}]</div>
 <div id="toggleCheckin{MOVIEID}" class="description" style="display: none">
 <form id="postform{MOVIEID}" action="index.php?mode=movies&checkin=true" method="post">
 <fieldset>
@@ -11,16 +11,16 @@
 	<input type="hidden" name="imdb_id" value="{MOVIEID}" />
 	<input type="button" name="fill" value="{L_FILL}" class="button" onclick="javascript:fill{MOVIEID}()" />
 	<input type="button" name="reset" value="{L_RESET}" class="button" onclick="javascript:reset{MOVIEID}()" />
-	<input type="submit" name="submit" value="{L_SUBMIT}" class="button" />
+	<input type="submit" name="submit" value="{L_CHECKIN}" class="button" />
 </fieldset>
 </form>
 </div>
 <div><a id="displayText{MOVIEID}" href="javascript:toggle{MOVIEID}();"><img src="images/{BANNER}" /></a></div>
 <div id="toggleText{MOVIEID}" class="description" style="display: none">{PLOT}</div>
-<div class="footer"><span style="float:left"><a id="displayUpdate{MOVIEID}" href="javascript:update{MOVIEID}();"><i class="fa fa-cog"></i> Options</a></span>{GENRE} - ({RUNTIME})
+<div class="footer"><span style="float:left"><a id="displayUpdate{MOVIEID}" href="javascript:update{MOVIEID}();"><i class="fa fa-cog"></i> {L_OPTIONS}</a></span>{GENRE} - ({RUNTIME})
 
 <div id="toggleUpdate{MOVIEID}" style="display: none;text-align:left">
-<a href="?mode=movies&getfanart={MOVIEID}"><i class="fa fa-refresh"></i> Refresh banner</a><br />
+<a href="?mode=movies&getfanart={MOVIEID}"><i class="fa fa-refresh"></i> {L_REFRESH_BANNER}</a><br />
 </div></div>
 <br />
 <script type="text/javascript" >

@@ -24,11 +24,11 @@ if ($checkin)
 		if (!isset($trakt_show_checkin['expires_at']))
 		{
 			$movie_title = $trakt_show_checkin['movie']['title'];
-			$error[] = "aangemeld bij $movie_title op trakt";
+			$error[] = sprintf($lang['TRAKT_CHECKIN'], $movie_title);
 		}
 		else
 		{
-			$error[] = "Communication with trakt is not possible, try again later.";
+			$error[] = $lang['TRAKT_ERROR'];
 		}
 	}
 }
@@ -109,7 +109,7 @@ else
 
 						if (empty($movie_id) || empty($movie['title']) || empty($movie['runtime']) || empty($movie['year']) || empty($movie['genre']) || empty($banner))
 						{
-							$log->debug($tag, 'Dumping movie info for debug ' . json_encode($movies[$movie_id]));
+							$log->debug($tag, sprintf($lang['DEBUG_DUMP'], json_encode($movies[$movie_id])));
 						}
 					}
 				}

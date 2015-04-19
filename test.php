@@ -11,7 +11,7 @@ if (!defined('IN_W2W'))
 
 include('includes/functions_show.php');
 
-$test_lines = '<div class="code"><strong>Testing</strong></div>';
+$test_lines = '<div class="code"><strong>{L_TESTING}</strong></div>';
 $test_lines .= '<pre>';
 // Output from tests go here
 // Uncomment below

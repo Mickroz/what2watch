@@ -46,11 +46,11 @@ if (!$config_version || $config_version != $install_version || $mode == 'config'
 	{
 		if (!empty($_POST['web_username']) && empty($_POST['web_password']))
 		{
-			$error[] = 'Password field cannot be empty';
+			$error[] = $lang['PASSWORD_EMPTY'];
 		}
 		if (empty($_POST['web_username']) && !empty($_POST['web_password']))
 		{
-			$error[] = 'Username field cannot be empty';
+			$error[] = $lang['USERNAME_EMPTY'];
 		}
 		if (!sizeof($error))
 		{
@@ -63,7 +63,7 @@ if (!$config_version || $config_version != $install_version || $mode == 'config'
 	{
 		if ($config_version != $install_version)
 		{
-			$error[] = 'Config version not up to date, you can update your config here';
+			$error[] = $lang['CONFIG_NOT_UP_TO_DATE'];
 		}
 		$first_run = false;
 		$post_data['sickbeard'] = (isset($_POST['sickbeard']) ? $_POST['sickbeard'] : $sickbeard);

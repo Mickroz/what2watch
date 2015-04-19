@@ -35,11 +35,11 @@ if ($checkin)
 			$episode_number = sprintf('%02d', $trakt_show_checkin['episode']['number']);
 			$episode_short = $episode_season . 'x' . $episode_number;
 			$episode_name = $trakt_show_checkin['episode']['title'];
-			$error[] = "aangemeld bij $show_name $episode_short $episode_name op trakt";
+			$error[] = sprintf($lang['TRAKT_CHECKIN'], $show_name . $episode_short . $episode_name);
 		}
 		else
 		{
-			$error[] = "Communication with trakt is not possible, try again later.";
+			$error[] = $lang['TRAKT_ERROR'];
 		}
 	}
 }
@@ -54,8 +54,8 @@ else
 	$shows = getUrl($sickbeard . "/api/" . $sb_api . "/?cmd=shows&sort=name", 'getShows');
 	if (!$shows)
 	{
-		$error[] = "SickBeard api returned no shows";
-		$log->error($tag, "SickBeard api returned no shows");
+		$error[] = $lang['SB_NO_SHOWS'];
+		$log->error($tag, $lang['SB_NO_SHOWS']);
 	}
 
 	$result = json_decode($shows, true);
@@ -73,17 +73,18 @@ else
 		// We check here if the seasons list is empty, maybe the slug is incorrect
 		if(empty($progress['seasons']))
 		{
-			$log->error('getProgress',  "Failed to get progress for " . $show_id[$tvdbid]['show_slug']);
-			$log->debug('getProgress', 'dumping for debug ' . $trakt);
+			$log->error('getProgress',  sprintf($lang['TRAKT_PROGRESS_FAILED'], $show_id[$tvdbid]['show_slug']));
+			$log->debug('getProgress', sprintf($lang['DEBUG_DUMP'], $trakt));
 			continue;
 		}
 		if (empty($progress['next_episode']))
 		{
-			$error[] = 'Trakt api returned nothing for: ' . $show_id[$tvdbid]['show_name'] . '(' . $show_id[$tvdbid]['show_slug'] . ')';
-			$log->error('getProgress', 'Trakt api returned nothing for: ' . $show_id[$tvdbid]['show_name'] . '(' . $show_id[$tvdbid]['show_slug'] . ')');
-			$log->debug('getProgress', 'dumping for debug ' . $trakt);
+			$error[] = sprintf($lang['TRAKT_PROGRESS_FAILED'], $show_id[$tvdbid]['show_name'], $show_id[$tvdbid]['show_slug']);
+			$log->error('getProgress', sprintf($lang['TRAKT_PROGRESS_FAILED'], $show_id[$tvdbid]['show_name'], $show_id[$tvdbid]['show_slug']));
+			$log->debug('getProgress', sprintf($lang['DEBUG_DUMP'], $trakt));
 			continue;
 		}
+		$log->info('getProgress', sprintf($lang['TRAKT_PROGRESS_SUCCESS'], $show_id[$tvdbid]['show_name'], $progress['next_episode']['season'] . 'x' . sprintf('%02d', $progress['next_episode']['number'])));
 		// Grab all episode data
 		$episode = getEpisode($tvdbid, $progress['next_episode']['season'], $progress['next_episode']['number']);
 		
@@ -105,7 +106,7 @@ else
 		$find_sub = str_replace($search, $sub_ext, $episode['data']['location']);
 		if (file_exists($find_sub))
 		{
-			$log->debug('checkSub', "found a subtitle for " . $series[$tvdbid]['show_name'] . ' ' . $series[$tvdbid]['episode']);
+			$log->debug('checkSub', sprintf($lang['SUBTITLE_FOUND'], $series[$tvdbid]['show_name'] . ' ' . $series[$tvdbid]['episode']));
 			$series[$tvdbid]['subbed'] = true;
 			$create_image = true;
 		}
@@ -113,26 +114,26 @@ else
 		{
 			$ignore_words_array = explode(",", strtolower($ignore_words));
 			$skip_shows_array = explode(",", strtolower($skip_shows));
-			
-			if (!empty($ignore_words_array))
+
+			if (!empty($ignore_words))
 			{
 				foreach ($ignore_words_array as $ignore_word)
 				{
 					if (strpos(strtolower($episode['data']['location']), $ignore_word) !== false)
 					{
-						$log->debug('checkSub', "found $ignore_word, ignoring " . $series[$tvdbid]['show_name'] . ' ' . $series[$tvdbid]['episode']);
+						$log->debug('checkSub', sprintf($lang['IGNORE_FOUND'], $ignore_word, $series[$tvdbid]['show_name'] . ' ' . $series[$tvdbid]['episode']));
 						$series[$tvdbid]['subbed'] = true;
 						$create_image = true;
 					}
 				}
 			}
-			if (!empty($skip_shows_array))
+			if (!empty($skip_shows))
 			{
 				foreach ($skip_shows_array as $skip_show)
 				{
 					if (strpos($series[$tvdbid]['tvdbid'], $skip_show) !== false)
 					{
-						$log->debug('checkSub', "found $skip_show, skipping " . $series[$tvdbid]['show_name'] . ' ' . $series[$tvdbid]['episode']);
+						$log->debug('checkSub', sprintf($lang['SKIP_FOUND'], $skip_show, $series[$tvdbid]['show_name'] . ' ' . $series[$tvdbid]['episode']));
 						$series[$tvdbid]['subbed'] = true;
 						$create_image = true;
 					}
@@ -141,7 +142,7 @@ else
 		}
 		if (!isset($series[$tvdbid]['subbed']))
 		{
-			$log->debug('checkSub', "no subtitle was found for " . $series[$tvdbid]['show_name'] . ' ' . $series[$tvdbid]['episode']);
+			$log->debug('checkSub', sprintf($lang['NO_SUBTITLE_FOUND'], $series[$tvdbid]['show_name'] . ' ' . $series[$tvdbid]['episode']));
 			unset($series[$tvdbid]);
 			$create_image = false;
 		}

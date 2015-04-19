@@ -1,4 +1,4 @@
-<div class="header"><span style="float: right;"><a id="displayCheckin{TVDBID}" href="javascript:checkin{TVDBID}();"><i class="fa fa-check-square-o"></i> CHECK IN</a></span>{SHOW_NAME}</div>
+<div class="header"><span style="float: right;"><a id="displayCheckin{TVDBID}" href="javascript:checkin{TVDBID}();"><i class="fa fa-check-square-o"></i> {L_CHECKIN}</a></span>{SHOW_NAME}</div>
 <div id="toggleCheckin{TVDBID}" class="description" style="display: none">
 <form id="postform{TVDBID}" action="index.php?mode=shows&checkin=true" method="post">
 <fieldset>
@@ -11,17 +11,17 @@
 	<input type="hidden" name="trakt_id" value="{TRAKT_ID}" />
 	<input type="button" name="fill" value="{L_FILL}" class="button" onclick="javascript:fill{TVDBID}()" />
 	<input type="button" name="reset" value="{L_RESET}" class="button" onclick="javascript:reset{TVDBID}()" />
-	<input type="submit" name="submit" value="{L_SUBMIT}" class="button" />
+	<input type="submit" name="submit" value="{L_CHECKIN}" class="button" />
 </fieldset>
 </form>
 </div>
 <div><a id="displayText{TVDBID}" href="javascript:toggle{TVDBID}();"><img src="images/{TVDBID}.banner.jpg" /></a></div>
 <div id="toggleText{TVDBID}" class="description" style="display: none">{DESCRIPTION}</div>
-<div class="footer"><span style="float:left"><a id="displayUpdate{TVDBID}" href="javascript:update{TVDBID}();"><i class="fa fa-cog"></i> Options</a></span>{EPISODE} - {NAME}
+<div class="footer"><span style="float:left"><a id="displayUpdate{TVDBID}" href="javascript:update{TVDBID}();"><i class="fa fa-cog"></i> {L_OPTIONS}</a></span>{EPISODE} - {NAME}
 
 <div id="toggleUpdate{TVDBID}" style="display: none;text-align:left">
-<a href="?mode=shows&getfanart={TVDBID}"><i class="fa fa-refresh"></i> Refresh banner</a><br />
-<a href="?mode=shows&getbanner={TVDBID}"><i class="fa fa-download"></i> Download thetvdb.com banner</a>
+<a href="?mode=shows&getfanart={TVDBID}"><i class="fa fa-refresh"></i> {L_REFRESH_BANNER}</a><br />
+<a href="?mode=shows&getbanner={TVDBID}"><i class="fa fa-download"></i> {L_DOWNLOAD_BANNER}</a>
 </div></div>
 <br />
 <script type="text/javascript" >

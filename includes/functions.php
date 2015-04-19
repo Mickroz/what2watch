@@ -21,33 +21,33 @@ function getFanart($cat, $location, $name, $id, $banner, $background)
 		if (file_put_contents(CACHE_IMAGES . '/' . $banner, fopen($result[$cat_banner][0]['url'], 'r')))
 		{
 			$grabbed = true;
-			$log->debug($tag, 'grabbing ' . $cat_banner . ' ' . $result[$cat_banner][0]['url']);
-			$error[] = 'Saved ' . $cat_banner . ' from fanart.tv for ' . $result['name'];
-			$log->info($tag, 'Saved ' . $cat_banner . ' from fanart.tv for ' . $result['name']);
+			$log->debug($tag, sprintf($lang['GRABBING_FANART'], $cat_banner . ' ' . $result[$cat_banner][0]['url']));
+			$error[] = sprintf($lang['SAVED_FANART'], $cat_banner, $result['name']);
+			$log->info($tag, sprintf($lang['SAVED_FANART'], $cat_banner, $result['name']));
 		}
 		else
 		{
-			$error[] = 'Failed saving ' . $cat_banner . ' from fanart.tv for ' . $result['name'];
-			$log->error($tag, 'Failed saving ' . $cat_banner . ' from fanart.tv for ' . $result['name']);
+			$error[] = sprintf($lang['SAVED_FANART_FAILED'], $cat_banner, $result['name']);
+			$log->error($tag, sprintf($lang['SAVED_FANART_FAILED'], $cat_banner, $result['name']));
 		}
 	}
 	if (!isset($result[$cat_banner]) && isset($result[$cat_bg]))
 	{
 		if (file_put_contents(CACHE_IMAGES . '/' . $background, fopen($result[$cat_bg][0]['url'], 'r')))
 		{
-			$log->debug($tag, 'grabbing ' . $cat_bg . ' ' . $result[$cat_bg][0]['url']);
-			$error[] = 'Saved ' . $cat_bg . ' from fanart.tv for ' . $result['name'];
-			$log->info($tag, 'Saved ' . $cat_bg . ' from fanart.tv for ' . $result['name']);
+			$log->debug($tag, sprintf($lang['GRABBING_FANART'], $cat_bg . ' ' . $result[$cat_bg][0]['url']));
+			$error[] = sprintf($lang['SAVED_FANART'], $cat_bg, $result['name']);
+			$log->info($tag, sprintf($lang['SAVED_FANART'], $cat_bg, $result['name']));
 		}
 		else
 		{
-			$error[] = 'Failed saving ' . $cat_bg . ' from fanart.tv for ' . $result['name'];
-			$log->error($tag, 'Failed saving ' . $cat_bg . ' from fanart.tv for ' . $result['name']);
+			$error[] = sprintf($lang['SAVED_FANART_FAILED'], $cat_bg, $result['name']);
+			$log->error($tag, sprintf($lang['SAVED_FANART_FAILED'], $cat_bg, $result['name']));
 		}
 	}
 	if (!isset($result[$cat_banner]) && file_exists(CACHE_IMAGES . '/' . $background))
 	{
-		$log->debug($tag, 'creating image from ' . $cat_bg . ' ' . $location . '/' . $name . '/' . $background);
+		$log->debug($tag, sprintf($lang['CREATED_FANART'], $cat_bg . ' ' . $location . '/' . $name . '/' . $background));
 		$rsr_org = imagecreatefromjpeg(CACHE_IMAGES . '/' . $background);
 		$im = imagescale($rsr_org, 1000, 185,  IMG_BICUBIC_FIXED);
 		$got_bg = true;
@@ -100,8 +100,8 @@ function createImage($title, $banner, $rsr_org, $im, $got_bg)
 	{
 		imagedestroy($rsr_org);
 	}
-	$error[] = 'Created banner for ' . $title;
-	$log->info($tag, 'Created banner for ' . $title);
+	$error[] = sprintf($lang['CREATED_BANNER'], $title);
+	$log->info($tag, sprintf($lang['CREATED_BANNER'], $title));
 }
 
 function saveImage($url, $banner, $name)
@@ -128,7 +128,7 @@ function saveImage($url, $banner, $name)
 		imagedestroy($get_banner);
 		imagedestroy($save_banner);
 		//file_put_contents($dir_to_save . '/' . $banner, $save_banner);
-		$log->info($tag, 'Saved banner for ' . $name . ' (' . $dir_to_save . '/' . $banner . ')');
+		$log->info($tag, sprintf($lang['SAVED_BANNER'], $name . ' (' . $dir_to_save . '/' . $banner . ')'));
 	}
 	return;
 }
@@ -162,12 +162,12 @@ function slugify($phrase)
 
 function get_slug($id, $trakt_token)
 {
-	global $log;
+	global $log, $lang;
 	
 		$type = 'tvdb';
 		$return = 'show';
 		
-	$log->info('getSlug', "grabbing slug for " . $id);
+	$log->info('getSlug', sprintf($lang['GET_SLUG'], $id));
 	$ch = curl_init();
 
 	curl_setopt($ch, CURLOPT_URL, "https://api-v2launch.trakt.tv/search?id_type=$type&id=$id");
@@ -213,7 +213,7 @@ function version_check()
 	if ($current_commits !== false)
 	{
 		$commits = json_decode($current_commits);
-		$ref_commit = "fb219d394e00e40fc474298d2494a2c5d690a1c2";
+		$ref_commit = "0aca57401ed9ad2de719dee5120282cafc9a4fe9";
 		$current_commit_minus1 = $commits[1]->sha;
 		$commit_message = $commits[0]->commit->message;
 		

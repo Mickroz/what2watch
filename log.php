@@ -8,7 +8,7 @@ $error_log = file('error.log', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
 $log_lines = '<form method="post" action="?mode=viewlog" id="searchform"> 
 	<a href="?mode=viewlog&level=all">All</a> | <a href="?mode=viewlog&level=info">Info</a> | <a href="?mode=viewlog&level=debug">Debug</a>  | <a href="?mode=viewlog&level=error">Error</a> | <a href="?mode=viewlog&level=warning">Warning</a> | <a href="?mode=purge_log">Purge Log</a><br /><br />
-	<input type="text" name="message" id="message" maxlength="255" style="width: 200px;" placeholder="Search for..." class="inputbox" />
+	<input type="text" name="message" id="message" maxlength="255" style="width: 200px;" placeholder="{L_SEARCH_FOR}" class="inputbox" />
 	<input type="submit" name="submit" value="{L_SEARCH}" class="button" />
 	</form>
 	<br />';
@@ -55,7 +55,7 @@ $log_lines .= '<pre>';
 if (empty($view_log))
 {
 	$info = (!empty($level) ? $level : $search);
-	$log_lines .= "There is currently no $info information in your log file!";
+	$log_lines .= sprintf($lang['LOG_INFO'], $info);
 }
 else
 {

@@ -46,10 +46,10 @@ function trakt_show_checkin($trakt_id, $message)
 
 function getProgress($slug, $trakt_token)
 {
-	global $log;
+	global $log, $lang;
 	
 	$tag = 'getProgress';
-	$log->debug($tag, "trying to get progress for " . $slug);
+	$log->debug($tag, sprintf($lang['TRAKT_GET_PROGRESS'], $slug));
 	$log->info($tag, "Opening URL https://api.trakt.tv/shows/$slug/progress/watched");
 	
 	$ch = curl_init();
@@ -79,16 +79,16 @@ function getProgress($slug, $trakt_token)
 function getShow($tvdbid)
 {
 	$tag = 'getShow';
-	global $sickbeard, $sb_api, $log, $trakt_token;
+	global $sickbeard, $sb_api, $log, $trakt_token, $lang;
 	
 	$show_id = getUrl($sickbeard . "/api/" . $sb_api . "/?cmd=show&tvdbid=" . $tvdbid, $tag);
 	if (!$show_id)
 	{
-		$error[] = "SickBeard api returned nothing for" . $tvdbid;
-		$log->error($tag, "SickBeard api returned nothing for" . $tvdbid);
+		$error[] = sprintf($lang['SB_NO_SHOW'], $tvdbid);
+		$log->error($tag, sprintf($lang['SB_NO_SHOW'], $tvdbid));
 	}
 	$result_show = json_decode($show_id, true);
-	$log->debug($tag, "SickBeard returned " . $result_show['data']['show_name']);
+	$log->debug($tag, sprintf($lang['SB_SHOW'], $result_show['data']['show_name']));
 	// Checking which show actually has a episode downloaded
 	// and put all  tvdb id's in an array
 	// TODO grab naming pattern
@@ -107,7 +107,7 @@ function getShow($tvdbid)
 		{
 			if(++$i === $numItems && $s == 0)
 			{
-				$log->debug('getSeason', "no seasons found for " . $result_show['data']['show_name']);
+				$log->debug('getSeason', sprintf($lang['NO_SEASONS_FOUND'], $result_show['data']['show_name']));
 			}
 			continue;
 		}
@@ -117,7 +117,7 @@ function getShow($tvdbid)
 			$slug = slugify($result_show['data']['show_name']);
 		}
 		$s++;
-		$log->debug('getSeason', "found season $padded for " . $result_show['data']['show_name']);
+		$log->debug('getSeason', sprintf($lang['SEASONS_FOUND'], $padded, $result_show['data']['show_name']));
 		$show_name[$tvdbid]['show_name'] = $result_show['data']['show_name'];
 		$show_name[$tvdbid]['show_slug'] = $slug;
 		$show_name[$tvdbid]['location'] = $result_show['data']['location'];
@@ -128,14 +128,14 @@ function getShow($tvdbid)
 
 function getEpisode($tvdbid, $season, $episode)
 {
-	global $sickbeard, $sb_api, $log;
+	global $sickbeard, $sb_api, $log, $lang;
 	
 	$tag = 'getEpisode';
 	$get_episode = getUrl($sickbeard . "/api/" . $sb_api . "/?cmd=episode&tvdbid=" . $tvdbid . "&season=" . $season . "&episode=" . $episode . "&full_path=1", $tag);
 	if (!$get_episode)
 	{
-		$error[] = "SickBeard api returned no episode data for tvdbid: $tvdbid";
-		$log->error($tag, "SickBeard api returned no episode data for tvdbid: $tvdbid");
+		$error[] = sprintf($lang['SB_NO_EPISODE'], $tvdbid);
+		$log->error($tag, sprintf($lang['SB_NO_EPISODE'], $tvdbid));
 		return;
 	}
 	$result = json_decode($get_episode, true);
@@ -150,10 +150,10 @@ function getEpisode($tvdbid, $season, $episode)
 
 function readXml($xml_file)
 {
-	global $log;
+	global $log, $lang;
 	
 	$xml = simplexml_load_file($xml_file);
-	$log->info('readXml', 'Opening XML ' . $xml_file);
+	$log->info('readXml', sprintf($lang['OPEN_XML'], $xml_file));
 	$json = json_encode($xml);
 	$result = json_decode($json, true);
 	$result = array_change_key_case($result, CASE_LOWER);
