@@ -83,7 +83,7 @@ switch ($mode)
 		include('log.php');
 	break;
 	
-	case 'viewlog':
+	case 'test':
 		include('test.php');
 	break;
 	

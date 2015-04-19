@@ -4,7 +4,10 @@ ini_set("display_errors", 1);
 /**
 * @ignore
 */
-define('IN_W2W', true);
+if (!defined('IN_W2W'))
+{
+	exit;
+}
 include('common.php');
 include('includes/functions_show.php');
 
