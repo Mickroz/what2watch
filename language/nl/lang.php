@@ -13,6 +13,7 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
+	'ALL'						=> 'Alles',
 	'CACHE_LIFE' 				=> 'Buffer tijd',
 	'CACHE_LIFE_EXPLAIN' 				=> 'buffer tijd in seconden',
 	'CACHE_PURGED' 				=> 'Buffer geleegd!',
@@ -31,6 +32,7 @@ $lang = array_merge($lang, array(
 	'DL_DONE' 				=> 'Klaar',
 	'DL_DOWNLOAD' 				=> 'Download',
 	'DOWNLOAD_BANNER' 				=> 'Download thetvdb.com banner',
+	'ERROR'						=> 'Error',
 	'FAILED_CHMOD' 				=> 'Mislukt om permissies in te stellen, je moet je configuratiebestand permissies tenminste veranderen naar 0644.',
 	'FILL' 				=> 'Titel plakken',
 	'FIRST_RUN' 				=> 'Eerste keer, Authoriseer eerst bij trakt, Je wordt doorgestuurd in ongeveer 5 seconden, zo niet, klik dan hier.',
@@ -44,12 +46,13 @@ $lang = array_merge($lang, array(
 	'IGNORE_WORDS' 				=> 'Negeer Woorden',
 	'IGNORE_WORDS_EXPLAIN' 				=> 'Niet hoofdlettergevoelige woorden gescheiden door een , die je wenst te negeren in releases.',
 	'INDEX' 				=> 'What2Watch',
+	'INFO'					=> 'Info',
 	'LANGUAGE_SELECT' 				=> 'Taal',
 	'LOG' 				=> 'Log',
 	'LOG_INFO' 				=> 'Er is momenteel geen %s informatie in je log bestand!',
 	'LOG_PURGED' 				=> 'Log geleegd!',
 	'LOG_PURGED_EXPLAIN' 				=> 'Je wordt doorgestuurd in ongeveer 5 seconden, zo niet, klik dan hier.',
-	'MESSAGE' 				=> 'Message',
+	'MESSAGE' 				=> 'Bericht',
 	'MESSAGE_EXPLAIN' 				=> 'Voer een bericht in (optioneel)',
 	'MISSING_LANG_FILES' 				=> 'Het iso.txt bestand mist in de %s language folder.',
 	'MOVIES' 				=> 'Films',
@@ -62,6 +65,7 @@ $lang = array_merge($lang, array(
 	'OPTIONS' 				=> 'Opties',
 	'PASSWORD_EMPTY' 				=> 'Het wachtwoordveld mag niet leeg zijn',
 	'PURGE_CACHE' 				=> 'Leeg de buffer',
+	'PURGE_LOG'					=> 'Leeg het log',
 	'REFRESH_BANNER' 				=> 'Vernieuw banner',
 	'RESET' 				=> 'Wissen',
 	'SAVED_BANNER' 				=> 'Banner opgeslagen voor %s',
@@ -97,6 +101,7 @@ $lang = array_merge($lang, array(
 	'VERSIONCHECK_FAIL' 				=> 'Verkrijgen van laatste versie-informatie mislukt.',
 	'VERSION_NOT_UP_TO_DATE' 				=> 'Nieuwe versie beschikbaar : (%s)',
 	'VERSION_UP_TO_DATE' 				=> 'What2Watch is up-to-date',
+	'WARNING'				=> 'Warning',
 	'WELCOME' 				=> 'Welkom bij What2Watch, Kies uit het menu hierboven',
 ));
 

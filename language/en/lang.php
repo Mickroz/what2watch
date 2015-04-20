@@ -13,6 +13,7 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
+	'ALL'						=> 'All',
 	'CACHE_LIFE' 				=> 'Cache life',
 	'CACHE_LIFE_EXPLAIN' 				=> 'cache life in seconds',
 	'CACHE_PURGED' 				=> 'Cache cleared!',
@@ -25,12 +26,14 @@ $lang = array_merge($lang, array(
 	'CREATED_BANNER' 				=> 'Created banner for %s',
 	'CREATED_FANART' 				=> 'Creating image from %s',
 	'CREATE_CONFIG' 				=> 'Create config',
+	'DEBUG'						=> 'Debug',
 	'DEBUG_DUMP' 				=> 'Dumping for debug: %s',
 	'DL_CONFIG' 				=> 'Download config',
 	'DL_CONFIG_EXPLAIN' 				=> 'You may download the complete config.php to your own PC. You will then need to upload the file manually, replacing any existing config.php in your root directory. Please remember to upload the file in ASCII format (see your FTP application documentation if you are unsure how to achieve this). When you have uploaded the config.php please click “Done” to move to the next stage.',
 	'DL_DONE' 				=> 'Done',
 	'DL_DOWNLOAD' 				=> 'Download',
 	'DOWNLOAD_BANNER' 				=> 'Download thetvdb.com banner',
+	'ERROR'						=> 'Error',
 	'FAILED_CHMOD' 				=> 'Failed to set permissions, you should chmod your config file to at least 0644.',
 	'FILL' 				=> 'Paste title',
 	'FIRST_RUN' 				=> 'First run, Authorize with trakt first, You\'ll be redirected in about 5 secs. If not, click here.',
@@ -44,6 +47,7 @@ $lang = array_merge($lang, array(
 	'IGNORE_WORDS' 				=> 'Ignore Words',
 	'IGNORE_WORDS_EXPLAIN' 				=> 'Case insensitive words separated by , that you wish to ignore in releases.',
 	'INDEX' 				=> 'What2Watch',
+	'INFO'					=> 'Info',
 	'LANGUAGE_SELECT' 				=> 'Select language',
 	'LOG' 				=> 'Log',
 	'LOG_INFO' 				=> 'There is currently no %s information in your log file!',
@@ -62,6 +66,7 @@ $lang = array_merge($lang, array(
 	'OPTIONS' 				=> 'Options',
 	'PASSWORD_EMPTY' 				=> 'Password field cannot be empty',
 	'PURGE_CACHE' 				=> 'Purge cache',
+	'PURGE_LOG'					=> 'Purge log',
 	'REFRESH_BANNER' 				=> 'Refresh banner',
 	'RESET' 				=> 'Clear',
 	'SAVED_BANNER' 				=> 'Saved banner for %s',
@@ -97,6 +102,7 @@ $lang = array_merge($lang, array(
 	'VERSIONCHECK_FAIL' 				=> 'Failed to obtain latest version information.',
 	'VERSION_NOT_UP_TO_DATE' 				=> 'New version available : (%s)',
 	'VERSION_UP_TO_DATE' 				=> 'What2Watch is up-to-date',
+	'WARNING'				=> 'Warning',
 	'WELCOME' 				=> 'Welcome to What2Watch, Choose from the menu above',
 ));
 
