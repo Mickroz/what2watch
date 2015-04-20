@@ -6,7 +6,7 @@ if (!defined('IN_W2W'))
 
 function getFanart($cat, $location, $name, $id, $banner, $background)
 {
-	global $log;
+	global $log, $lang;
 	$tag = 'getFanart';
 
 	$cat_banner = ($cat == 'tv' ? 'tvbanner' : 'moviebanner');
@@ -70,7 +70,7 @@ function getFanart($cat, $location, $name, $id, $banner, $background)
 
 function createImage($title, $banner, $rsr_org, $im, $got_bg)
 {
-	global $log;
+	global $log, $lang;
 	
 	$tag = 'createImage';
 	// Create some colors
@@ -106,7 +106,7 @@ function createImage($title, $banner, $rsr_org, $im, $got_bg)
 
 function saveImage($url, $banner, $name)
 {
-	global $log;
+	global $log, $lang;
 	
 	$tag = 'saveImage';
 	
@@ -213,7 +213,7 @@ function version_check()
 	if ($current_commits !== false)
 	{
 		$commits = json_decode($current_commits);
-		$ref_commit = "0aca57401ed9ad2de719dee5120282cafc9a4fe9";
+		$ref_commit = "f66bac9464dc4fde9ce2cd1d302c733ccdbe803c";
 		$current_commit_minus1 = $commits[1]->sha;
 		$commit_message = $commits[0]->commit->message;
 		
