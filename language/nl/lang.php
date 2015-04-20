@@ -39,6 +39,7 @@ $lang = array_merge($lang, array(
 	'SB_SHOW'			=> 'SickBeard retourneerde %s',
 	'NO_SEASONS_FOUND'		=> 'Geen seizoenen gevonden voor %s',
 	'SEASONS_FOUND'		=> 'Seizoen %s gevonden voor %s',
+        'TRAKT_GET_PROGRESS'    => 'Probeer voortgang te krijgen voor %s',
 	'TRAKT_PROGRESS_FAILED'	=> 'Mislukt om de voortgang te krijgen voor %s',
 	'TRAKT_PROGRESS_SUCCESS'	=> 'Trakt retourneerde de volgende aflevering voor %s is %s',
 	'TRAKT_NO_NEXT_EPISODE'	=> 'Seizoen folder gevonden voor %s (%s) maar Trakt api retourneerde geen next_episode, seizoen klaar?',
