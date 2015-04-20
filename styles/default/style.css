@@ -1,5 +1,6 @@
 * {
 	margin: 0;
+	padding: 0;
 }
 html {
 	font-size: 100%;
@@ -81,6 +82,8 @@ label input {
 
 fieldset dl {
 	padding: 4px 0;
+	height: 1%;
+	overflow: hidden;
 }
 
 fieldset dt {

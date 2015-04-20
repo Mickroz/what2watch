@@ -10,6 +10,8 @@ $post_data = $lang_pack = $error = array();
 $trakt_token = $trakt_expires_in = $sickbeard = $sb_api = $cache_life = $sub_ext = $movies_folder = $language = $config_version = $web_username = $web_password = $ignore_words = $skip_shows = '';
 $install_version = '1.0.1';
 $first_run = true;
+$template_path = 'default';
+$language = 'en';
 
 if (file_exists('config.php'))
 {
@@ -24,8 +26,7 @@ if (!$config_version || $config_version != $install_version || $mode == 'config'
 	require('includes/functions.php');
 	require('includes/template.php');
 
-	$template_path = 'default';
-	set_lang('en');
+	set_lang($language);
 	$template	= new template();
 	$template->set_template();
 	$log = new PHPLogger("error.log");

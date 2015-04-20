@@ -79,7 +79,7 @@ else
 		}
 		if (empty($progress['next_episode']))
 		{
-			$error[] = sprintf($lang['TRAKT_PROGRESS_FAILED'], $show_id[$tvdbid]['show_name'], $show_id[$tvdbid]['show_slug']);
+			//$error[] = sprintf($lang['TRAKT_PROGRESS_FAILED'], $show_id[$tvdbid]['show_name'], $show_id[$tvdbid]['show_slug']);
 			$log->error('getProgress', sprintf($lang['TRAKT_PROGRESS_FAILED'], $show_id[$tvdbid]['show_name'], $show_id[$tvdbid]['show_slug']));
 			$log->debug('getProgress', sprintf($lang['DEBUG_DUMP'], $trakt));
 			continue;

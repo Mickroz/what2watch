@@ -67,7 +67,7 @@ function readXml($xml_file)
 function createXml($filename, $location = false)
 {
 	$tag = 'createXml';
-	global $log;
+	global $log, $lang;
 	
 	$got_file = false;
 	$cache_dir = CACHE_XML;
@@ -93,8 +93,8 @@ function createXml($filename, $location = false)
 		
 		if ($result['response'] == 'False')
 		{
-			$error[] = 'Movie not found from OMDBAPI for ' . $new_string;
-			$log->error('getImdbTitle', 'Movie not found on OMDBAPI for ' . $new_string);
+			$error[] = sprintf($lang['OMDB_MOVIE_FAILED'], $new_string);
+			$log->error('getImdbTitle', sprintf($lang['OMDB_MOVIE_FAILED'], $new_string));
 		}
 	}
 	$imdbid = (isset($result['id'])) ? $result['id'] : $result['imdbid'];
@@ -117,12 +117,12 @@ function createXml($filename, $location = false)
 	$output = !empty($location) ? $location : 'OMDBAPI';
 	if (file_put_contents($cache_dir . '/' . $filename, $xml->asXML()))
 	{
-		$error[] = 'Saved xml file from ' . $output . ' for ' . $result['title'];
-		$log->info($tag, 'Saved xml file from ' . $output . ' for ' . $result['title']);
+		$error[] = sprintf($lang['SAVED_XML'], $output, $result['title']);
+		$log->info($tag, sprintf($lang['SAVED_XML'], $output, $result['title']));
 	}
 	else
 	{
-		$error[] = 'Failed saving xml file from ' . $output . ' for ' . $result['title'];
-		$log->error($tag, 'Failed saving xml file from ' . $output . ' for ' . $result['title']);
+		$error[] = sprintf($lang['FAILED_XML'], $output, $result['title']);
+		$log->error($tag, sprintf($lang['FAILED_XML'], $output, $result['title']));
 	}
 }
