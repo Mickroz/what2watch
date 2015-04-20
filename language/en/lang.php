@@ -97,6 +97,7 @@ $lang = array_merge($lang, array(
 	'VERSIONCHECK_FAIL' 				=> 'Failed to obtain latest version information.',
 	'VERSION_NOT_UP_TO_DATE' 				=> 'New version available : (%s)',
 	'VERSION_UP_TO_DATE' 				=> 'What2Watch is up-to-date',
-	'WELCOME' 				=> 'Welcome to What2Watch, Choose from the menu above',));
+	'WELCOME' 				=> 'Welcome to What2Watch, Choose from the menu above',
+));
 
 ?>
