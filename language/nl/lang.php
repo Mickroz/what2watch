@@ -26,6 +26,7 @@ $lang = array_merge($lang, array(
 	'CREATED_BANNER' 				=> 'Banner gecreëerd voor %s',
 	'CREATED_FANART' 				=> 'Afbeelding gecreëerd van %s',
 	'CREATE_CONFIG' 				=> 'Creër configuratie',
+	'DEBUG'						=> 'Debug',
 	'DEBUG_DUMP' 				=> 'Dumpen voor debug: %s',
 	'DL_CONFIG' 				=> 'Download configuratie',
 	'DL_CONFIG_EXPLAIN' 				=> 'Je kunt het config.php bestand naar je computer downloaden, waarna je het manueel uploadt (en het eventueel bestaande config.php bestand overschrijft) naar je root map. Zorg er echter wel voor dat je het bestand in ASCII-formaat uploadt (als je niet weet hoe dit moet, raadpleeg dan de documentatie van je FTP-programma). Nadat je het config.php geüpload hebt, klik je op "klaar" om naar de volgende stap te gaan.',
