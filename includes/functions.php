@@ -213,7 +213,7 @@ function version_check()
 	if ($current_commits !== false)
 	{
 		$commits = json_decode($current_commits);
-		$ref_commit = "e4c939ab64b6b1de071c47cfdfb2ccc0fc7fa211";
+		$ref_commit = "2379bc07274021f5ac20fa35951768d64b48c1d4";
 		$current_commit_minus1 = $commits[1]->sha;
 		$commit_message = $commits[0]->commit->message;
 		

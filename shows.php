@@ -35,7 +35,7 @@ if ($checkin)
 			$episode_number = sprintf('%02d', $trakt_show_checkin['episode']['number']);
 			$episode_short = $episode_season . 'x' . $episode_number;
 			$episode_name = $trakt_show_checkin['episode']['title'];
-			$error[] = sprintf($lang['TRAKT_CHECKIN'], $show_name . $episode_short . $episode_name);
+			$error[] = sprintf($lang['TRAKT_CHECKIN'], $show_name . ' ' . $episode_short . ' ' . $episode_name);
 		}
 		else
 		{
