@@ -24,7 +24,9 @@
 	
 	<div class="panel-body" id="toggleText{TVDBID}" style="display: none">{DESCRIPTION}</div>
 	
-	<div class="panel-footer"><a id="displayUpdate{TVDBID}" href="javascript:update{TVDBID}();"><i class="fa fa-cog"></i> {L_OPTIONS}</a><span style="float:right">{EPISODE} - {NAME}</span>
+	<div class="panel-footer">
+	<span style="float:right">{EPISODE} - {NAME}</span>
+		<a id="displayUpdate{TVDBID}" href="javascript:update{TVDBID}();" style="display: inline-block"><i class="fa fa-cog"></i> {L_OPTIONS}</a>
 		<div id="toggleUpdate{TVDBID}" style="display: none;text-align:left">
 			<a href="?mode=shows&getfanart={TVDBID}"><i class="fa fa-refresh"></i> {L_REFRESH_BANNER}</a><br />
 			<a href="?mode=shows&getbanner={TVDBID}"><i class="fa fa-download"></i> {L_DOWNLOAD_BANNER}</a>

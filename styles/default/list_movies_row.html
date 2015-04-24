@@ -17,11 +17,13 @@
 </div>
 <div><a id="displayText{MOVIEID}" href="javascript:toggle{MOVIEID}();"><img src="images/{BANNER}" /></a></div>
 <div id="toggleText{MOVIEID}" class="description" style="display: none">{PLOT}</div>
-<div class="footer"><span style="float:left"><a id="displayUpdate{MOVIEID}" href="javascript:update{MOVIEID}();"><i class="fa fa-cog"></i> {L_OPTIONS}</a></span>{GENRE} - ({RUNTIME})
-
-<div id="toggleUpdate{MOVIEID}" style="display: none;text-align:left">
-<a href="?mode=movies&getfanart={MOVIEID}"><i class="fa fa-refresh"></i> {L_REFRESH_BANNER}</a><br />
-</div></div>
+<div class="footer">
+	<span style="float:right">{GENRE} - ({RUNTIME})</span>
+	<a id="displayUpdate{MOVIEID}" href="javascript:update{MOVIEID}();" style="display: inline-block"><i class="fa fa-cog"></i> {L_OPTIONS}</a>
+	<div id="toggleUpdate{MOVIEID}" style="display: none;text-align:left">
+		<a href="?mode=movies&getfanart={MOVIEID}"><i class="fa fa-refresh"></i> {L_REFRESH_BANNER}</a><br />
+	</div>
+</div>
 <br />
 <script type="text/javascript" >
 function fill{MOVIEID}() {

@@ -24,7 +24,9 @@
 	
 	<div class="panel-body" id="toggleText{MOVIEID}" style="display: none">{PLOT}</div>
 	
-	<div class="panel-footer"><a id="displayUpdate{MOVIEID}" href="javascript:update{MOVIEID}();"><i class="fa fa-cog"></i> {L_OPTIONS}</a><span style="float:right">{GENRE} - ({RUNTIME})</span>
+	<div class="panel-footer">
+	<span style="float:right;display:block">{GENRE} - ({RUNTIME})</span>
+		<a id="displayUpdate{MOVIEID}" href="javascript:update{MOVIEID}();" style="display: inline-block"><i class="fa fa-cog"></i> {L_OPTIONS}</a>
 		<div id="toggleUpdate{MOVIEID}" style="display: none;text-align:left">
 			<a href="?mode=movies&getfanart={MOVIEID}"><i class="fa fa-refresh"></i> {L_REFRESH_BANNER}</a><br />
 		</div>

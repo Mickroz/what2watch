@@ -17,12 +17,13 @@
 </div>
 <div><a id="displayText{TVDBID}" href="javascript:toggle{TVDBID}();"><img src="images/{TVDBID}.banner.jpg" /></a></div>
 <div id="toggleText{TVDBID}" class="description" style="display: none">{DESCRIPTION}</div>
-<div class="footer"><span style="float:left"><a id="displayUpdate{TVDBID}" href="javascript:update{TVDBID}();"><i class="fa fa-cog"></i> {L_OPTIONS}</a></span>{EPISODE} - {NAME}
-
-<div id="toggleUpdate{TVDBID}" style="display: none;text-align:left">
-<a href="?mode=shows&getfanart={TVDBID}"><i class="fa fa-refresh"></i> {L_REFRESH_BANNER}</a><br />
-<a href="?mode=shows&getbanner={TVDBID}"><i class="fa fa-download"></i> {L_DOWNLOAD_BANNER}</a>
-</div></div>
+<div class="footer"><span style="float:right">{EPISODE} - {NAME}</span>
+	<a id="displayUpdate{TVDBID}" href="javascript:update{TVDBID}();" style="display: inline-block"><i class="fa fa-cog"></i> {L_OPTIONS}</a>
+	<div id="toggleUpdate{TVDBID}" style="display: none;text-align:left">
+		<a href="?mode=shows&getfanart={TVDBID}"><i class="fa fa-refresh"></i> {L_REFRESH_BANNER}</a><br />
+		<a href="?mode=shows&getbanner={TVDBID}"><i class="fa fa-download"></i> {L_DOWNLOAD_BANNER}</a>
+	</div>
+</div>
 <br />
 <script type="text/javascript" >
 function fill{TVDBID}() {

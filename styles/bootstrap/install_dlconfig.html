@@ -13,7 +13,6 @@
 	<link rel='stylesheet prefetch' href='http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css'>
 	<link rel="stylesheet" id="font-awesome-css" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" type="text/css" media="screen">
 	<link rel="stylesheet" href="{STYLESHEET_LINK}" type="text/css" media="screen, handheld, projection">
-	<link href="{TEMPLATE_PATH}/nprogress.css" rel="stylesheet" />
 	
 <!-- Custom styles for this template -->
 	<link href="{TEMPLATE_PATH}/sticky-footer.css" rel="stylesheet">
@@ -74,17 +73,9 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-	<script src="{TEMPLATE_PATH}/nprogress.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <script src="http://jasny.github.io/bootstrap/dist/js/jasny-bootstrap.min.js"></script>
 	<script>
-$(window).bind('beforeunload', function() {
-	NProgress.start();
-});
-
-$(window).load(function() {
-	NProgress.done(true);
-});
 $('.back-to-top').css({"display": "none"});
 jQuery(document).ready(function() {
     var offset = 250;
