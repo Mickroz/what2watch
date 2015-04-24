@@ -63,6 +63,7 @@ else
 	{
 		$tvdbid = $values['tvdbid'];
 		$show_id = getShow($tvdbid);
+
 		if(empty($show_id))
 		{
 			continue;

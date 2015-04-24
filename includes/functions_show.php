@@ -111,18 +111,22 @@ function getShow($tvdbid)
 			}
 			continue;
 		}
+		$s++;
+		$log->debug('getSeason', sprintf($lang['SEASONS_FOUND'], $padded, $result_show['data']['show_name']));
+		$show_name[$tvdbid]['show_name'] = $result_show['data']['show_name'];
+		$show_name[$tvdbid]['location'] = $result_show['data']['location'];
+		$show_name[$tvdbid]['tvrage_id'] = $result_show['data']['tvrage_id'];
+	}
+	if (isset($show_name[$tvdbid]['show_name']))
+	{
 		$slug = get_slug($tvdbid, $trakt_token);
 		if (empty($slug))
 		{
 			$slug = slugify($result_show['data']['show_name']);
 		}
-		$s++;
-		$log->debug('getSeason', sprintf($lang['SEASONS_FOUND'], $padded, $result_show['data']['show_name']));
-		$show_name[$tvdbid]['show_name'] = $result_show['data']['show_name'];
 		$show_name[$tvdbid]['show_slug'] = $slug;
-		$show_name[$tvdbid]['location'] = $result_show['data']['location'];
-		$show_name[$tvdbid]['tvrage_id'] = $result_show['data']['tvrage_id'];
 	}
+	
 	return $show_name;
 }
 
