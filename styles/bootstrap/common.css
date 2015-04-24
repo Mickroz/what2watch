@@ -1,0 +1,69 @@
+div img {
+	max-width: 100%;
+	height: auto;
+}
+pre, .pushed {
+	margin-bottom: 60px !important;
+}
+
+.navmenu-default .navmenu-nav > li > a, .navbar-default .navbar-offcanvas .navmenu-nav > li > a {font-size: 18px;}
+
+.center {
+     text-align: center;
+}
+
+.back-to-top {
+	background: none;
+	margin: 0;
+	position: fixed;
+	bottom: 10px;
+	right: 15px;
+	opacity: 0.8;
+    filter: alpha(opacity=80);
+	z-index: 100;
+	display: none;
+	text-decoration: none;
+	color: #000000;
+}
+
+.back-to-top i {
+  font-size: 48px;
+}
+
+/*	SECTIONS	*/
+.section {
+	clear: both;
+	padding: 0px;
+	margin: 0px;
+}
+
+/*	COLUMN SETUP	*/
+.col {
+	display: block;
+	float:left;
+	margin: 1% 0 1% 1.6%;
+}
+.col:first-child { margin-left: 0; }
+
+/*	GROUPING	*/
+.group:before,
+.group:after { content:""; display:table; }
+.group:after { clear:both;}
+.group { zoom:1; /* For IE 6/7 */ }
+/*	GRID OF TWO	*/
+.span_2_of_2 {
+	width: 100%;
+}
+.span_1_of_2 {
+	width: 49.2%;
+}
+
+@media only screen and (max-width: 992px) {
+	.col { 
+		margin: 1% 0 1% 0%;
+	}
+}
+
+@media only screen and (max-width: 992px) {
+	.span_2_of_2, .span_1_of_2 { width: 100%; }
+}

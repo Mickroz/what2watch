@@ -69,6 +69,7 @@ if (!$LoginSuccessful){
 }
 else
 {
+
 switch ($mode)
 {
 	case 'shows':
@@ -135,5 +136,5 @@ switch ($mode)
 		$template->set_filename('index_body.html');
 
 		page_footer();
-}
+	}
 }

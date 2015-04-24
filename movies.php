@@ -175,7 +175,11 @@ $moviescontents = template::merge($moviestemplates);
 $movieslist = new template();
 $movieslist->set_template();
 $movieslist->set_filename('list_content.html');
-$movieslist->assign_var('CONTENT', $moviescontents);
+$movieslist->assign_vars(array(
+	'HEADER'	=> $lang['MOVIES'],
+	'CONTENT'	=> $moviescontents
+));
+
 /**
 * Loads our layout template, settings its title and content.
 */

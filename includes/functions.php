@@ -213,7 +213,7 @@ function version_check()
 	if ($current_commits !== false)
 	{
 		$commits = json_decode($current_commits);
-		$ref_commit = "2379bc07274021f5ac20fa35951768d64b48c1d4";
+		$ref_commit = "cdd7efce1db259a0d8fea65806f695ecb59e9bab";
 		$current_commit_minus1 = $commits[1]->sha;
 		$commit_message = $commits[0]->commit->message;
 		
@@ -418,8 +418,14 @@ function set_lang($language)
 function page_header($page_title = '')
 {
 	global $lang, $template, $template_path;
+	
+	$mode = (isset($_GET['mode']) ? $_GET['mode'] : '');
 	// The following assigns all _common_ variables that may be used at any point in a template.
 	$template->assign_vars(array(
+		'SHOWS_ACTIVE'	=> ($mode == 'shows' ? ' class="active"' : ''),
+		'MOVIES_ACTIVE'	=> ($mode == 'movies' ? ' class="active"' : ''),
+		'LOG_ACTIVE'	=> ($mode == 'viewlog' ? ' class="active"' : ''),
+		'CONFIG_ACTIVE'	=> (($mode == 'config') ? ' class=active' : ''),
 		'STYLESHEET_LINK'	=> 'styles/' . $template_path . '/style.css',
 		'TEMPLATE_PATH'	=> 'styles/' . $template_path,
 		'PAGE_TITLE'	=> $page_title,

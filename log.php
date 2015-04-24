@@ -6,12 +6,7 @@ if (!defined('IN_W2W'))
 
 $error_log = file('error.log', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
-$log_lines = '<form method="post" action="?mode=viewlog" id="searchform"> 
-	<a href="?mode=viewlog&level=all">{L_ALL}</a> | <a href="?mode=viewlog&level=info">{L_INFO}</a> | <a href="?mode=viewlog&level=debug">{L_DEBUG}</a>  | <a href="?mode=viewlog&level=error">{L_ERROR}</a> | <a href="?mode=viewlog&level=warning">{L_WARNING}</a> | <a href="?mode=purge_log">{L_PURGE_LOG}</a><br /><br />
-	<input type="text" name="message" id="message" maxlength="255" style="width: 200px;" placeholder="{L_SEARCH_FOR}" class="inputbox" />
-	<input type="submit" name="submit" value="{L_SEARCH}" class="button" />
-	</form>
-	<br />';
+$log_lines = '';
 if ($submit)
 {
 	header('Location: index.php?mode=viewlog&search=' . $_POST['message']);
@@ -50,8 +45,7 @@ foreach ($error_log as $key => $val)
 		}
 	}
 }
-$log_lines .= '<div class="code"><strong>' . (($level == '') ?  '{L_ALL}' : ucfirst($level)) . '</strong></div>';
-$log_lines .= '<pre>';
+
 if (empty($view_log))
 {
 	$info = (!empty($level) ? $level : $search);
@@ -61,13 +55,21 @@ else
 {
 	$log_lines .= $view_log;
 }
-$log_lines .= '</pre>';
+
 /**
 * Loads our layout template, settings its title and content.
 */
+$loglist = new template();
+$loglist->set_template();
+$loglist->set_filename('log_body.html');
+$loglist->assign_vars(array(
+	'LEVEL'		=> (($level == '') ?  '{L_ALL}' : ucfirst($level)),
+	'CONTENT' 	=> $log_lines,
+));
+
 $template->assign_vars(array(
 	'STYLESHEET_LINK'	=> 'styles/' . $template_path . '/style.css',
-	'CONTENT'	=> $log_lines,
+	'CONTENT'	=> $loglist->output(),
 	'VERSION'	=> '<p' . $version['style'] . '><strong>' . $version['message'] . '</strong></p>',
 	'ERROR'		=> (sizeof($error)) ? '<strong style="color:red">' . implode('<br />', $error) . '</strong>' : '',
 ));

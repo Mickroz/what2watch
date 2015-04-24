@@ -109,6 +109,15 @@ if (!$config_version || $config_version != $install_version || $mode == 'config'
 			$s_lang_options .= '<option value="' . $iso . '"' . $selected . '>' . $value['name'] . '</option>';
 		}
 		
+		$dir = 'styles/';
+		$scanned_dir = array_diff(scandir($dir), array('..', '.'));
+		$s_style_options = '';
+		foreach ($scanned_dir as $key => $style) 
+		{
+			$selected = ($style == $post_data['template_path']) ? ' selected="selected"' : '';
+			$s_style_options .= '<option value="' . $style . '"' . $selected . '>' . $style . '</option>';
+		}
+		
 		$install = new template();
 		$install->set_template();
 		$install->set_filename('install_body.html');
@@ -126,9 +135,9 @@ if (!$config_version || $config_version != $install_version || $mode == 'config'
 			'IGNORE_WORDS'		=> $post_data['ignore_words'],
 			'SKIP_SHOWS'		=> $post_data['skip_shows'],
 			'LANGUAGE'			=> $post_data['language'],
-			'TEMPLATE_PATH'		=> $post_data['template_path'],
 			'CONFIG_VERSION'	=> $post_data['config_version'],
-			'S_LANGUAGE_OPTIONS'	=> $s_lang_options
+			'S_LANGUAGE_OPTIONS'	=> $s_lang_options,
+			'S_STYLE_OPTIONS'	=> $s_style_options
 		));
 		$template = new template();
 		$template->set_template();

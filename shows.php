@@ -230,7 +230,10 @@ $showcontents = template::merge($showtemplates);
 $showlist = new template();
 $showlist->set_template();
 $showlist->set_filename('list_content.html');
-$showlist->assign_var('CONTENT', $showcontents);
+$showlist->assign_vars(array(
+	'HEADER'	=> $lang['SHOWS'],
+	'CONTENT'	=> $showcontents
+));
 
 /**
 * Loads our layout template, settings its title and content.
