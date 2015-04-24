@@ -100,7 +100,7 @@ switch ($mode)
 		$tag = 'Cache';
 		$log->info($tag, $lang['CACHE_PURGED']);
 		$error[] = $lang['CACHE_PURGED'];
-		$cache_message = sprintf($lang['CACHE_PURGED_EXPLAIN'], $referer);
+		$cache_message = sprintf($lang['CACHE_PURGED_EXPLAIN'], '<a href="' . $referer . '">' . $lang['HERE'] . '</a>');
 		$purge_cache = true;
 	
 	case 'purge_log':
@@ -114,7 +114,7 @@ switch ($mode)
 			$tag = 'Log';
 			$log->info($tag, $lang['LOG_PURGED']);
 			$error[] = $lang['LOG_PURGED'];
-			$cache_message = sprintf($lang['LOG_PURGED_EXPLAIN'], $referer);
+			$cache_message = sprintf($lang['LOG_PURGED_EXPLAIN'], '<a href="' . $referer . '">' . $lang['HERE'] . '</a>');
 		}
 	
 	default:

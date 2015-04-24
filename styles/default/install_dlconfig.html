@@ -28,11 +28,11 @@
   		<div class="navigatie">{L_NAVIGATION}<a href="#" class="close-panel"><i class="icon-remove-sign icon-large"></i></a></div>
   		
   		<ul class="menu">
-			<li><a href="?mode=shows">{L_SHOWS}</a></li>
-			<li><a href="?mode=movies">{L_MOVIES}</a></li>
+			<li{SHOWS_ACTIVE}><a href="?mode=shows">{L_SHOWS}</a></li>
+			<li{MOVIES_ACTIVE}><a href="?mode=movies">{L_MOVIES}</a></li>
 			<li><a href="?mode=purge_cache">{L_PURGE_CACHE}</a></li>
-			<li><a href="?mode=viewlog">{L_LOG}</a></li>
-			<li><a href="?mode=config">{L_CONFIG}</a></li>
+			<li{LOG_ACTIVE}><a href="?mode=viewlog">{L_LOG}</a></li>
+			<li{CONFIG_ACTIVE}><a href="?mode=config">{L_CONFIG}</a></li>
 		</ul>
 	</nav>
 

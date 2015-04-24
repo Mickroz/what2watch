@@ -166,7 +166,7 @@ if (!$config_version || $config_version != $install_version || $mode == 'config'
 		$request_to = $url . '?' . http_build_query($params);
 
 		header("refresh:5; url=$request_to");
-		echo sprintf($lang['FIRST_RUN'], $request_to);
+		echo sprintf($lang['FIRST_RUN'], '<a href="' . $request_to . '">' . $lang['HERE'] . '</a>');
 	}
 	exit;
 }

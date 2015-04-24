@@ -213,7 +213,7 @@ function version_check()
 	if ($current_commits !== false)
 	{
 		$commits = json_decode($current_commits);
-		$ref_commit = "08a07c2ded2a4ba37679ff48ffa24d0703410f84";
+		$ref_commit = "f1b71fd95481ddde8f2b71bbd4b79294d1bc7fd7";
 		$current_commit_minus1 = $commits[1]->sha;
 		$commit_message = $commits[0]->commit->message;
 		
@@ -357,7 +357,7 @@ function create_config_file()
 		$template->set_filename('index_body.html');
 		$template->assign_vars(array(
 			'ERROR'		=> (sizeof($error)) ? '<strong style="color:red">' . implode('<br />', $error) . '</strong>' : '',
-			'CONTENT'	=> $lang['CONFIG_WRITTEN_EXPLAIN'],
+			'CONTENT'	=> sprintf($lang['CONFIG_WRITTEN_EXPLAIN'], '<a href="index.php">' . $lang['HERE'] . '</a>'),
 		));
 
 		page_footer();
