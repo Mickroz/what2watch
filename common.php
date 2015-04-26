@@ -9,7 +9,7 @@ $mode = (isset($_GET['mode'])) ? $_GET['mode'] : '';
 $post_data = $lang_pack = $error = array();
 $trakt_token = $trakt_expires_in = $sickbeard = $sb_api = $cache_life = $sub_ext = $movies_folder = $language = $config_version = $web_username = $web_password = $ignore_words = $skip_shows = '';
 $install_version = '1.0.1';
-$first_run = true;
+$download = $first_run = true;
 $template_path = 'default';
 $language = 'en';
 
@@ -56,11 +56,12 @@ if (!$config_version || $config_version != $install_version || $mode == 'config'
 		if (!sizeof($error))
 		{
 			create_config_file();
+			$download = false;
 		}
 		$first_run = false;
 	}
 
-	if(isset($_GET['access_token']) || $config_version != $install_version || $mode == 'config')
+	if((isset($_GET['access_token']) || $config_version != $install_version || $mode == 'config') && $download)
 	{
 		if ($config_version != $install_version)
 		{

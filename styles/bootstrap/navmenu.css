@@ -3,6 +3,7 @@ html, body {
 }
 body {
   padding: 50px 0 0 0;
+  overflow-x:hidden;
 }
 
 .navmenu {

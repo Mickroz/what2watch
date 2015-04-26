@@ -213,7 +213,7 @@ function version_check()
 	if ($current_commits !== false)
 	{
 		$commits = json_decode($current_commits);
-		$ref_commit = "f1b71fd95481ddde8f2b71bbd4b79294d1bc7fd7";
+		$ref_commit = "9506ed7066289c7679744b6c020d8e8e91e575f3";
 		$current_commit_minus1 = $commits[1]->sha;
 		$commit_message = $commits[0]->commit->message;
 		
@@ -277,9 +277,10 @@ function create_config_file_data($data)
 
 function create_config_file()
 {
-	global $lang, $template;
+	global $lang, $template, $log;
 	$data = get_submitted_data();
 	$written = false;
+	$error = array();
 	$config_options = $data;
 	$config_data = create_config_file_data($data);
 	
@@ -307,6 +308,7 @@ function create_config_file()
 			if (!$chmod)
 			{
 				$error[] = $lang['FAILED_CHMOD'];
+				$log->warning('config', $lang['FAILED_CHMOD']);
 			}
 		}
 	}
@@ -340,12 +342,11 @@ function create_config_file()
 			echo $config_data;
 			exit;
 		}
-
+		
 		// The option to download the config file is always available, so output it here
 		page_header($lang['INDEX'] . ' - ' . $lang['DL_CONFIG']);
 		$template->set_filename('install_dlconfig.html');
 		$template->assign_vars(array(
-			'STYLESHEET_LINK'	=> 'styles/default/style.css',
 			'VERSION'	=> '',
 			'S_HIDDEN'				=> $s_hidden_fields,
 		));
@@ -358,6 +359,7 @@ function create_config_file()
 		$template->assign_vars(array(
 			'ERROR'		=> (sizeof($error)) ? '<strong style="color:red">' . implode('<br />', $error) . '</strong>' : '',
 			'CONTENT'	=> sprintf($lang['CONFIG_WRITTEN_EXPLAIN'], '<a href="index.php">' . $lang['HERE'] . '</a>'),
+			'VERSION'	=> '',
 		));
 
 		page_footer();

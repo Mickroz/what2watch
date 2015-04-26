@@ -7,7 +7,8 @@ pre, .pushed {
 }
 
 .navmenu-default .navmenu-nav > li > a, .navbar-default .navbar-offcanvas .navmenu-nav > li > a {font-size: 18px;}
-
+.panel-default > .panel-heading {font-size: 16px;}
+.panel-default > .panel-heading span {font-size: 14px;}
 .center {
      text-align: center;
 }
@@ -41,7 +42,7 @@ pre, .pushed {
 .col {
 	display: block;
 	float:left;
-	margin: 1% 0 1% 1.6%;
+	margin: 1% 0 0 1.6%;
 }
 .col:first-child { margin-left: 0; }
 

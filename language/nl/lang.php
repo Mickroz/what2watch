@@ -51,6 +51,7 @@ $lang = array_merge($lang, array(
 	'INDEX' 				=> 'What2Watch',
 	'INFO'					=> 'Info',
 	'LANGUAGE_SELECT' 				=> 'Taal',
+	'LOADINGINDICATOR'	=> 'Loading...',
 	'LOG' 				=> 'Log',
 	'LOG_INFO' 				=> 'Er is momenteel geen %s informatie in je log bestand!',
 	'LOG_PURGED' 				=> 'Log geleegd!',

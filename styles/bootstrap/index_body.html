@@ -26,15 +26,33 @@
   </head>
 
   <body>
+	<div id="loading-indicator">
+		<span>{L_LOADINGINDICATOR}</span>
+	</div>
     <div class="navmenu navmenu-default navmenu-fixed-left offcanvas-sm">
       <a class="navmenu-brand visible-md visible-lg" href="/what2watch">{L_INDEX}</a>
       <ul class="nav navmenu-nav">
-        <li{SHOWS_ACTIVE}><a href="?mode=shows" /><span class="glyphicon glyphicon-hd-video" aria-hidden="true"></span> {L_SHOWS}</a></li>
-        <li{MOVIES_ACTIVE}><a href="?mode=movies" /><span class="glyphicon glyphicon-film" aria-hidden="true"></span> {L_MOVIES}</a></li>
-        <li{LOG_ACTIVE}><a href="?mode=viewlog" /><span class="glyphicon glyphicon-book" aria-hidden="true"></span> {L_LOG}</a></li>
-		<li{CONFIG_ACTIVE}><a href="?mode=config" /><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> {L_CONFIG}</a></li>
+        <li{SHOWS_ACTIVE}>
+        	<a href="?mode=shows" class="hidden-xs" /><span class="glyphicon glyphicon-hd-video" aria-hidden="true"></span> {L_SHOWS}</a>
+        	<a href="?mode=shows" class="visible-xs" data-toggle="offcanvas" data-target=".navmenu" /><span class="glyphicon glyphicon-hd-video" aria-hidden="true"></span> {L_SHOWS}</a>
+        </li>
+        <li{MOVIES_ACTIVE}>
+        	<a href="?mode=movies" class="hidden-xs" /><span class="glyphicon glyphicon-film" aria-hidden="true"></span> {L_MOVIES}</a>
+        	<a href="?mode=movies" class="visible-xs" data-toggle="offcanvas" data-target=".navmenu" /><span class="glyphicon glyphicon-film" aria-hidden="true"></span> {L_MOVIES}</a>
+        </li>
+        <li{LOG_ACTIVE}>
+        	<a href="?mode=viewlog" class="hidden-xs" /><span class="glyphicon glyphicon-book" aria-hidden="true"></span> {L_LOG}</a>
+        	<a href="?mode=viewlog" class="visible-xs" data-toggle="offcanvas" data-target=".navmenu" /><span class="glyphicon glyphicon-book" aria-hidden="true"></span> {L_LOG}</a>
+        </li>
+		<li{CONFIG_ACTIVE}>
+			<a href="?mode=config" class="hidden-xs" /><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> {L_CONFIG}</a>
+			<a href="?mode=config" class="visible-xs" data-toggle="offcanvas" data-target=".navmenu" /><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> {L_CONFIG}</a>
+		</li>
 		<li class="nav-divider"></li>
-		<li><a href="?mode=purge_cache"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> {L_PURGE_CACHE}</a></li>
+		<li>
+			<a href="?mode=purge_cache"class="hidden-xs" /><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> {L_PURGE_CACHE}</a>
+			<a href="?mode=purge_cache" class="visible-xs" data-toggle="offcanvas" data-target=".navmenu" /><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> {L_PURGE_CACHE}</a>
+		</li>
       </ul>
     </div>
 
@@ -50,6 +68,7 @@
     <div class="container">
 		<p class="lead">{ERROR}</p>
 		<p class="lead">{CONTENT}</p>
+		<div class="pushed"></div>
     </div><!-- /.container -->
 	<footer class="footer">
       <div class="container">
@@ -84,6 +103,16 @@ jQuery(document).ready(function() {
         return false;
     })
 });
+window.onbeforeunload = loading_indicator;
+
+function loading_indicator()
+{
+	var l = document.getElementById('loading-indicator');
+	if (l)
+	{
+		l.style.display = 'block';
+	}
+}
 </script>
   </body>
 </html>
