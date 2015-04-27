@@ -25,6 +25,14 @@ else
 // Status flag:
 $LoginSuccessful = false;
 
+if (!empty($ip_subnet))
+{
+	if (substr($_SERVER['REMOTE_ADDR'], 0, strlen($ip_subnet)) == $ip_subnet)
+	{
+		unset($web_username);
+	}
+}
+
 if (!empty($web_username))
 {
 	// Check username and password:

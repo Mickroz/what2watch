@@ -213,7 +213,7 @@ function version_check()
 	if ($current_commits !== false)
 	{
 		$commits = json_decode($current_commits);
-		$ref_commit = "9506ed7066289c7679744b6c020d8e8e91e575f3";
+		$ref_commit = "193b4de1516202bf6e1a03ebb1b65a6a8b6a0e22";
 		$current_commit_minus1 = $commits[1]->sha;
 		$commit_message = $commits[0]->commit->message;
 		
@@ -264,6 +264,7 @@ function create_config_file_data($data)
 		'skip_shows'		=> $data['skip_shows'],
 		'template_path'		=> $data['template_path'],
 		'language'			=> $data['language'],
+		'ip_subnet'			=> $data['ip_subnet'],
 		'config_version'	=> $data['config_version'],
 	);
 
@@ -384,6 +385,7 @@ function get_submitted_data()
 		'skip_shows'		=> $_POST['skip_shows'],
 		'language'			=> $_POST['language'],
 		'template_path'		=> $_POST['template_path'],
+		'ip_subnet'		=> $_POST['ip_subnet'],
 		'config_version'	=> $_POST['config_version'],
 	);
 }
