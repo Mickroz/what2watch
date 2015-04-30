@@ -19,11 +19,11 @@ if ($checkin)
 		$message = $_POST['message'];
 		$imdb_id = $_POST['imdb_id'];
 		$trakt_checkin = trakt_movie_checkin($imdb_id, $message);
-		$trakt_show_checkin = json_decode($trakt_checkin, true);
+		$trakt_movie_checkin = json_decode($trakt_checkin, true);
 		
 		if (!isset($trakt_show_checkin['expires_at']))
 		{
-			$movie_title = $trakt_show_checkin['movie']['title'];
+			$movie_title = $trakt_movie_checkin['movie']['title'];
 			$error[] = sprintf($lang['TRAKT_CHECKIN'], $movie_title);
 		}
 		else
