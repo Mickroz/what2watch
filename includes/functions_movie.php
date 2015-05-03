@@ -41,6 +41,8 @@ function trakt_movie_checkin($imdb_id, $message)
 
 	$response = curl_exec($ch);
 	curl_close($ch);
+	
+	return $response;
 }
 
 function getMovieMeter($imdbid)
