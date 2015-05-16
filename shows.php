@@ -7,7 +7,7 @@ if (!defined('IN_W2W'))
 include('includes/functions_show.php');
 
 // Initial var setup
-$series = $data = array();
+$series = $data = $showtemplates = $getnext = array();
 $tag = "Shows";
 $checkin = (isset($_GET['checkin'])) ? $_GET['checkin'] : '';
 $getbanner = (isset($_GET['getbanner'])) ? $_GET['getbanner'] : '';
@@ -25,6 +25,7 @@ if ($checkin)
 	{
 		$message = $_POST['message'];
 		$trakt_id = $_POST['trakt_id'];
+		$tvdb_id = $_POST['tvdb_id'];
 		$trakt_checkin = trakt_show_checkin($trakt_id, $message);
 		$trakt_show_checkin = json_decode($trakt_checkin, true);
 		
@@ -36,11 +37,64 @@ if ($checkin)
 			$episode_short = $episode_season . 'x' . $episode_number;
 			$episode_name = $trakt_show_checkin['episode']['title'];
 			$error[] = sprintf($lang['TRAKT_CHECKIN'], $show_name . ' ' . $episode_short . ' ' . $episode_name);
+			$getnext[$tvdb_id]['tvdbid'] = $tvdb_id;
+			$getnext[$tvdb_id]['trakt_id'] = $trakt_id;
+			$getnext[$tvdb_id]['show_name'] = $show_name;
+			$getnext[$tvdb_id]['season'] = $episode_season;
+			$getnext[$tvdb_id]['episode'] = $trakt_show_checkin['episode']['number'] + 1;
+			$getnext[$tvdb_id]['episode_name'] = $episode_name;
 		}
 		else
 		{
 			$error[] = $lang['TRAKT_ERROR'];
 		}
+	}
+}
+
+if (!empty($getnext))
+{
+	$log->debug('trakt.tv', $lang['TRAKT_UPDATE']);
+	$key = key($getnext);
+	$update_show = getShow($key);
+	$update_episode = getEpisode($getnext[$key]['tvdbid'], $getnext[$key]['season'], $getnext[$key]['episode']);
+	// Put it all in a array
+	$update_serie[$key]['tvdbid'] = $key;
+	$update_serie[$key]['show_name'] = $update_show[$key]['show_name'];
+	$update_serie[$key]['tvrage_id'] = $update_show[$key]['tvrage_id'];
+	$update_serie[$key]['show_slug'] = $update_show[$key]['show_slug'];
+	$update_serie[$key]['trakt_id'] = $getnext[$key]['trakt_id'];
+	$update_serie[$key]['message'] = $getnext[$key]['show_name'] . ' ' . $getnext[$key]['season'] . 'x' . sprintf('%02d', $getnext[$key]['episode']) . ' ' . $getnext[$key]['episode_name'];
+	$update_serie[$key]['episode'] = $getnext[$key]['season'] . 'x' . sprintf('%02d', $getnext[$key]['episode']);
+	$update_serie[$key]['name'] = $update_episode['data']['name'];
+	$update_serie[$key]['description'] = $update_episode['data']['description'];
+	$update_serie[$key]['status'] = $update_episode['data']['status'];
+	$update_serie[$key]['location'] = $update_episode['data']['location'];
+	
+	// Check if there are subs downloaded for this episode
+	$check_sub_update = checkSub($update_serie, $key);
+	$update_serie[$key]['subbed'] = $check_sub_update;
+		
+	if (!$update_serie[$key]['subbed'])
+	{
+		$log->debug('checkSub', sprintf($lang['NO_SUBTITLE_FOUND'], $update_serie[$key]['show_name'] . ' ' . $update_serie[$key]['episode']));
+		$log->info('checkSub', sprintf($lang['CHECK_FINISHED'], $update_serie[$key]['show_name'] . ' ' . $update_serie[$key]['episode']));
+		if ($data = $cache->get('shows'))
+		{
+			$data = json_decode($data, true);
+			unset($data[$key]);
+			$cache->put('shows', json_encode($data));
+		}
+	}
+	else
+	{
+		if ($data = $cache->get('shows'))
+		{
+			$log->info('checkSub', sprintf($lang['CHECK_FINISHED'], $update_serie[$key]['show_name'] . ' ' . $update_serie[$key]['episode']));
+			$data = json_decode($data, true);
+			$update_data = array_replace($data, $update_serie);
+			$cache->put('shows', json_encode($update_data));
+		}
+		unset($getnext);
 	}
 }
 
@@ -103,50 +157,22 @@ else
 		$series[$tvdbid]['location'] = $episode['data']['location'];
 	
 		// Check if there are subs downloaded for this episode
-		$search = array('.mkv', '.avi', '.mpeg', '.mp4');
-		$find_sub = str_replace($search, $sub_ext, $episode['data']['location']);
-		if (file_exists($find_sub))
-		{
-			$log->debug('checkSub', sprintf($lang['SUBTITLE_FOUND'], $series[$tvdbid]['show_name'] . ' ' . $series[$tvdbid]['episode']));
-			$series[$tvdbid]['subbed'] = true;
-			$create_image = true;
-		}
-		else
-		{
-			$ignore_words_array = explode(",", strtolower($ignore_words));
-			$skip_shows_array = explode(",", strtolower($skip_shows));
-
-			if (!empty($ignore_words))
-			{
-				foreach ($ignore_words_array as $ignore_word)
-				{
-					if (strpos(strtolower($episode['data']['location']), $ignore_word) !== false)
-					{
-						$log->debug('checkSub', sprintf($lang['IGNORE_FOUND'], $ignore_word, $series[$tvdbid]['show_name'] . ' ' . $series[$tvdbid]['episode']));
-						$series[$tvdbid]['subbed'] = true;
-						$create_image = true;
-					}
-				}
-			}
-			if (!empty($skip_shows))
-			{
-				foreach ($skip_shows_array as $skip_show)
-				{
-					if (strpos($series[$tvdbid]['tvdbid'], $skip_show) !== false)
-					{
-						$log->debug('checkSub', sprintf($lang['SKIP_FOUND'], $skip_show, $series[$tvdbid]['show_name'] . ' ' . $series[$tvdbid]['episode']));
-						$series[$tvdbid]['subbed'] = true;
-						$create_image = true;
-					}
-				}
-			}
-		}
-		if (!isset($series[$tvdbid]['subbed']))
+		$check_sub = checkSub($series, $tvdbid);
+		$series[$tvdbid]['subbed'] = $check_sub;
+		
+		if (!$series[$tvdbid]['subbed'])
 		{
 			$log->debug('checkSub', sprintf($lang['NO_SUBTITLE_FOUND'], $series[$tvdbid]['show_name'] . ' ' . $series[$tvdbid]['episode']));
+			$log->info('checkSub', sprintf($lang['CHECK_FINISHED'], $series[$tvdbid]['show_name'] . ' ' . $series[$tvdbid]['episode']));
 			unset($series[$tvdbid]);
 			$create_image = false;
 		}
+		else
+		{
+			$log->info('checkSub', sprintf($lang['CHECK_FINISHED'], $series[$tvdbid]['show_name'] . ' ' . $series[$tvdbid]['episode']));
+			$create_image = true;
+		}
+
 		if ($create_image)
 		{
 			$banner = $series[$tvdbid]['tvdbid'] . '.banner.jpg';
@@ -226,7 +252,13 @@ foreach ($data as $show)
 * Merges all our shows templates into a single variable.
 * This will allow us to use it in the main template.
 */
+
 $showcontents = template::merge($showtemplates);
+
+if ($showcontents == '')
+{
+	$error[] = $lang['CACHE_EMPTY'];
+}
 
 $showlist = new template();
 $showlist->set_template();

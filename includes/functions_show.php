@@ -6,7 +6,9 @@ if (!defined('IN_W2W'))
 
 function trakt_show_checkin($trakt_id, $message)
 {
-	global $trakt_token;
+	global $trakt_token, $log, $lang;
+	
+	$log->debug('trakt.tv', $lang['TRAKT_START']);
 	
 	$ch = curl_init();
 
@@ -81,6 +83,8 @@ function getShow($tvdbid)
 	$tag = 'getShow';
 	global $sickbeard, $sb_api, $log, $trakt_token, $lang;
 	
+	$log->info($tag, sprintf($lang['SB_START'], $tvdbid));
+	
 	$show_id = getUrl($sickbeard . "/api/" . $sb_api . "/?cmd=show&tvdbid=" . $tvdbid, $tag);
 	if (!$show_id)
 	{
@@ -143,12 +147,18 @@ function getEpisode($tvdbid, $season, $episode)
 		return;
 	}
 	$result = json_decode($get_episode, true);
-		
+	
+	$failures = array('failure', 'error', 'fatal', 'Skipped', 'Unknown', 'Snatched', 'Wanted', 'Unaired', 'Archived', 'Ignored');  
 	// Remove empty results
-	if ($result['result'] == 'failure' || $result['result'] == 'error' || $result['result'] == 'fatal')
+	if (in_array($result['result'], $failures))
 	{
 		return;
 	}
+	if (in_array($result['data']['status'], $failures))
+	{
+		return;
+	}
+
 	return $result;
 }
 
@@ -173,4 +183,53 @@ function getBanner($tvdbid)
 	$url = 'http://thetvdb.com/banners/' . $result['series']['banner'];
 				
 	saveImage($url, $banner, $result['series']['SeriesName']);
+}
+
+function checkSub($array, $tvdbid)
+{
+	global $sub_ext, $lang, $log, $ignore_words, $skip_shows;
+	
+	$key = $tvdbid;
+	// Check if there are subs downloaded for this episode
+	$search = array('.mkv', '.avi', '.mpeg', '.mp4');
+	$find_sub = str_replace($search, $sub_ext, $array[$key]['location']);
+	if (file_exists($find_sub))
+	{
+		$log->debug('checkSub', sprintf($lang['SUBTITLE_FOUND'], $array[$key]['show_name'] . ' ' . $array[$key]['episode']));
+		$array[$key]['subbed'] = true;
+	}
+	else
+	{
+		$ignore_words_array = explode(",", strtolower($ignore_words));
+		$skip_shows_array = explode(",", strtolower($skip_shows));
+
+		if (!empty($ignore_words))
+		{
+			foreach ($ignore_words_array as $ignore_word)
+			{
+				if (strpos(strtolower($array[$key]['location']), $ignore_word) !== false)
+				{
+					$log->debug('checkSub', sprintf($lang['IGNORE_FOUND'], $ignore_word, $array[$key]['show_name'] . ' ' . $array[$key]['episode']));
+					$array[$key]['subbed'] = true;
+				}
+			}
+		}
+		if (!empty($skip_shows))
+		{
+			foreach ($skip_shows_array as $skip_show)
+			{
+				if (strpos($array[$key]['tvdbid'], $skip_show) !== false)
+				{
+					$log->debug('checkSub', sprintf($lang['SKIP_FOUND'], $skip_show, $array[$key]['show_name'] . ' ' . $array[$key]['episode']));
+					$array[$key]['subbed'] = true;
+				}
+			}
+		}
+	}
+	if (!isset($array[$key]['subbed']))
+	{
+		$array[$key]['subbed'] = false;
+	}
+	
+	return $array[$key]['subbed'];
 }
