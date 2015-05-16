@@ -5,6 +5,13 @@ if (!defined('IN_W2W'))
 }
 
 include('includes/functions_show.php');
+//include files for adding plugin functionality
+require_once "includes/functions_plugins.php";
+
+//Load Plugins
+foreach( glob("plugins/*.php")  as $plugin) {
+  require_once($plugin);
+}
 
 // Initial var setup
 $series = $data = $showtemplates = $getnext = array();
@@ -64,7 +71,9 @@ if (!empty($getnext))
 	$update_serie[$key]['show_slug'] = $update_show[$key]['show_slug'];
 	$update_serie[$key]['trakt_id'] = $getnext[$key]['trakt_id'];
 	$update_serie[$key]['message'] = $getnext[$key]['show_name'] . ' ' . $getnext[$key]['season'] . 'x' . sprintf('%02d', $getnext[$key]['episode']) . ' ' . $getnext[$key]['episode_name'];
+	$update_serie[$key]['season'] = $getnext[$key]['season'];
 	$update_serie[$key]['episode'] = $getnext[$key]['season'] . 'x' . sprintf('%02d', $getnext[$key]['episode']);
+	$update_serie[$key]['episode_number'] = $getnext[$key]['episode'];
 	$update_serie[$key]['name'] = $update_episode['data']['name'];
 	$update_serie[$key]['description'] = $update_episode['data']['description'];
 	$update_serie[$key]['status'] = $update_episode['data']['status'];
@@ -149,8 +158,10 @@ else
 		$series[$tvdbid]['tvrage_id'] = $show_id[$tvdbid]['tvrage_id'];
 		$series[$tvdbid]['show_slug'] = $show_id[$tvdbid]['show_slug'];
 		$series[$tvdbid]['trakt_id'] = $progress['next_episode']['ids']['trakt'];
-		$series[$tvdbid]['message'] = $show_id[$tvdbid]['show_name'] . ' ' . $progress['next_episode']['season'] . 'x' . sprintf('%02d', $progress['next_episode']['number']) . ' ' . $progress['next_episode']['title'];;
+		$series[$tvdbid]['message'] = $show_id[$tvdbid]['show_name'] . ' ' . $progress['next_episode']['season'] . 'x' . sprintf('%02d', $progress['next_episode']['number']) . ' ' . $progress['next_episode']['title'];
+		$series[$tvdbid]['season'] = $progress['next_episode']['season'];
 		$series[$tvdbid]['episode'] = $progress['next_episode']['season'] . 'x' . sprintf('%02d', $progress['next_episode']['number']);
+		$series[$tvdbid]['episode_number'] = $progress['next_episode']['number'];
 		$series[$tvdbid]['name'] = (!empty($progress['next_episode']['title']) ? $progress['next_episode']['title'] : $episode['data']['name']);
 		$series[$tvdbid]['description'] = $episode['data']['description'];
 		$series[$tvdbid]['status'] = $episode['data']['status'];
@@ -223,6 +234,9 @@ if ($getfanart)
 	}
 	header('Location: index.php?mode=shows');
 }
+
+// Send $data to plugins
+$data = hook_filter('the_data', $data);
 
 $count = count($data);
 $divider = ceil($count / 2);
