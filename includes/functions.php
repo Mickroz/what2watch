@@ -1,4 +1,18 @@
 <?php
+/**
+*
+* @package What2Watch
+* @author Mickroz
+* @version Id$
+* @link https://www.github.com/Mickroz/what2watch
+* @copyright (c) 2015 Mickroz
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+*
+*/
+
+/**
+* @ignore
+*/
 if (!defined('IN_W2W'))
 {
 	exit;
@@ -213,7 +227,7 @@ function version_check()
 	if ($current_commits !== false)
 	{
 		$commits = json_decode($current_commits);
-		$ref_commit = "df219519c6932ddb547af0d6827296ba738446f0";
+		$ref_commit = "24ecf6c3b8cc33de9d0bfbb29493f75071b52d23";
 		$current_commit_minus1 = $commits[1]->sha;
 		$commit_message = $commits[0]->commit->message;
 		

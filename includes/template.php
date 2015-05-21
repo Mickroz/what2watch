@@ -1,14 +1,27 @@
 <?php
+/**
+* Simple template engine class (use [@tag] tags in your templates).
+*
+* @package What2Watch
+* @author Nuno Freitas <nunofreitas@gmail.com>
+* @author Mickroz
+* @version 1.0
+* @link http://www.broculos.net/ Broculos.net Programming Tutorials
+* @link https://www.github.com/Mickroz/what2watch
+* @copyright (c) 2015 Mickroz
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+*
+*/
+
+/**
+* @ignore
+*/
 if (!defined('IN_W2W'))
 {
 	exit;
 }
 /**
-* Simple template engine class (use [@tag] tags in your templates).
-* 
-* @link http://www.broculos.net/ Broculos.net Programming Tutorials
-* @author Nuno Freitas <nunofreitas@gmail.com>
-* @version 1.0
+* template class
 */
 class template
 {
@@ -107,6 +120,11 @@ class template
 				return (isset($lang[$match]) ? $lang[$match] : '{ ' . $match . ' }');
 			},
 			$output);
+		}
+		preg_match_all('#<!-- INCLUDE (\{\$?[A-Z0-9\-_]+\}|[a-zA-Z0-9\_\-\+\./]+) -->#', $output, $matches);
+		foreach ($matches[1] as $include)
+		{
+			$output = preg_replace('#<!-- INCLUDE ' . $include . ' -->#', file_get_contents($this->root .  '/' . $include), $output);
 		}
 
 		return $output;

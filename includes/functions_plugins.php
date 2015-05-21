@@ -1,4 +1,24 @@
 <?php
+/**
+*
+* @package What2Watch
+* @author Jethro Solomon
+* @author Mickroz
+* @version Id$
+* @link https://www.github.com/Mickroz/what2watch
+* @copyright (c) 2015 Mickroz
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+*
+*/
+
+/**
+* @ignore
+*/
+if (!defined('IN_W2W'))
+{
+	exit;
+}
+
 //Arrays to store user-registered events and functions.
 $action_events = array();
 $filter_events = array();

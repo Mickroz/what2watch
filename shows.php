@@ -1,20 +1,27 @@
 <?php
+/**
+*
+* @package What2Watch
+* @author Mickroz
+* @version Id$
+* @link https://www.github.com/Mickroz/what2watch
+* @copyright (c) 2015 Mickroz
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+*
+*/
+
+/**
+* @ignore
+*/
 if (!defined('IN_W2W'))
 {
 	exit;
 }
-
-include('includes/functions_show.php');
 //include files for adding plugin functionality
-require_once "includes/functions_plugins.php";
-
-//Load Plugins
-foreach( glob("plugins/*.php")  as $plugin) {
-  require_once($plugin);
-}
+include('includes/functions_show.php');
 
 // Initial var setup
-$series = $data = $showtemplates = $getnext = array();
+$series = $data = $showtemplates = $getnext = $hook_before_checkin = $hook_after_checkin = array();
 $tag = "Shows";
 $checkin = (isset($_GET['checkin'])) ? $_GET['checkin'] : '';
 $getbanner = (isset($_GET['getbanner'])) ? $_GET['getbanner'] : '';
@@ -237,12 +244,31 @@ if ($getfanart)
 
 // Send $data to plugins
 $data = hook_filter('the_data', $data);
+$data = hook_filter('hook_before_checkin', $data);
+$data = hook_filter('hook_after_checkin', $data);
 
 $count = count($data);
 $divider = ceil($count / 2);
 $i = 1;
 foreach ($data as $show)
 {
+	if (!array_key_exists('hook_before_checkin', $show))
+	{	
+		$show['hook_before_checkin'] = '';
+	}
+	else
+	{
+		$show['hook_before_checkin'] = implode(' &bull; ', $show['hook_before_checkin']);
+	}
+	if (!array_key_exists('hook_after_checkin', $show))
+	{	
+		$show['hook_after_checkin'] = '';
+	}
+	else
+	{
+		$show['hook_after_checkin'] = implode(' &bull; ', $show['hook_after_checkin']);
+	}
+	
 	$row = new template();
 	$row->set_template();
 	$row->set_filename('list_shows_row.html');
@@ -253,12 +279,12 @@ foreach ($data as $show)
 	else
 	{
 		$row->assign_var('BREAK', '');
-	}
-	
+	}	
 	foreach ($show as $key => $value)
 	{
 		$row->assign_var($key, $value);
 	}
+	
 	$showtemplates[] = $row;
 	$i++;
 }
