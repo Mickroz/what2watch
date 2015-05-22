@@ -24,6 +24,8 @@ $kodiIP = '';
 $kodiPort = '';
 $kodi_url = "http://$user:$pass@$kodiIP:$kodiPort/jsonrpc?request=";
 
+$play_in_kodi = (isset($_GET['play'])) ? $_GET['play'] : '';
+
 $log->info('plugins', 'play_in_kodi loaded');
 
 register_filter('hook_before_checkin','kodi');
@@ -61,17 +63,29 @@ function kodi($data)
 	
 				//Play a single video from file. change everything in bold.
 				$link = $kodi_url . urlencode('{"jsonrpc":"2.0","id":"1","method":"Player.Open","params":{"item":{"file":"' . $path . '"}}}');
+				$data[$key]['kodi_link'] = $link;
 				// Add to the buttons array
-				$buttons[] = ' <a href="' . $link . '"><i class="fa fa-play"></i> Play in Kodi</a>';
+				$myurl = basename($_SERVER['PHP_SELF']) . "?" . $_SERVER['QUERY_STRING'];
+				$buttons[] = ' <a href="' . $myurl . '&play=' . $key . '"><i class="fa fa-play"></i> Play in Kodi</a>';
 			}
 		}
 		// Set the new buttons array in the data array
 		$data[$key]['hook_before_checkin'] = $buttons;
-		unset($buttons);
+		unset($buttons, $result);
 	}
 	return $data;
 }
 
+if ($play_in_kodi)
+{
+	$play = getUrl($data[$play_in_kodi]['kodi_link']);
+	$return = json_decode($play, true);
+	if ($return['result'] == 'OK')
+	{
+		$error[] = 'Playing: ' . $data[$play_in_kodi]['message'];
+		header('Location: index.php?mode=shows');
+	}
+}
 /**
 * Movies, todo
 *
