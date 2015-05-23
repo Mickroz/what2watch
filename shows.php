@@ -252,7 +252,7 @@ $divider = ceil($count / 2);
 $i = 1;
 foreach ($data as $show)
 {
-	if (!array_key_exists('hook_before_checkin', $show) && empty($show['hook_before_checkin']))
+	if (!array_key_exists('hook_before_checkin', $show) || empty($show['hook_before_checkin']))
 	{	
 		$show['hook_before_checkin'] = '';
 	}
@@ -263,7 +263,7 @@ foreach ($data as $show)
 			$show['hook_before_checkin'] = implode(' &bull; ', $show['hook_before_checkin']);
 		}
 	}
-	if (!array_key_exists('hook_after_checkin', $show) && empty($show['hook_after_checkin']))
+	if (!array_key_exists('hook_after_checkin', $show) || empty($show['hook_after_checkin']))
 	{	
 		$show['hook_after_checkin'] = '';
 	}

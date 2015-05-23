@@ -22,7 +22,7 @@ $submit	= (isset($_POST['submit'])) ? true : false;
 $mode = (isset($_GET['mode'])) ? $_GET['mode'] : '';
 $post_data = $lang_pack = $error = array();
 $trakt_token = $trakt_expires_in = $sickbeard = $sb_api = $cache_life = $sub_ext = $movies_folder = $language = $config_version = $web_username = $web_password = $ignore_words = $skip_shows = $ip_subnet = '';
-$install_version = '1.0.2';
+$install_version = '1.0.3';
 $download = $first_run = true;
 $template_path = 'default';
 $language = 'en';
@@ -34,6 +34,11 @@ if (file_exists('config.php'))
 
 if (!$config_version || $config_version != $install_version || $mode == 'config')
 {
+	// Fall back to default template on updates
+	if ($config_version != $install_version)
+	{
+		$template_path = 'default';
+	}
 	// Redirect the user to the installer
 	require('includes/logger.php');
 	require('includes/cache.php');
