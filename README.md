@@ -20,4 +20,7 @@ Read more on this on [php.net](http://php.net/manual/en/ini.core.php#ini.open-ba
 - [x] Move subs extension to config for user configurable setting
 - [x] Save banner on disk for later usage?
 
+## LICENSE
+[GNU General Public License v2](http://opensource.org/licenses/gpl-2.0.php)
+
 thanks to @derkens for testing :grin:
