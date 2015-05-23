@@ -34,9 +34,9 @@ function kodi($data)
 {
 	global $user, $pass, $kodiIP, $kodiPort, $kodi_url;
 	
-	$buttons = array();
 	foreach ($data as $episode)
 	{
+		$buttons = array();
 		// We check if there are already some buttons created
 		if (array_key_exists('hook_before_checkin', $episode))
 		{	
@@ -55,23 +55,26 @@ function kodi($data)
 		$kodi = getUrl($kodi_url . urlencode($call));
 		$result = json_decode($kodi, true);
 		
-		foreach ($result['result']['episodes'] as $episodes)
+		if ($result)
 		{
-			if ($show_name == $episodes['showtitle'])
+			foreach ($result['result']['episodes'] as $episodes)
 			{
-				$path = $episodes['file'];
+				if ($show_name == $episodes['showtitle'])
+				{
+					$path = $episodes['file'];
 	
-				//Play a single video from file. change everything in bold.
-				$link = $kodi_url . urlencode('{"jsonrpc":"2.0","id":"1","method":"Player.Open","params":{"item":{"file":"' . $path . '"}}}');
-				$data[$key]['kodi_link'] = $link;
-				// Add to the buttons array
-				$myurl = basename($_SERVER['PHP_SELF']) . "?" . $_SERVER['QUERY_STRING'];
-				$buttons[] = ' <a href="' . $myurl . '&play=' . $key . '"><i class="fa fa-play"></i> Play in Kodi</a>';
+					//Play a single video from file. change everything in bold.
+					$link = $kodi_url . urlencode('{"jsonrpc":"2.0","id":"1","method":"Player.Open","params":{"item":{"file":"' . $path . '"}}}');
+					$data[$key]['kodi_link'] = $link;
+					// Add to the buttons array
+					$myurl = basename($_SERVER['PHP_SELF']) . "?" . $_SERVER['QUERY_STRING'];
+					$buttons[] = ' <a href="' . $myurl . '&play=' . $key . '"><i class="fa fa-play"></i> Play in Kodi</a>';
+				}
 			}
+			// Set the new buttons array in the data array
+			$data[$key]['hook_before_checkin'] = $buttons;
+			unset($buttons, $result);
 		}
-		// Set the new buttons array in the data array
-		$data[$key]['hook_before_checkin'] = $buttons;
-		unset($buttons, $result);
 	}
 	return $data;
 }

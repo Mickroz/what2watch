@@ -252,21 +252,27 @@ $divider = ceil($count / 2);
 $i = 1;
 foreach ($data as $show)
 {
-	if (!array_key_exists('hook_before_checkin', $show))
+	if (!array_key_exists('hook_before_checkin', $show) && empty($show['hook_before_checkin']))
 	{	
 		$show['hook_before_checkin'] = '';
 	}
 	else
 	{
-		$show['hook_before_checkin'] = implode(' &bull; ', $show['hook_before_checkin']);
+		if (is_array($show['hook_before_checkin']) && !empty($show['hook_before_checkin']))
+		{
+			$show['hook_before_checkin'] = implode(' &bull; ', $show['hook_before_checkin']);
+		}
 	}
-	if (!array_key_exists('hook_after_checkin', $show))
+	if (!array_key_exists('hook_after_checkin', $show) && empty($show['hook_after_checkin']))
 	{	
 		$show['hook_after_checkin'] = '';
 	}
 	else
 	{
-		$show['hook_after_checkin'] = implode(' &bull; ', $show['hook_after_checkin']);
+		if (is_array($show['hook_after_checkin']) && !empty($show['hook_after_checkin']))
+		{
+			$show['hook_after_checkin'] = implode(' &bull; ', $show['hook_after_checkin']);
+		}
 	}
 	
 	$row = new template();
