@@ -24,9 +24,12 @@ register_filter('the_data','new_data');
  
 function new_data($data)
 {
+	global $log;
+	
 	$new_array = array();
 	foreach ($data as $episode)
 	{
+		$log->info('nextEpisode', 'starting check for next episode');
 		$key = $episode['tvdbid'];
 
 		$next_episode = getEpisode($key, $episode['season'], $episode['episode_number'] + 1);
@@ -43,6 +46,8 @@ function new_data($data)
 			$data[$key]['description'] = $data[$key]['description'] . '<br /><small><em>Next: ' . $new_array[$key]['episode'] . ' ' . $next_episode['data']['name'] . '</em></small>';
 		}
 		unset($new_array);
+		$log->info('nextEpisode', 'check for next episode finished');
+		
 	}
 	
     return $data;

@@ -60,6 +60,28 @@ function trakt_show_checkin($trakt_id, $message)
 	return $response;
 }
 
+function getTraktId($slug, $season, $episode)
+{
+	global $trakt_token, $log, $lang;
+	
+	$log->debug('trakt.tv', sprintf($lang['TRAKT_GET_ID'], $slug, $season, $episode));
+	$ch = curl_init();
+
+	curl_setopt($ch, CURLOPT_URL, "https://api-v2launch.trakt.tv/shows/$slug/seasons/$season/episodes/$episode");
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+	curl_setopt($ch, CURLOPT_HEADER, FALSE);
+
+	curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+		"Content-Type: application/json",
+		"trakt-api-version: 2",
+		"trakt-api-key: dfca522ce536a330d25737752dc8a26e2a5ac09e9067409669f3456db4089b7b"
+	));
+
+	$response = curl_exec($ch);
+	curl_close($ch);
+	return $response;
+}
+
 function getProgress($slug, $trakt_token)
 {
 	global $log, $lang;

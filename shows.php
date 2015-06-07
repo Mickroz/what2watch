@@ -42,7 +42,7 @@ if ($checkin)
 		$tvdb_id = $_POST['tvdb_id'];
 		$trakt_checkin = trakt_show_checkin($trakt_id, $message);
 		$trakt_show_checkin = json_decode($trakt_checkin, true);
-		
+
 		if (!isset($trakt_show_checkin['expires_at']))
 		{
 			$show_name = $trakt_show_checkin['show']['title'];
@@ -50,12 +50,16 @@ if ($checkin)
 			$episode_number = sprintf('%02d', $trakt_show_checkin['episode']['number']);
 			$episode_short = $episode_season . 'x' . $episode_number;
 			$episode_name = $trakt_show_checkin['episode']['title'];
+			$show_slug = $trakt_show_checkin['show']['ids']['slug'];
+			$log->debug('trakt.tv', sprintf($lang['TRAKT_CHECKIN'], $show_name . ' ' . $episode_short . ' ' . $episode_name));
 			$error[] = sprintf($lang['TRAKT_CHECKIN'], $show_name . ' ' . $episode_short . ' ' . $episode_name);
+			$get_trakt_info = getTraktId($show_slug, $trakt_show_checkin['episode']['season'], $trakt_show_checkin['episode']['number'] + 1);
+			$get_trakt_id = json_decode($get_trakt_info, true);
 			$getnext[$tvdb_id]['tvdbid'] = $tvdb_id;
-			$getnext[$tvdb_id]['trakt_id'] = $trakt_id;
+			$getnext[$tvdb_id]['trakt_id'] = $get_trakt_id['ids']['trakt'];
 			$getnext[$tvdb_id]['show_name'] = $show_name;
 			$getnext[$tvdb_id]['season'] = $episode_season;
-			$getnext[$tvdb_id]['episode'] = $trakt_show_checkin['episode']['number'] + 1;
+			$getnext[$tvdb_id]['episode'] = $get_trakt_id['number'];
 			$getnext[$tvdb_id]['episode_name'] = $episode_name;
 		}
 		else
@@ -110,7 +114,7 @@ if (!empty($getnext))
 			$update_data = array_replace($data, $update_serie);
 			$cache->put('shows', json_encode($update_data));
 		}
-		unset($getnext);
+		//unset($getnext,$data);
 	}
 }
 

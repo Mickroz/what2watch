@@ -105,6 +105,7 @@ $lang = array_merge($lang, array(
 	'TESTING' 				=> 'Testing',
 	'TRAKT_CHECKIN' 				=> 'aangemeld bij %s op trakt',
 	'TRAKT_ERROR' 				=> 'Communicatie met trakt is niet mogenlijk, probeer het later nog eens.',
+	'TRAKT_GET_ID'				=> 'Getting trakt id for %s %dx%d',
 	'TRAKT_GET_PROGRESS' 				=> 'Probeer voortgang te krijgen voor %s',
 	'TRAKT_NO_NEXT_EPISODE' 				=> 'Seizoen folder gevonden voor %s (%s) maar Trakt api retourneerde geen next_episode, seizoen klaar?',
 	'TRAKT_PROGRESS_FAILED' 				=> 'Mislukt om de voortgang te krijgen voor %s',
