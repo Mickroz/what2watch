@@ -60,7 +60,7 @@ if ($checkin)
 			$getnext[$tvdb_id]['show_name'] = $show_name;
 			$getnext[$tvdb_id]['season'] = $episode_season;
 			$getnext[$tvdb_id]['episode'] = $get_trakt_id['number'];
-			$getnext[$tvdb_id]['episode_name'] = $get_trakt_id['title']
+			$getnext[$tvdb_id]['episode_name'] = $get_trakt_id['title'];
 		}
 		else
 		{
