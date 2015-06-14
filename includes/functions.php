@@ -228,12 +228,13 @@ function version_check()
 	{
 		$commits = json_decode($current_commits);
 		$ref_commit = file_get_contents('version');
-		echo $ref_commit;
+		echo $ref_commit . '<br />';
 		$current_commit_minus1 = substr($commits[1]->sha, 0, 7);
 		echo $current_commit_minus1;
 		$commit_message = $commits[0]->commit->message;
 		
-		if (!strcmp($current_commit_minus1, $ref_commit)) {
+		if (!strcmp($current_commit_minus1, $ref_commit))
+		{
 			$version['style'] = ' style="color: #228822;"';
 			$version['message'] = $lang['VERSION_UP_TO_DATE'];
 		}
