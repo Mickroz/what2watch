@@ -228,9 +228,9 @@ function version_check()
 	{
 		$commits = json_decode($current_commits);
 		$ref_commit = file_get_contents('version');
+		$ref_commit = str_replace(array("\r", "\n"), '', $ref_commit);
 		$current_commit_minus1 = $commits[1]->sha;
 		$commit_message = $commits[0]->commit->message;
-		
 		if (!strcmp($current_commit_minus1, $ref_commit))
 		{
 			$version['style'] = ' style="color: #228822;"';
