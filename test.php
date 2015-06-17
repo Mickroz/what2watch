@@ -16,7 +16,7 @@ $test_lines .= '<pre>';
 // Output from tests go here
 // Uncomment below
 // $test_lines . = your code;
-
+$test_lines .= getProgress('wayward-pines', '');
 $test_lines .= '</pre>';
 /**
 * Loads our layout template, settings its title and content.

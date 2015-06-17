@@ -18,6 +18,9 @@ if (!defined('IN_W2W'))
 	exit;
 }
 
+// Version
+define('W2W_VERSION', '1.0.3');
+
 // Directories
 define('CACHE_XML',			$_SERVER['DOCUMENT_ROOT'] . '/what2watch/cache/xml');
 define('CACHE_IMAGES',			$_SERVER['DOCUMENT_ROOT'] . '/what2watch/images');

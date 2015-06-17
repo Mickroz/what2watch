@@ -288,6 +288,8 @@ function create_config_file_data($data)
 		$config_data .= "\${$key} = '" . str_replace("'", "\\'", str_replace('\\', '\\\\', $value)) . "';\n";
 	}
 	
+	$config_data .= "\n@define('W2W_INSTALLED', true);\n";
+	
 	return $config_data;
 }
 
