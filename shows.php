@@ -152,9 +152,20 @@ else
 			$log->debug('getProgress', sprintf($lang['DEBUG_DUMP'], $trakt));
 			continue;
 		}
+		// We check here if completed is 0, if so, we overwrite all next_episode values with S01E01 values
+		// This will fix some problems when trakt returns an empty next_episode for shows not watched yet
+		// or shows that return a wrong value in next_episode
+		if ($progress['completed'] == 0)
+		{
+			$getTraktInfo = getTraktId($show_id[$tvdbid]['show_slug'], 1, 1);
+			$getTraktID = json_decode($getTraktInfo, true);
+			$progress['next_episode']['ids']['trakt'] = $getTraktID['ids']['trakt'];
+			$progress['next_episode']['season'] = $getTraktID['season'];
+			$progress['next_episode']['number'] = $getTraktID['number'];
+			$progress['next_episode']['title'] = $getTraktID['title'];
+		}
 		if (empty($progress['next_episode']))
 		{
-			//$error[] = sprintf($lang['TRAKT_PROGRESS_FAILED'], $show_id[$tvdbid]['show_name'], $show_id[$tvdbid]['show_slug']);
 			$log->error('getProgress', sprintf($lang['TRAKT_PROGRESS_FAILED'], $show_id[$tvdbid]['show_name'], $show_id[$tvdbid]['show_slug']));
 			$log->debug('getProgress', sprintf($lang['DEBUG_DUMP'], $trakt));
 			continue;
@@ -169,7 +180,7 @@ else
 		$series[$tvdbid]['tvrage_id'] = $show_id[$tvdbid]['tvrage_id'];
 		$series[$tvdbid]['show_slug'] = $show_id[$tvdbid]['show_slug'];
 		$series[$tvdbid]['trakt_id'] = $progress['next_episode']['ids']['trakt'];
-		$series[$tvdbid]['message'] = $show_id[$tvdbid]['show_name'] . ' ' . $progress['next_episode']['season'] . 'x' . sprintf('%02d', $progress['next_episode']['number']) . ' ' . $progress['next_episode']['title'];
+		$series[$tvdbid]['message'] = $show_id[$tvdbid]['show_name'] . ' ' . $progress['next_episode']['season'] . 'x' . sprintf('%02d', $progress['next_episode']['number']) . ' ' . (!empty($progress['next_episode']['title']) ? $progress['next_episode']['title'] : $episode['data']['name']);
 		$series[$tvdbid]['season'] = $progress['next_episode']['season'];
 		$series[$tvdbid]['episode'] = $progress['next_episode']['season'] . 'x' . sprintf('%02d', $progress['next_episode']['number']);
 		$series[$tvdbid]['episode_number'] = $progress['next_episode']['number'];
