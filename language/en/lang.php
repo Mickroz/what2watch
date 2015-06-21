@@ -108,6 +108,7 @@ $lang = array_merge($lang, array(
 	'TRAKT_GET_ID'				=> 'Getting trakt id for %s %dx%d',
 	'TRAKT_GET_PROGRESS' 				=> 'Trying to get progress for %s',
 	'TRAKT_NO_NEXT_EPISODE' 				=> 'Got season folder for %s (%s) but Trakt API returned no next_episode, season finished?',
+	'TRAKT_PROGRESS_COMPLETED'				=> 'Watched %d out of %d episodes. Great job, every episode of this show is watched!',
 	'TRAKT_PROGRESS_FAILED' 				=> 'Failed to get progress for %s',
 	'TRAKT_PROGRESS_SUCCESS' 				=> 'Trakt returned next episode for %s is %s',
 	'TRAKT_START'					=> 'Starting checkin',

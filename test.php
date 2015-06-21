@@ -15,7 +15,7 @@ $test_lines = '<div class="code"><strong>{L_TESTING}</strong></div>';
 $test_lines .= '<pre>';
 // Output from tests go here
 // Uncomment below
-// $test_lines . = your code;
+// $test_lines .= your code;
 
 $test_lines .= '</pre>';
 /**

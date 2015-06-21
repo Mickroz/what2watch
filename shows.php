@@ -166,9 +166,19 @@ else
 		}
 		if (empty($progress['next_episode']))
 		{
-			$log->error('getProgress', sprintf($lang['TRAKT_PROGRESS_FAILED'], $show_id[$tvdbid]['show_name'], $show_id[$tvdbid]['show_slug']));
-			$log->debug('getProgress', sprintf($lang['DEBUG_DUMP'], $trakt));
-			continue;
+			// We expect here that every episode of the show is watched
+			if ($progress['completed'] == $progress['aired'])
+			{
+				$log->debug('getProgress', sprintf($lang['TRAKT_NO_NEXT_EPISODE'], $show_id[$tvdbid]['show_name'], $show_id[$tvdbid]['show_slug']));
+				$log->debug('getProgress', sprintf($lang['TRAKT_PROGRESS_COMPLETED'], $progress['completed'], $progress['aired']));
+				continue;
+			}
+			else
+			{
+				$log->error('getProgress', sprintf($lang['TRAKT_PROGRESS_FAILED'], $show_id[$tvdbid]['show_name'], $show_id[$tvdbid]['show_slug']));
+				$log->debug('getProgress', sprintf($lang['DEBUG_DUMP'], $trakt));
+				continue;
+			}
 		}
 		$log->info('getProgress', sprintf($lang['TRAKT_PROGRESS_SUCCESS'], $show_id[$tvdbid]['show_name'], $progress['next_episode']['season'] . 'x' . sprintf('%02d', $progress['next_episode']['number'])));
 		// Grab all episode data

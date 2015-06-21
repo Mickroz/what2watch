@@ -174,7 +174,7 @@ function slugify($phrase)
     return $result;
 }
 
-function get_slug($id, $trakt_token)
+function get_slug($id)
 {
 	global $log, $lang;
 	
@@ -192,7 +192,7 @@ function get_slug($id, $trakt_token)
 	curl_setopt($ch, CURLOPT_HTTPHEADER, array(
 		"Content-Type: application/json",
 		"trakt-api-version: 2",
-		"trakt-api-key: $trakt_token"
+		"trakt-api-key: dfca522ce536a330d25737752dc8a26e2a5ac09e9067409669f3456db4089b7b"
 	));
 
 	$response = curl_exec($ch);
@@ -349,7 +349,6 @@ function create_config_file()
 		{
 			$s_hidden_fields .= '<input type="hidden" name="' . $config_key . '" value="' . $config_value . '" />';
 		}
-		$first_run = false;
 		// OK, so it didn't work let's try the alternatives
 
 		if (isset($_POST['dlconfig']))

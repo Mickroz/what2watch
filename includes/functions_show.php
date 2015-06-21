@@ -88,11 +88,11 @@ function getProgress($slug, $trakt_token)
 	
 	$tag = 'getProgress';
 	$log->debug($tag, sprintf($lang['TRAKT_GET_PROGRESS'], $slug));
-	$log->info($tag, "Opening URL https://api.trakt.tv/shows/$slug/progress/watched");
+	$log->info($tag, "Opening URL https://api-v2launch.trakt.tv/shows/$slug/progress/watched");
 	
 	$ch = curl_init();
 
-	curl_setopt($ch, CURLOPT_URL, "https://api.trakt.tv/shows/$slug/progress/watched");
+	curl_setopt($ch, CURLOPT_URL, "https://api-v2launch.trakt.tv/shows/$slug/progress/watched");
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 	curl_setopt($ch, CURLOPT_HEADER, FALSE);
 	curl_setopt($ch, CURLOPT_FAILONERROR, TRUE);
@@ -159,7 +159,7 @@ function getShow($tvdbid)
 	}
 	if (isset($show_name[$tvdbid]['show_name']))
 	{
-		$slug = get_slug($tvdbid, $trakt_token);
+		$slug = get_slug($tvdbid);
 		if (empty($slug))
 		{
 			$slug = slugify($result_show['data']['show_name']);
