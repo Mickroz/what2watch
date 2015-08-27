@@ -446,6 +446,8 @@ function page_header($page_title = '')
 		'MOVIES_ACTIVE'	=> ($mode == 'movies' ? ' class="active"' : ''),
 		'LOG_ACTIVE'	=> ($mode == 'viewlog' ? ' class="active"' : ''),
 		'CONFIG_ACTIVE'	=> (($mode == 'config') ? ' class=active' : ''),
+		'PLUGINS_ACTIVE'	=> (($mode == 'plugins') ? ' class=active' : ''),
+		'DROPDOWN_ACTIVE'	=> (($mode == 'config' || $mode == 'plugins') ? ' active' : ''),
 		'STYLESHEET_LINK'	=> 'styles/' . $template_path . '/style.css',
 		'TEMPLATE_PATH'	=> 'styles/' . $template_path,
 		'PAGE_TITLE'	=> $page_title,

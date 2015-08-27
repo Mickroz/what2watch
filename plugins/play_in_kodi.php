@@ -17,6 +17,11 @@ if (!defined('IN_W2W'))
 {
 	exit;
 }
+
+// Should be named exactly like filename
+$play_in_kodi_name = 'Play in Kodi';
+$play_in_kodi_version = '1.0.2';
+
 // Initial var setup
 $user = '';
 $pass = '';

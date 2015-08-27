@@ -96,6 +96,10 @@ switch ($mode)
 		create_config_file();
 		header('Location: index.php');
 	break;
+
+	case 'plugins':
+		include('plugins.php');
+	break;
 	
 	case 'test':
 		include('test.php');

@@ -237,7 +237,7 @@ function checkSub($array, $tvdbid)
 	else
 	{
 		$ignore_words_array = explode(",", strtolower($ignore_words));
-		$skip_shows_array = explode(",", strtolower($skip_shows));
+		$skip_shows_array = array_map('trim', explode(",", strtolower($skip_shows)));
 
 		if (!empty($ignore_words))
 		{

@@ -44,9 +44,18 @@
         	<a href="?mode=viewlog" class="hidden-xs" /><span class="glyphicon glyphicon-book" aria-hidden="true"></span> {L_LOG}</a>
         	<a href="?mode=viewlog" class="visible-xs" data-toggle="offcanvas" data-target=".navmenu" /><span class="glyphicon glyphicon-book" aria-hidden="true"></span> {L_LOG}</a>
         </li>
-		<li{CONFIG_ACTIVE}>
-			<a href="?mode=config" class="hidden-xs" /><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> {L_CONFIG}</a>
-			<a href="?mode=config" class="visible-xs" data-toggle="offcanvas" data-target=".navmenu" /><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> {L_CONFIG}</a>
+		<li class="dropdown{DROPDOWN_ACTIVE}">
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> {L_CONTROL_PANEL} <b class="caret"></b></a>
+				<ul class="dropdown-menu navmenu-nav">
+					<li{CONFIG_ACTIVE}>
+						<a href="?mode=config" class="hidden-xs" /><i class="fa fa-cog"></i> {L_CONFIG}</a>
+						<a href="?mode=config" class="visible-xs" data-toggle="offcanvas" data-target=".navmenu" /><i class="fa fa-cog"></i> {L_CONFIG}</a>
+					</li>
+					<li{PLUGINS_ACTIVE}>
+						<a href="?mode=plugins" class="hidden-xs" /><i class="fa fa-puzzle-piece"></i> {L_PLUGINS}</a>
+						<a href="?mode=plugins" class="visible-xs" data-toggle="offcanvas" data-target=".navmenu" /><i class="fa fa-puzzle-piece"></i> {L_PLUGINS}</a>
+					</li>
+				</ul>
 		</li>
 		<li class="nav-divider"></li>
 		<li>
@@ -124,6 +133,13 @@ function loading_indicator()
 		l.style.display = 'block';
 	}
 }
+$(function(){
+$(".dropdown.active").toggleClass("open",true);
+$(".dropdown.active").on("hide.bs.dropdown",function(e) {
+    e.preventDefault();
+    return false;
+});
+});
 </script>
   </body>
 </html>

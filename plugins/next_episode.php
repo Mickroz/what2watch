@@ -18,6 +18,10 @@ if (!defined('IN_W2W'))
 	exit;
 }
 
+// Should be named exactly like filename
+$next_episode_name = 'Next Episode';
+$next_episode_version = '1.0.1';
+
 $log->info('plugins', 'next_episode loaded');
 
 register_filter('the_data','new_data');

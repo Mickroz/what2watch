@@ -20,6 +20,7 @@ if (!defined('IN_W2W'))
 
 $submit	= (isset($_POST['submit'])) ? true : false;
 $mode = (isset($_GET['mode'])) ? $_GET['mode'] : '';
+$page = (isset($_GET['page']) ? $_GET['page'] : '');
 $post_data = $lang_pack = $error = array();
 $trakt_token = $trakt_expires_in = $sickbeard = $sb_api = $cache_life = $sub_ext = $movies_folder = $language = $config_version = $web_username = $web_password = $ignore_words = $skip_shows = $ip_subnet = '';
 $download = true;
@@ -208,7 +209,7 @@ set_lang($language);
 require('includes/functions_plugins.php');
 
 //Load Plugins
-foreach( glob("plugins/*.php")  as $plugin)
+foreach( glob("plugins/*.php") as $plugin)
 {
 	require_once($plugin);
 }
