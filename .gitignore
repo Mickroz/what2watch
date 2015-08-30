@@ -3,3 +3,4 @@ error.log
 images/
 cache/*.cache
 cache/xml/
+plugins/active.json

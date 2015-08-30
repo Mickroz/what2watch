@@ -89,10 +89,10 @@ function kodi($data)
 					}
 				}
 				// Set the new buttons array in the data array
-				$data[$key]['hook_before_checkin'] = $buttons;
+				$data[$ep_tvdbid]['hook_before_checkin'] = $buttons;
 				unset($buttons, $result);
 			}
-			if ($result == '')
+			if (!$result)
 			{
 				$log->error('playInKodi', "Cannot connect to $kodiIP:$kodiPort");
 				break;
