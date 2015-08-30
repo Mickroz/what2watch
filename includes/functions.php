@@ -431,6 +431,73 @@ function set_lang($language)
 	{
 		trigger_error('Language file ' . $language_filename . ' couldn\'t be opened.', E_USER_ERROR);
 	}
+	
+	// Include active plugins language files
+	if ($active_plugins = @file_get_contents("plugins/active.json"))
+	{
+		$json_a = json_decode($active_plugins, true);
+		
+		foreach ($json_a as $key => $value)
+		{
+			$file = 'language/' . $language . '/' . $key . '.php';
+			if(file_exists($file))
+			{
+				include $file;
+			}
+		}
+	}
+}
+
+function meta_refresh($time, $url)
+{
+	global $template;
+
+	$url = str_replace('&', '&amp;', $url);
+
+	// For XHTML compatibility we change back & to &amp;
+	$template->assign_vars(array(
+		'META' => '<meta http-equiv="refresh" content="' . $time . '; url=' . $url . '" />')
+	);
+
+	return $url;
+}
+
+function msg_handler($msg_text, $type = '')
+{
+	global $template_path, $template, $lang, $msg_title;
+	global $version;
+	
+	if (empty($type))
+	{
+		$type = 'info';
+	}
+	$msg_text = (!empty($lang[$msg_text])) ? $lang[$msg_text] : $msg_text;
+	$msg_title = (!isset($msg_title)) ? $lang['INFORMATION'] : ((!empty($lang[$msg_title])) ? $lang[$msg_title] : $msg_title);
+	
+	$msg_handler = new template();
+	$msg_handler->set_template();
+	$msg_handler->set_filename('message_body.html');
+
+	$msg_handler->assign_vars(array(
+		'TYPE'				=> $type,
+		'MESSAGE_TITLE'		=> $msg_title,
+		'MESSAGE_TEXT'		=> $msg_text)
+	);
+
+	$template->assign_vars(array(
+		'STYLESHEET_LINK'	=> 'styles/' . $template_path . '/style.css',
+		'CONTENT'	=> $msg_handler->output(),
+		'VERSION'	=> '<p' . $version['style'] . '><strong>' . $version['message'] . '</strong></p>',
+		'ERROR'		=> '',
+	));
+
+	page_header($msg_title);
+	
+	$template->set_filename('index_body.html');
+		
+	page_footer();
+
+	exit_handler();
 }
 /**
 * Generate page header
@@ -462,4 +529,10 @@ function page_footer()
 	global $lang, $template;
 	
 	echo $template->output();
+	exit_handler();
+}
+
+function exit_handler()
+{
+	exit;
 }

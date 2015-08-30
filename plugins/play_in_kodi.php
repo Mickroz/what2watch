@@ -17,19 +17,30 @@ if (!defined('IN_W2W'))
 {
 	exit;
 }
-
+// Initial var setup
 // Should be named exactly like filename
 $play_in_kodi_name = 'Play in Kodi';
 $play_in_kodi_version = '1.0.2';
+$play_in_kodi['config'] = array(
+	'user'		=> '',
+	'pass'		=> '',
+	'kodiIP'	=> '',
+	'kodiPort'	=> '',
+	'active'	=> true
+);
+// Grabbing config
+if ($active_plugins = @file_get_contents("plugins/active.json"))
+{
+	$config = json_decode($active_plugins, true);
+}
 
-// Initial var setup
-$user = '';
-$pass = '';
-$kodiIP = '';
-$kodiPort = '';
+$user = $config['play_in_kodi']['config']['user'];
+$pass = $config['play_in_kodi']['config']['pass'];
+$kodiIP = $config['play_in_kodi']['config']['kodiIP'];
+$kodiPort = $config['play_in_kodi']['config']['kodiPort'];
 $kodi_url = "http://$user:$pass@$kodiIP:$kodiPort/jsonrpc?request=";
 
-$play_in_kodi = (isset($_GET['play'])) ? $_GET['play'] : '';
+$play_kodi = (isset($_GET['play'])) ? $_GET['play'] : '';
 
 $log->info('plugins', 'play_in_kodi loaded');
 
@@ -49,7 +60,7 @@ function kodi($data)
 			{	
 				$buttons = $episode['hook_before_checkin'];
 			}
-			$key = $episode['tvdbid'];
+			$ep_tvdbid = $episode['tvdbid'];
 
 			$show_name = $episode['show_name'];
 			$episode_name = $episode['name'];
@@ -74,12 +85,17 @@ function kodi($data)
 						$link = urlencode('{"jsonrpc":"2.0","id":"1","method":"Player.Open","params":{"item":{"file":"' . $path . '"}}}');
 						// Add to the buttons array
 						$myurl = basename($_SERVER['PHP_SELF']) . "?" . $_SERVER['QUERY_STRING'];
-						$buttons[] = ' <a href="' . $myurl . '&play=' . $key . '&kodi_link=' . $link . '"><i class="fa fa-play"></i> Play in Kodi</a>';
+						$buttons[] = ' <a href="' . $myurl . '&play=' . $ep_tvdbid . '&kodi_link=' . $link . '"><i class="fa fa-play"></i> Play in Kodi</a>';
 					}
 				}
 				// Set the new buttons array in the data array
 				$data[$key]['hook_before_checkin'] = $buttons;
 				unset($buttons, $result);
+			}
+			if ($result == '')
+			{
+				$log->error('playInKodi', "Cannot connect to $kodiIP:$kodiPort");
+				break;
 			}
 		}
 	}
@@ -90,7 +106,7 @@ function kodi($data)
 	return $data;
 }
 
-if ($play_in_kodi)
+if ($play_kodi)
 {
 	$tag = "kodi";
 	$kodi_link = $_GET['kodi_link'];
@@ -111,7 +127,7 @@ if ($play_in_kodi)
 	$return = json_decode($play, true);
 	if ($return['result'] == 'OK')
 	{
-		$error[] = 'Playing: ' . $data[$play_in_kodi]['message'];
+		$error[] = 'Playing: ' . $data[$play_kodi]['message'];
 		header("refresh:5; url=index.php?mode=shows");
 	}
 }

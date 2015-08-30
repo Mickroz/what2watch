@@ -204,12 +204,16 @@ $template	= new template();
 $template->set_template();
 $cache->cache_time = $cache_life;
 set_lang($language);
-
+$template->assign_var('META', '');
 // Add own plugins handler
 require('includes/functions_plugins.php');
 
 //Load Plugins
-foreach( glob("plugins/*.php") as $plugin)
+if ($active_plugins = @file_get_contents("plugins/active.json"))
 {
-	require_once($plugin);
+	$config = json_decode($active_plugins, true);
+}
+foreach($config as $plugin => $value)
+{
+	require_once("plugins/$plugin.php");
 }

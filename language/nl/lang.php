@@ -53,6 +53,7 @@ $lang = array_merge($lang, array(
 	'IGNORE_WORDS_EXPLAIN' 				=> 'Niet hoofdlettergevoelige woorden gescheiden door een , die je wenst te negeren in releases.',
 	'INDEX' 				=> 'What2Watch',
 	'INFO'					=> 'Info',
+	'INFORMATION'			=> 'Informatie',
 	'IP_SUBNET'				=> 'IP Subnet',
 	'IP_SUBNET_EXPLAIN'		=> 'Je kan hier je ip subnet invullen als je alleen een login scherm voor buiten je LAN wilt, laat de laatste reeks leeg(192.168.100.), of laat dit veld leeg om het uit te schakelen',
 	'LANGUAGE_SELECT' 				=> 'Taal',

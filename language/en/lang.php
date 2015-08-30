@@ -53,6 +53,7 @@ $lang = array_merge($lang, array(
 	'IGNORE_WORDS_EXPLAIN' 				=> 'Case insensitive words separated by , that you wish to ignore in releases.',
 	'INDEX' 				=> 'What2Watch',
 	'INFO'					=> 'Info',
+	'INFORMATION'			=> 'Information',
 	'IP_SUBNET'				=> 'IP Subnet',
 	'IP_SUBNET_EXPLAIN'		=> 'You can fill in your ip subnet if you only want a login field for outside your LAN, leave the last range empty (192.168.100.), or leave empty at all to disable',
 	'LANGUAGE_SELECT' 				=> 'Select language',
