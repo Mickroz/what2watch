@@ -92,7 +92,7 @@ function kodi($data)
 				$data[$ep_tvdbid]['hook_before_checkin'] = $buttons;
 				unset($buttons, $result);
 			}
-			if (!$result)
+			else
 			{
 				$log->error('playInKodi', "Cannot connect to $kodiIP:$kodiPort");
 				break;
