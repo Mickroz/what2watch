@@ -77,7 +77,7 @@ function kodi($data)
 			{
 				if (!isset($result['result']['episodes']))
 				{
-					$log->error('playInKodi', "Cannot find $showname, Kodi returned: $result");
+					$log->error('playInKodi', "Cannot find $show_name, Kodi returned: $result");
 					continue;
 				}
 				foreach ($result['result']['episodes'] as $episodes)
