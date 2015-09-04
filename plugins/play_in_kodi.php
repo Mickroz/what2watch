@@ -34,10 +34,10 @@ if ($active_plugins = @file_get_contents("plugins/active.json"))
 	$config = json_decode($active_plugins, true);
 }
 
-$user = $config['play_in_kodi']['config']['user'];
-$pass = $config['play_in_kodi']['config']['pass'];
-$kodiIP = $config['play_in_kodi']['config']['kodiIP'];
-$kodiPort = $config['play_in_kodi']['config']['kodiPort'];
+$user = (isset($config['play_in_kodi']['config']['user'])) ? $config['play_in_kodi']['config']['user'] : '';
+$pass = (isset($config['play_in_kodi']['config']['pass'])) ? $config['play_in_kodi']['config']['pass'] : '';
+$kodiIP = (isset($config['play_in_kodi']['config']['kodiIP'])) ? $config['play_in_kodi']['config']['kodiIP'] : '';
+$kodiPort = (isset($config['play_in_kodi']['config']['kodiPort'])) ? $config['play_in_kodi']['config']['kodiPort'] : '';
 $kodi_url = "http://$user:$pass@$kodiIP:$kodiPort/jsonrpc?request=";
 
 $play_kodi = (isset($_GET['play'])) ? $_GET['play'] : '';

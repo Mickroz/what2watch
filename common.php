@@ -22,7 +22,7 @@ $submit	= (isset($_POST['submit'])) ? true : false;
 $mode = (isset($_GET['mode'])) ? $_GET['mode'] : '';
 $page = (isset($_GET['page']) ? $_GET['page'] : '');
 $post_data = $lang_pack = $error = array();
-$trakt_token = $trakt_expires_in = $sickbeard = $sb_api = $cache_life = $sub_ext = $movies_folder = $language = $config_version = $web_username = $web_password = $ignore_words = $skip_shows = $ip_subnet = '';
+$config = $trakt_token = $trakt_expires_in = $sickbeard = $sb_api = $cache_life = $sub_ext = $movies_folder = $language = $config_version = $web_username = $web_password = $ignore_words = $skip_shows = $ip_subnet = '';
 $download = true;
 $template_path = 'default';
 $language = 'en';
@@ -209,6 +209,10 @@ $template->assign_var('META', '');
 require('includes/functions_plugins.php');
 
 //Load Plugins
+if (!file_exists("plugins/active.json"))
+{
+    file_put_contents("plugins/active.json", '[]');
+}
 if ($active_plugins = @file_get_contents("plugins/active.json"))
 {
 	$config = json_decode($active_plugins, true);
