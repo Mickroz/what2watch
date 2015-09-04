@@ -184,10 +184,7 @@ $movieslist->assign_vars(array(
 * Loads our layout template, settings its title and content.
 */
 $template->assign_vars(array(
-	'STYLESHEET_LINK'	=> 'styles/' . $template_path . '/style.css',
 	'CONTENT'	=> $movieslist->output(),
-	'VERSION'	=> '<p' . $version['style'] . '><strong>' . $version['message'] . '</strong></p>',
-	'ERROR'		=> (sizeof($error)) ? '<strong style="color:red">' . implode('<br />', $error) . '</strong>' : '',
 ));
 /**
 * Finally we can output our final page.

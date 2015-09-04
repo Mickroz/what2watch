@@ -295,7 +295,7 @@ function create_config_file_data($data)
 
 function create_config_file()
 {
-	global $lang, $template, $log;
+	global $lang, $template, $log, $error, $msg_title;
 	$data = get_submitted_data();
 	$written = false;
 	$error = array();
@@ -371,15 +371,10 @@ function create_config_file()
 	}
 	else
 	{
-		page_header($lang['INDEX'] . ' - ' . $lang['CONFIG_WRITTEN']);
-		$template->set_filename('index_body.html');
-		$template->assign_vars(array(
-			'ERROR'		=> (sizeof($error)) ? '<strong style="color:red">' . implode('<br />', $error) . '</strong>' : '',
-			'CONTENT'	=> sprintf($lang['CONFIG_WRITTEN_EXPLAIN'], '<a href="index.php">' . $lang['HERE'] . '</a>'),
-			'VERSION'	=> '',
-		));
-
-		page_footer();
+		$msg_title = $lang['SUCCESS'];
+		$redirect_url = "index.php";
+		meta_refresh(5, $redirect_url);
+		msg_handler(sprintf($lang['CONFIG_WRITTEN_EXPLAIN'], '<a href="index.php">' . $lang['HERE'] . '</a>'), 'success');
 	}
 }
 /**
@@ -465,8 +460,7 @@ function meta_refresh($time, $url)
 function msg_handler($msg_text, $type = '')
 {
 	global $template_path, $template, $lang, $msg_title;
-	global $version;
-	
+	global $version, $error;
 	if (empty($type))
 	{
 		$type = 'info';
@@ -485,10 +479,7 @@ function msg_handler($msg_text, $type = '')
 	);
 
 	$template->assign_vars(array(
-		'STYLESHEET_LINK'	=> 'styles/' . $template_path . '/style.css',
 		'CONTENT'	=> $msg_handler->output(),
-		'VERSION'	=> '<p' . $version['style'] . '><strong>' . $version['message'] . '</strong></p>',
-		'ERROR'		=> '',
 	));
 
 	page_header($msg_title);
@@ -504,7 +495,7 @@ function msg_handler($msg_text, $type = '')
 */
 function page_header($page_title = '')
 {
-	global $lang, $template, $template_path;
+	global $lang, $template, $template_path, $error, $version;
 	
 	$mode = (isset($_GET['mode']) ? $_GET['mode'] : '');
 	// The following assigns all _common_ variables that may be used at any point in a template.
@@ -518,6 +509,8 @@ function page_header($page_title = '')
 		'STYLESHEET_LINK'	=> 'styles/' . $template_path . '/style.css',
 		'TEMPLATE_PATH'	=> 'styles/' . $template_path,
 		'PAGE_TITLE'	=> $page_title,
+		'ERROR'		=> (sizeof($error)) ? '<div class="alert alert-danger" role="alert"><strong>Error</strong>: ' . implode('<br />', $error) . '</div>' : '',
+		'VERSION'	=> '<p' . $version['style'] . '><strong>' . $version['message'] . '</strong></p>',
 	));
 }
 

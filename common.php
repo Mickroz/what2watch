@@ -58,6 +58,7 @@ if (($config_version != W2W_VERSION || $mode == 'config') && $mode != 'config_fi
 	set_lang($language);
 	$template	= new template();
 	$template->set_template();
+	$template->assign_var('META', '');
 	$log = new PHPLogger("error.log");
 	$cache		= new cache();
     $tag = "INSTALLER";
@@ -175,11 +176,9 @@ if (($config_version != W2W_VERSION || $mode == 'config') && $mode != 'config_fi
 		));
 		$template = new template();
 		$template->set_template();
+		$template->assign_var('META', '');
 		$template->assign_vars(array(
-			'STYLESHEET_LINK'	=> 'styles/' . $template_path . '/style.css',
-			'ERROR'		=> (sizeof($error)) ? '<strong style="color:red">' . implode('<br />', $error) . '</strong>' : '',
 			'CONTENT'	=> $install->output(),
-			'VERSION'	=> '<p' . $version['style'] . '><strong>' . $version['message'] . '</strong></p>',
 		));
 		
 		page_header($lang['INDEX']);

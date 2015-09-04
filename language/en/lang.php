@@ -105,6 +105,7 @@ $lang = array_merge($lang, array(
 	'SUBTITLE_EXTENSION' 				=> 'Subtitle extension',
 	'SUBTITLE_EXTENSION_EXPLAIN' 				=> 'with leading period i.e. .nl.srt',
 	'SUBTITLE_FOUND' 				=> 'Found a subtitle for %s',
+	'SUCCESS'	=> 'Success',
 	'TESTING' 				=> 'Testing',
 	'TRAKT_CHECKIN' 				=> 'Checked into %s on trakt',
 	'TRAKT_ERROR' 				=> 'Communication with trakt is not possible, try again later.',

@@ -159,10 +159,7 @@ if ((isset($_GET['access_token']) && !empty($_GET['access_token'])) && $download
 	$template = new template();
 	$template->set_template();
 	$template->assign_vars(array(
-		'STYLESHEET_LINK'	=> 'styles/' . $template_path . '/style.css',
-		'ERROR'		=> (sizeof($error)) ? '<strong style="color:red">' . implode('<br />', $error) . '</strong>' : '',
 		'CONTENT'	=> $install->output(),
-		'VERSION'	=> '<p' . $version['style'] . '><strong>' . $version['message'] . '</strong></p>',
 	));
 		
 	page_header($lang['INDEX']);

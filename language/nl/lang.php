@@ -105,6 +105,7 @@ $lang = array_merge($lang, array(
 	'SUBTITLE_EXTENSION' 				=> 'Ondertitels extensie',
 	'SUBTITLE_EXTENSION_EXPLAIN' 				=> 'met voorloop punt bijvoorbeeld .nl.srt',
 	'SUBTITLE_FOUND' 				=> 'Ondertitel gevonden voor %s',
+	'SUCCESS'	=> 'Succes',
 	'TESTING' 				=> 'Testing',
 	'TRAKT_CHECKIN' 				=> 'aangemeld bij %s op trakt',
 	'TRAKT_ERROR' 				=> 'Communicatie met trakt is niet mogenlijk, probeer het later nog eens.',

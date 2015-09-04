@@ -137,8 +137,6 @@ switch ($mode)
 
 		$template->assign_vars(array(
 			'CONTENT'	=> $content,
-			'VERSION'	=> '<p' . $version['style'] . '><strong>' . $version['message'] . '</strong></p>',
-			'ERROR'		=> (sizeof($error)) ? '<strong style="color:red">' . implode('<br />', $error) . '</strong>' : '',
 		));
 		/**
 		* Finally we can output our final page.
