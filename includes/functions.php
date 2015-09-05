@@ -20,7 +20,7 @@ if (!defined('IN_W2W'))
 
 function getFanart($cat, $location, $name, $id, $banner, $background)
 {
-	global $log, $lang;
+	global $log, $lang, $info, $error;
 	$tag = 'getFanart';
 
 	$cat_banner = ($cat == 'tv' ? 'tvbanner' : 'moviebanner');
@@ -36,7 +36,7 @@ function getFanart($cat, $location, $name, $id, $banner, $background)
 		{
 			$grabbed = true;
 			$log->debug($tag, sprintf($lang['GRABBING_FANART'], $cat_banner . ' ' . $result[$cat_banner][0]['url']));
-			$error[] = sprintf($lang['SAVED_FANART'], $cat_banner, $result['name']);
+			$info[] = sprintf($lang['SAVED_FANART'], $cat_banner, $result['name']);
 			$log->info($tag, sprintf($lang['SAVED_FANART'], $cat_banner, $result['name']));
 		}
 		else
@@ -50,7 +50,7 @@ function getFanart($cat, $location, $name, $id, $banner, $background)
 		if (file_put_contents(CACHE_IMAGES . '/' . $background, fopen($result[$cat_bg][0]['url'], 'r')))
 		{
 			$log->debug($tag, sprintf($lang['GRABBING_FANART'], $cat_bg . ' ' . $result[$cat_bg][0]['url']));
-			$error[] = sprintf($lang['SAVED_FANART'], $cat_bg, $result['name']);
+			$info[] = sprintf($lang['SAVED_FANART'], $cat_bg, $result['name']);
 			$log->info($tag, sprintf($lang['SAVED_FANART'], $cat_bg, $result['name']));
 		}
 		else
@@ -84,7 +84,7 @@ function getFanart($cat, $location, $name, $id, $banner, $background)
 
 function createImage($title, $banner, $rsr_org, $im, $got_bg)
 {
-	global $log, $lang;
+	global $log, $lang, $info;
 	
 	$tag = 'createImage';
 	// Create some colors
@@ -114,7 +114,7 @@ function createImage($title, $banner, $rsr_org, $im, $got_bg)
 	{
 		imagedestroy($rsr_org);
 	}
-	$error[] = sprintf($lang['CREATED_BANNER'], $title);
+	$info[] = sprintf($lang['CREATED_BANNER'], $title);
 	$log->info($tag, sprintf($lang['CREATED_BANNER'], $title));
 }
 
@@ -176,7 +176,7 @@ function slugify($phrase)
 
 function get_slug($id)
 {
-	global $log, $lang;
+	global $log, $lang, $error;
 	
 		$type = 'tvdb';
 		$return = 'show';
@@ -364,17 +364,15 @@ function create_config_file()
 		page_header($lang['INDEX'] . ' - ' . $lang['DL_CONFIG']);
 		$template->set_filename('install_dlconfig.html');
 		$template->assign_vars(array(
-			'VERSION'	=> '',
 			'S_HIDDEN'				=> $s_hidden_fields,
 		));
 		page_footer();
 	}
 	else
 	{
-		$msg_title = $lang['SUCCESS'];
 		$redirect_url = "index.php";
 		meta_refresh(5, $redirect_url);
-		msg_handler(sprintf($lang['CONFIG_WRITTEN_EXPLAIN'], '<a href="index.php">' . $lang['HERE'] . '</a>'), 'success');
+		msg_handler(sprintf($lang['CONFIG_WRITTEN_EXPLAIN'], '<a href="index.php">' . $lang['HERE'] . '</a>'), 'SUCCESS', 'success');
 	}
 }
 /**
@@ -446,6 +444,7 @@ function set_lang($language)
 function meta_refresh($time, $url)
 {
 	global $template;
+	define('META_REFRESH', true);
 
 	$url = str_replace('&', '&amp;', $url);
 
@@ -457,10 +456,10 @@ function meta_refresh($time, $url)
 	return $url;
 }
 
-function msg_handler($msg_text, $type = '')
+function msg_handler($msg_text, $msg_title = '', $type = '')
 {
 	global $template_path, $template, $lang, $msg_title;
-	global $version, $error;
+	global $error;
 	if (empty($type))
 	{
 		$type = 'info';
@@ -478,38 +477,48 @@ function msg_handler($msg_text, $type = '')
 		'MESSAGE_TEXT'		=> $msg_text)
 	);
 
-	$template->assign_vars(array(
-		'CONTENT'	=> $msg_handler->output(),
-	));
+	if (defined('META_REFRESH'))
+	{
+		$template->assign_vars(array(
+			'CONTENT'	=> $msg_handler->output(),
+		));
 
-	page_header($msg_title);
+		page_header($msg_title);
 	
-	$template->set_filename('index_body.html');
+		$template->set_filename('index_body.html');
 		
-	page_footer();
-
-	exit_handler();
+		page_footer();
+	}
+	else
+	{
+		return $msg_handler->output();
+	}
 }
 /**
 * Generate page header
 */
 function page_header($page_title = '')
 {
-	global $lang, $template, $template_path, $error, $version;
+	global $lang, $template, $template_path, $error, $version, $success, $info, $warning;
 	
+	$notifier = file_get_contents('styles/' . $template_path . '/message_body.html');
+
 	$mode = (isset($_GET['mode']) ? $_GET['mode'] : '');
 	// The following assigns all _common_ variables that may be used at any point in a template.
 	$template->assign_vars(array(
 		'SHOWS_ACTIVE'	=> ($mode == 'shows' ? ' class="active"' : ''),
 		'MOVIES_ACTIVE'	=> ($mode == 'movies' ? ' class="active"' : ''),
 		'LOG_ACTIVE'	=> ($mode == 'viewlog' ? ' class="active"' : ''),
-		'CONFIG_ACTIVE'	=> (($mode == 'config') ? ' class=active' : ''),
-		'PLUGINS_ACTIVE'	=> (($mode == 'plugins') ? ' class=active' : ''),
+		'CONFIG_ACTIVE'	=> (($mode == 'config') ? ' class="active"' : ''),
+		'PLUGINS_ACTIVE'	=> (($mode == 'plugins') ? ' class="active"' : ''),
 		'DROPDOWN_ACTIVE'	=> (($mode == 'config' || $mode == 'plugins') ? ' active' : ''),
 		'STYLESHEET_LINK'	=> 'styles/' . $template_path . '/style.css',
 		'TEMPLATE_PATH'	=> 'styles/' . $template_path,
 		'PAGE_TITLE'	=> $page_title,
-		'ERROR'		=> (sizeof($error)) ? '<div class="alert alert-danger" role="alert"><strong>Error</strong>: ' . implode('<br />', $error) . '</div>' : '',
+		'ERROR'		=> (sizeof($error)) ? strtr($notifier, array('{TYPE}' => 'danger', '{MESSAGE_TITLE}' => $lang['ERROR'], '{MESSAGE_TEXT}' => implode('<br />', $error))) : '',
+		'SUCCESS'	=> (sizeof($success)) ? strtr($notifier, array('{TYPE}' => 'success', '{MESSAGE_TITLE}' => $lang['SUCCESS'], '{MESSAGE_TEXT}' => implode('<br />', $success))) : '',
+		'INFORMATION'		=> (sizeof($info)) ? strtr($notifier, array('{TYPE}' => 'info', '{MESSAGE_TITLE}' => $lang['INFORMATION'], '{MESSAGE_TEXT}' => implode('<br />', $info))) : '',
+		'WARNING'	=> (sizeof($warning)) ? strtr($notifier, array('{TYPE}' => 'warning', '{MESSAGE_TITLE}' => $lang['WARNING'], '{MESSAGE_TEXT}' => implode('<br />', $warning))) : '',
 		'VERSION'	=> '<p' . $version['style'] . '><strong>' . $version['message'] . '</strong></p>',
 	));
 }

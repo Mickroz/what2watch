@@ -19,7 +19,7 @@ foreach( glob("plugins/*.php") as $plugins_detected)
 {
 	require_once($plugins_detected);
 	$plugin = str_replace(array('plugins/', '.php'), '', $plugins_detected);
-	$plugin_installed = array_key_exists($plugin, $json_a) ? '<a href="?mode=plugins&name=' . $plugin . '&action=uninstall">uninstall</a>' :  '<a href="?mode=plugins&name=' . $plugin . '&action=install">install</a>';
+	$plugin_installed = array_key_exists($plugin, $json_a) ? '<a href="?mode=plugins&name=' . $plugin . '&action=uninstall">' . $lang['PLUGIN_UNINSTALL'] . '</a>' :  '<a href="?mode=plugins&name=' . $plugin . '&action=install">' . $lang['PLUGIN_INSTALL'] . '</a>';
 	$plugins[] .= ${$plugin . '_name'} . ' ' . ${$plugin . '_version'} . ' ( ' . $plugin_installed . ' )';
 }
 if ($submit)
@@ -44,7 +44,7 @@ if ($submit)
 	fclose($fp);
 	$redirect_url = "index.php?mode=plugins";
 	meta_refresh(3, $redirect_url);
-	msg_handler($_POST['name'] . ' settings updated', 'success');
+	msg_handler(sprintf($_POST['name'], $lang['PLUGIN_SETTINGS_UPDATED']), 'SUCCESS', 'success');
 }
 
 foreach ($json_b as $key => $value)
@@ -126,7 +126,7 @@ if ($action == 'install')
 		$msg_title = 'Error';
 		$redirect_url = "index.php?mode=plugins";
 		meta_refresh(3, $redirect_url);
-		msg_handler('plugin already installed', 'danger');
+		msg_handler($lang['PLUGIN_INSTALL_EXIST'], 'ERROR', 'danger');
 	}
 	else
 	{
@@ -137,7 +137,7 @@ if ($action == 'install')
 		fclose($fp);
 		$redirect_url = "index.php?mode=plugins";
 		meta_refresh(3, $redirect_url);
-		msg_handler('Installed ' . $name, 'info');
+		msg_handler(sprintf($lang['PLUGIN_INSTALL_SUCCESS'], $name), 'SUCCESS', 'success');
 	}
 }
 
@@ -147,7 +147,7 @@ if ($action == 'uninstall')
 	{
 		$redirect_url = "index.php?mode=plugins";
 		meta_refresh(3, $redirect_url);
-		msg_handler('plugin already uninstalled', 'danger');
+		msg_handler(sprintf($lang['PLUGIN_UNINSTALL_FAILED'], $name), 'ERROR', 'danger');
 	}
 	else
 	{
@@ -157,7 +157,7 @@ if ($action == 'uninstall')
 		fclose($fp);
 		$redirect_url = "index.php?mode=plugins";
 		meta_refresh(3, $redirect_url);
-		msg_handler('uninstalled ' . $name, 'info');
+		msg_handler(sprintf($lang['PLUGIN_UNINSTALL_SUCCESS'], $name), 'SUCCESS', 'success');
 	}
 }
 /**

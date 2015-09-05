@@ -52,7 +52,7 @@ if ($checkin)
 			$episode_name = $trakt_show_checkin['episode']['title'];
 			$show_slug = $trakt_show_checkin['show']['ids']['slug'];
 			$log->debug('trakt.tv', sprintf($lang['TRAKT_CHECKIN'], $show_name . ' ' . $episode_short . ' ' . $episode_name));
-			$error[] = sprintf($lang['TRAKT_CHECKIN'], $show_name . ' ' . $episode_short . ' ' . $episode_name);
+			$success[] = sprintf($lang['TRAKT_CHECKIN'], $show_name . ' ' . $episode_short . ' ' . $episode_name);
 			$get_trakt_info = getTraktId($show_slug, $trakt_show_checkin['episode']['season'], $trakt_show_checkin['episode']['number'] + 1);
 			$get_trakt_id = json_decode($get_trakt_info, true);
 			$getnext[$tvdb_id]['tvdbid'] = $tvdb_id;

@@ -83,7 +83,7 @@ function readXml($xml_file)
 function createXml($filename, $location = false)
 {
 	$tag = 'createXml';
-	global $log, $lang;
+	global $log, $lang, $error;
 	
 	$got_file = false;
 	$cache_dir = CACHE_XML;

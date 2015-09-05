@@ -84,7 +84,7 @@ function getTraktId($slug, $season, $episode)
 
 function getProgress($slug, $trakt_token)
 {
-	global $log, $lang;
+	global $log, $lang, $error;
 	
 	$tag = 'getProgress';
 	$log->debug($tag, sprintf($lang['TRAKT_GET_PROGRESS'], $slug));
@@ -117,7 +117,7 @@ function getProgress($slug, $trakt_token)
 function getShow($tvdbid)
 {
 	$tag = 'getShow';
-	global $sickbeard, $sb_api, $log, $trakt_token, $lang;
+	global $sickbeard, $sb_api, $log, $trakt_token, $lang, $error;
 	
 	$log->info($tag, sprintf($lang['SB_START'], $tvdbid));
 	
@@ -172,7 +172,7 @@ function getShow($tvdbid)
 
 function getEpisode($tvdbid, $season, $episode)
 {
-	global $sickbeard, $sb_api, $log, $lang;
+	global $sickbeard, $sb_api, $log, $lang, $error;
 	
 	$tag = 'getEpisode';
 	$get_episode = getUrl($sickbeard . "/api/" . $sb_api . "/?cmd=episode&tvdbid=" . $tvdbid . "&season=" . $season . "&episode=" . $episode . "&full_path=1", $tag);

@@ -9,7 +9,7 @@ include('common.php');
 
 // Initial var setup
 $mode = (isset($_GET['mode']) ? $_GET['mode'] : '');
-$error = array();
+$error = $success = $info = $warning = array();
 $purge_cache = false;
 if ($version = $cache->get('version_check'))
 {
@@ -111,7 +111,7 @@ switch ($mode)
 		header("refresh:5; url=" . $referer);
 		$tag = 'Cache';
 		$log->info($tag, $lang['CACHE_PURGED']);
-		$error[] = $lang['CACHE_PURGED'];
+		$info[] = $lang['CACHE_PURGED'];
 		$cache_message = sprintf($lang['CACHE_PURGED_EXPLAIN'], '<a href="' . $referer . '">' . $lang['HERE'] . '</a>');
 		$purge_cache = true;
 	
@@ -125,7 +125,7 @@ switch ($mode)
 			header("refresh:5; url=" . $referer);
 			$tag = 'Log';
 			$log->info($tag, $lang['LOG_PURGED']);
-			$error[] = $lang['LOG_PURGED'];
+			$info[] = $lang['LOG_PURGED'];
 			$cache_message = sprintf($lang['LOG_PURGED_EXPLAIN'], '<a href="' . $referer . '">' . $lang['HERE'] . '</a>');
 		}
 	

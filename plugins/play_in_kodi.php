@@ -48,7 +48,7 @@ register_filter('hook_before_checkin','kodi');
 
 function kodi($data)
 {
-	global $user, $pass, $kodiIP, $kodiPort, $kodi_url, $log;
+	global $user, $pass, $kodiIP, $kodiPort, $kodi_url, $log, $lang;
 	
 	if (!empty($kodiIP))
 	{
@@ -77,7 +77,7 @@ function kodi($data)
 			{
 				if (!isset($result['result']['episodes']))
 				{
-					$log->error('playInKodi', "Cannot find $show_name, Kodi returned: $kodi");
+					$log->error('playInKodi', sprintf($lang['KODI_SHOWNAME_FAILED'], $show_name,  $kodi));
 					continue;
 				}
 				foreach ($result['result']['episodes'] as $episodes)
@@ -90,7 +90,7 @@ function kodi($data)
 						$link = urlencode('{"jsonrpc":"2.0","id":"1","method":"Player.Open","params":{"item":{"file":"' . $path . '"}}}');
 						// Add to the buttons array
 						$myurl = basename($_SERVER['PHP_SELF']) . "?" . $_SERVER['QUERY_STRING'];
-						$buttons[] = ' <a href="' . $myurl . '&play=' . $ep_tvdbid . '&kodi_link=' . $link . '"><i class="fa fa-play"></i> Play in Kodi</a>';
+						$buttons[] = ' <a href="' . $myurl . '&play=' . $ep_tvdbid . '&kodi_link=' . $link . '">' . $lang['KODI_PLAY_TEXT'] . '</a>';
 					}
 				}
 				// Set the new buttons array in the data array
@@ -99,14 +99,14 @@ function kodi($data)
 			}
 			else
 			{
-				$log->error('playInKodi', "Cannot connect to $kodiIP:$kodiPort");
+				$log->error('playInKodi', sprintf($lang['KODI_CONNECT_FAILED'], $kodiIP, $kodiPort));
 				break;
 			}
 		}
 	}
 	else
 	{
-		$log->error('playInKodi', 'Settings are empty!');
+		$log->error('playInKodi', $lang['KODI_SETTINGS_EMPTY']);
 	}
 	return $data;
 }
@@ -115,7 +115,7 @@ if ($play_kodi)
 {
 	$tag = "kodi";
 	$kodi_link = $_GET['kodi_link'];
-	$log->info($tag, "Opening URL " . $kodi_url . $kodi_link);
+	$log->info($tag, sprintf($lang['KODI_OPENING_URL'], $kodi_url . $kodi_link));
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, $kodi_url);
 	curl_setopt($ch, CURLOPT_USERAGENT, 'What2Watch');
@@ -132,7 +132,7 @@ if ($play_kodi)
 	$return = json_decode($play, true);
 	if ($return['result'] == 'OK')
 	{
-		$error[] = 'Playing: ' . $data[$play_kodi]['message'];
+		$error[] = sprintf($lang['KODI_PLAYING'], $data[$play_kodi]['message']);
 		header("refresh:5; url=index.php?mode=shows");
 	}
 }

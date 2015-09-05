@@ -24,7 +24,7 @@ if ($checkin)
 		if (!isset($trakt_show_checkin['expires_at']))
 		{
 			$movie_title = $trakt_movie_checkin['movie']['title'];
-			$error[] = sprintf($lang['TRAKT_CHECKIN'], $movie_title);
+			$success[] = sprintf($lang['TRAKT_CHECKIN'], $movie_title);
 		}
 		else
 		{
