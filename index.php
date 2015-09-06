@@ -107,36 +107,31 @@ switch ($mode)
 	
 	case 'purge_cache':
 		$cache->purge();
-		$referer = $_SERVER['HTTP_REFERER'];
-		header("refresh:5; url=" . $referer);
-		$tag = 'Cache';
-		$log->info($tag, $lang['CACHE_PURGED']);
-		$info[] = $lang['CACHE_PURGED'];
-		$cache_message = sprintf($lang['CACHE_PURGED_EXPLAIN'], '<a href="' . $referer . '">' . $lang['HERE'] . '</a>');
-		$purge_cache = true;
+		$log->info('Cache', $lang['CACHE_PURGED']);
+
+		$redirect_url = $_SERVER['HTTP_REFERER'];
+		meta_refresh(5, $redirect_url);
+		msg_handler(sprintf($lang['CACHE_PURGED_EXPLAIN'], '<a href="' . $redirect_url . '">' . $lang['HERE'] . '</a>'), 'CACHE_PURGED', 'info');
+	break;
 	
 	case 'purge_log':
-		if (!$purge_cache)
-		{
-			$lines_array = file('error.log');
-			$new_output = "";
-			file_put_contents('error.log', $new_output);
-			$referer = $_SERVER['HTTP_REFERER'];
-			header("refresh:5; url=" . $referer);
-			$tag = 'Log';
-			$log->info($tag, $lang['LOG_PURGED']);
-			$info[] = $lang['LOG_PURGED'];
-			$cache_message = sprintf($lang['LOG_PURGED_EXPLAIN'], '<a href="' . $referer . '">' . $lang['HERE'] . '</a>');
-		}
+		$lines_array = file('error.log');
+		$new_output = "";
+		file_put_contents('error.log', $new_output);
+		$log->info('Log', $lang['LOG_PURGED']);
+
+		$redirect_url = $_SERVER['HTTP_REFERER'];
+		meta_refresh(5, $redirect_url);
+		msg_handler(sprintf($lang['LOG_PURGED_EXPLAIN'], '<a href="' . $redirect_url . '">' . $lang['HERE'] . '</a>'), 'LOG_PURGED', 'info');
+	break;
 	
 	default:
 		/**
 		* Loads our layout template, settings its title and content.
 		*/
-		$content = (isset($cache_message) ? $cache_message : $lang['WELCOME']);
 
 		$template->assign_vars(array(
-			'CONTENT'	=> $content,
+			'CONTENT'	=> $lang['WELCOME'],
 		));
 		/**
 		* Finally we can output our final page.

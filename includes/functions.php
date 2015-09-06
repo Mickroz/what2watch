@@ -464,8 +464,9 @@ function meta_refresh($time, $url)
 
 function msg_handler($msg_text, $msg_title = '', $type = '')
 {
-	global $template_path, $template, $lang, $msg_title;
+	global $template_path, $template, $lang;
 	global $error;
+
 	if (empty($type))
 	{
 		$type = 'info';
