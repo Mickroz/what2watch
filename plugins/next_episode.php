@@ -31,12 +31,12 @@ register_filter('the_data','new_data');
  
 function new_data($data)
 {
-	global $log;
+	global $log, $lang;
 	
 	$new_array = array();
 	foreach ($data as $episode)
 	{
-		$log->info('nextEpisode', 'starting check for next episode');
+		$log->info('nextEpisode', $lang['NEXT_EPISODE_START']);
 		$key = $episode['tvdbid'];
 
 		$next_episode = getEpisode($key, $episode['season'], $episode['episode_number'] + 1);
@@ -50,10 +50,10 @@ function new_data($data)
 
 		if ($check_sub_next)
 		{
-			$data[$key]['description'] = $data[$key]['description'] . '<br /><small><em>Next: ' . $new_array[$key]['episode'] . ' ' . $next_episode['data']['name'] . '</em></small>';
+			$data[$key]['description'] = $data[$key]['description'] . '<br /><small><em>' . $lang['NEXT'] . ': ' . $new_array[$key]['episode'] . ' ' . $next_episode['data']['name'] . '</em></small>';
 		}
 		unset($new_array);
-		$log->info('nextEpisode', 'check for next episode finished');
+		$log->info('nextEpisode', $lang['NEXT_EPISODE_END']);
 		
 	}
 	
