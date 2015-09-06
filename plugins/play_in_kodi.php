@@ -106,7 +106,7 @@ function kodi($data)
 	}
 	else
 	{
-		$log->error('playInKodi', $lang['KODI_SETTINGS_EMPTY']);
+		$log->warning('playInKodi', $lang['KODI_SETTINGS_EMPTY']);
 	}
 	return $data;
 }
@@ -128,6 +128,11 @@ if ($play_kodi)
 	);                                                                                                                   
 
 	$play = curl_exec($ch);
+	if(curl_errno($ch))
+	{
+		$error[] = curl_error($ch);
+		$log->error($tag, curl_error($ch));
+	}
 	curl_close($ch);
 	$return = json_decode($play, true);
 	if ($return['result'] == 'OK')
