@@ -32,19 +32,26 @@ if ($getbanner)
 	getBanner($getbanner);
 	header('Location: index.php?mode=shows');
 }
-
 if ($checkin)
 {
+	if (isset($_POST['trakt_cancel']))
+	{
+		file_put_contents('cache/progress.txt', $lang['TRAKT_CANCEL']);
+		trakt_show_cancel();
+		$submit = true;
+	}
 	if ($submit)
 	{
 		$message = $_POST['message'];
 		$trakt_id = $_POST['trakt_id'];
 		$tvdb_id = $_POST['tvdb_id'];
+		
 		$trakt_checkin = trakt_show_checkin($trakt_id, $message);
 		$trakt_show_checkin = json_decode($trakt_checkin, true);
 
 		if (!isset($trakt_show_checkin['expires_at']))
 		{
+			file_put_contents('cache/progress.txt', '');
 			$show_name = $trakt_show_checkin['show']['title'];
 			$episode_season = $trakt_show_checkin['episode']['season'];
 			$episode_number = sprintf('%02d', $trakt_show_checkin['episode']['number']);
@@ -64,7 +71,28 @@ if ($checkin)
 		}
 		else
 		{
-			$error[] = $lang['TRAKT_ERROR'];
+			//Our dates and times.
+			$then = $trakt_show_checkin['expires_at'];
+			$then = new DateTime($then);
+ 
+			$now = new DateTime();
+ 
+			$untilThen = $now->diff($then);
+			$diff_minutes = $untilThen->i;
+			$diff_seconds = $untilThen->s;
+			$minutes = (isset($diff_minutes)) ? $diff_minutes . ':' : '';
+			$seconds = (isset($diff_seconds)) ? ((isset($diff_minutes)) ? $diff_seconds : sprintf($lang['TRAKT_SECONDS'], $diff_seconds)) : '';
+			$trakt_wait = sprintf($lang['TRAKT_CHECKIN_WAIT'], $minutes . $seconds);
+			$notifier = file_get_contents('styles/' . $template_path . '/trakt_body.html');
+			$notifier_template = strtr($notifier, array(
+				'{TRAKT_LINK_CHECKIN}' => 'index.php?mode=shows&checkin=true',
+				'{TRAKT_LINK_CANCEL}' => 'index.php?mode=shows',
+				'{MESSAGE_TEXT}' => $trakt_wait,
+				'{MESSAGE}' => $message,
+				'{TRAKT_ID}' => $trakt_id,
+				'{TVDBID}' => $tvdb_id,
+			));
+			$trakt = $notifier_template;
 		}
 	}
 }

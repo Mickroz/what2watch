@@ -17,6 +17,36 @@ if (!defined('IN_W2W'))
 {
 	exit;
 }
+function trakt_show_cancel()
+{
+	global $trakt_token, $log, $lang, $error;
+	
+	$log->debug('trakt.tv', $lang['TRAKT_CANCEL']);
+	
+	$ch = curl_init();
+
+	curl_setopt($ch, CURLOPT_URL, "https://api-v2launch.trakt.tv/checkin");
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+	curl_setopt($ch, CURLOPT_HEADER, FALSE);
+
+	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+
+	curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+		"Content-Type: application/json",
+		"Authorization: Bearer $trakt_token",
+		"trakt-api-version: 2",
+		"trakt-api-key: dfca522ce536a330d25737752dc8a26e2a5ac09e9067409669f3456db4089b7b"
+	));
+
+	$response = curl_exec($ch);
+	if(curl_errno($ch))
+	{
+		$error[] = curl_error($ch);
+		$log->error($tag, curl_error($ch));
+	}
+	curl_close($ch);
+	return $response;
+}
 
 function trakt_show_checkin($trakt_id, $message)
 {

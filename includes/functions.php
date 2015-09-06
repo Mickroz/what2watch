@@ -506,7 +506,7 @@ function msg_handler($msg_text, $msg_title = '', $type = '')
 */
 function page_header($page_title = '')
 {
-	global $lang, $template, $template_path, $error, $version, $success, $info, $warning;
+	global $lang, $template, $template_path, $error, $version, $success, $info, $warning, $trakt;
 	
 	$notifier = file_get_contents('styles/' . $template_path . '/message_body.html');
 
@@ -527,6 +527,7 @@ function page_header($page_title = '')
 		'INFORMATION'		=> (sizeof($info)) ? strtr($notifier, array('{TYPE}' => 'info', '{MESSAGE_TITLE}' => $lang['INFORMATION'], '{MESSAGE_TEXT}' => implode('<br />', $info))) : '',
 		'WARNING'	=> (sizeof($warning)) ? strtr($notifier, array('{TYPE}' => 'warning', '{MESSAGE_TITLE}' => $lang['WARNING'], '{MESSAGE_TEXT}' => implode('<br />', $warning))) : '',
 		'VERSION'	=> '<p' . $version['style'] . '><strong>' . $version['message'] . '</strong></p>',
+		'TRAKT'		=> (isset($trakt)) ? $trakt : '',
 	));
 }
 
