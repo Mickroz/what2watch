@@ -83,6 +83,7 @@ $lang = array_merge($lang, array(
 	'PLUGIN_UNINSTALL_SUCCESS'	=> '%s succesvol verwijderd.',
 	'PLUGIN_SETTINGS_UPDATED'	=> '%s instellingen opgeslagen.',
 	'PLUGINS'					=> 'Plugins',
+	'PROCESSING'				=> '%s van %s serie(s) verwerkt',
 	'PURGE_CACHE' 				=> 'Leeg de buffer',
 	'PURGE_LOG'					=> 'Leeg het log',
 	'REFRESH_BANNER' 				=> 'Vernieuw banner',

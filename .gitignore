@@ -2,5 +2,6 @@ config.php
 error.log
 images/
 cache/*.cache
+cache/*.txt
 cache/xml/
 plugins/active.json

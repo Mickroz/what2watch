@@ -20,7 +20,7 @@ if (!defined('IN_W2W'))
 
 function trakt_show_checkin($trakt_id, $message)
 {
-	global $trakt_token, $log, $lang;
+	global $trakt_token, $log, $lang, $error;
 	
 	$log->debug('trakt.tv', $lang['TRAKT_START']);
 	
@@ -56,13 +56,18 @@ function trakt_show_checkin($trakt_id, $message)
 	));
 
 	$response = curl_exec($ch);
+	if(curl_errno($ch))
+	{
+		$error[] = curl_error($ch);
+		$log->error($tag, curl_error($ch));
+	}
 	curl_close($ch);
 	return $response;
 }
 
 function getTraktId($slug, $season, $episode)
 {
-	global $trakt_token, $log, $lang;
+	global $trakt_token, $log, $lang, $error;
 	
 	$log->debug('trakt.tv', sprintf($lang['TRAKT_GET_ID'], $slug, $season, $episode));
 	$ch = curl_init();
@@ -78,6 +83,11 @@ function getTraktId($slug, $season, $episode)
 	));
 
 	$response = curl_exec($ch);
+	if(curl_errno($ch))
+	{
+		$error[] = curl_error($ch);
+		$log->error($tag, curl_error($ch));
+	}
 	curl_close($ch);
 	return $response;
 }
@@ -108,6 +118,7 @@ function getProgress($slug, $trakt_token)
 	if(curl_errno($ch))
 	{
 		$error[] = curl_error($ch);
+		$log->error($tag, curl_error($ch));
 	}
 	curl_close($ch);
 	

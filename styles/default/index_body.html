@@ -29,6 +29,24 @@
   <body>
 	<div id="loading-indicator">
 		<span>{L_LOADINGINDICATOR}</span>
+	<div id="processing"></div>
+    <script>
+        var time = 0;
+        setInterval(function() {
+            $.ajax({
+                type: "POST",
+                data: {time : time},
+                url: "fileupdate.php",
+                success: function (data) {
+                    var result = $.parseJSON(data)
+                    if (result.content) {
+                        $('#processing').html(result.content);
+                    }
+                    time = result.time;
+                }
+            });
+        }, 1000);
+    </script>
 	</div>
     <div class="navmenu navmenu-default navmenu-fixed-left offcanvas-sm">
       <a class="navmenu-brand visible-md visible-lg" href="/what2watch">{L_INDEX}</a>

@@ -133,8 +133,13 @@ else
 	}
 
 	$result = json_decode($shows, true);
+	$total = count($result['data']);
+	$i = 0;
 	foreach ($result['data'] as $show => $values)
 	{
+		$i++;
+		file_put_contents('cache/progress.txt', sprintf($lang['PROCESSING'], $i, $total));
+		
 		$tvdbid = $values['tvdbid'];
 		$show_id = getShow($tvdbid);
 
@@ -246,6 +251,7 @@ else
 	// Save array as json
 	$cache->put('shows', json_encode($series));
     $data = $series;
+	file_put_contents('cache/progress.txt', '');
 }
 if ($getfanart)
 {
