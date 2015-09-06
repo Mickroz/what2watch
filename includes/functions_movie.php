@@ -83,7 +83,7 @@ function readXml($xml_file)
 function createXml($filename, $location = false)
 {
 	$tag = 'createXml';
-	global $log, $lang, $error;
+	global $log, $lang, $error, $info;
 	
 	$got_file = false;
 	$cache_dir = CACHE_XML;
@@ -133,7 +133,7 @@ function createXml($filename, $location = false)
 	$output = !empty($location) ? $location : 'OMDBAPI';
 	if (file_put_contents($cache_dir . '/' . $filename, $xml->asXML()))
 	{
-		$error[] = sprintf($lang['SAVED_XML'], $output, $result['title']);
+		$info[] = sprintf($lang['SAVED_XML'], $output, $result['title']);
 		$log->info($tag, sprintf($lang['SAVED_XML'], $output, $result['title']));
 	}
 	else

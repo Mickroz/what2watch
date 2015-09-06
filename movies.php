@@ -40,9 +40,12 @@ if ($data = $cache->get('movies'))
 else
 {
 	$scanned_directory = array_diff(scandir($movies_folder), array('..', '.', 'folder.jpg'));
-
+	$total = count($scanned_directory);
+	$current = 0;
 	foreach ($scanned_directory as $key => $value) 
-	{		
+	{
+		$current++;
+		file_put_contents('cache/progress.txt', sprintf($lang['PROCESSING_MOVIE'], $current, $total));
 		if ($handle = opendir($movies_folder . '/' . $value)) {
 
 			while (false !== ($file = readdir($handle)))
@@ -81,23 +84,26 @@ else
 						$movie_id = $movie['movieid'];
 						$banner = str_replace('.xml', '.banner.jpg', $file);
 						$background = str_replace('.xml', '.background.jpg', $file);
-						if (!file_exists($movies_folder . '/' . $value . '/' . $banner))
+						
+						if (!file_exists(CACHE_IMAGES . '/' . $banner))
 						{
-							$image = getFanart('movies', $movies_folder, $value, $movie_id, $banner, $background);
-							if ($image['grabbed'] == false)
+							if (!file_exists($movies_folder . '/' . $value . '/' . $banner))
 							{
-								$rsr_org = $image['rsr_org'];
-								$im = $image['im'];
-								$got_bg = $image['got_bg'];
-								createImage($movie['title'], $banner, $rsr_org, $im, $got_bg);
+								$image = getFanart('movies', $movies_folder, $value, $movie_id, $banner, $background);
+								if ($image['grabbed'] == false)
+								{
+									$rsr_org = $image['rsr_org'];
+									$im = $image['im'];
+									$got_bg = $image['got_bg'];
+									createImage($movie['title'], $banner, $rsr_org, $im, $got_bg);
+								}
+							}
+							else
+							{
+								$url = $movies_folder . '/' . $value . '/' . $banner;
+								saveImage($url, $banner, $movie['title']);
 							}
 						}
-						else
-						{
-							$url = $movies_folder . '/' . $value . '/' . $banner;
-							saveImage($url, $banner, $movie['title']);
-						}
-					
 						$movies[$movie_id]['movieid'] = $movie['movieid'];
 						$movies[$movie_id]['title'] = $movie['title'];
 						$movies[$movie_id]['runtime'] = $movie['runtime'];
@@ -120,6 +126,7 @@ else
 	// Save array as json
 	$cache->put('movies', json_encode($movies));
     $data = $movies;
+	file_put_contents('cache/progress.txt', '');
 }
 
 if ($getfanart)

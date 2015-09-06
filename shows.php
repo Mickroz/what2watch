@@ -134,11 +134,11 @@ else
 
 	$result = json_decode($shows, true);
 	$total = count($result['data']);
-	$i = 0;
+	$current = 0;
 	foreach ($result['data'] as $show => $values)
 	{
-		$i++;
-		file_put_contents('cache/progress.txt', sprintf($lang['PROCESSING'], $i, $total));
+		$current++;
+		file_put_contents('cache/progress.txt', sprintf($lang['PROCESSING_SHOW'], $current, $total));
 		
 		$tvdbid = $values['tvdbid'];
 		$show_id = getShow($tvdbid);
