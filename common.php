@@ -24,6 +24,7 @@ $page = (isset($_GET['page']) ? $_GET['page'] : '');
 $post_data = $lang_pack = $error = array();
 $config = $trakt_token = $trakt_expires_in = $sickbeard = $sb_api = $cache_life = $sub_ext = $movies_folder = $language = $config_version = $web_username = $web_password = $ignore_words = $skip_shows = $ip_subnet = '';
 $download = true;
+$debug = 0;
 $template_path = 'default';
 $language = 'en';
 
@@ -111,6 +112,7 @@ if (($config_version != W2W_VERSION || $mode == 'config') && $mode != 'config_fi
 		$post_data['ignore_words'] = (isset($_POST['ignore_words']) ? $_POST['ignore_words'] : $ignore_words);
 		$post_data['skip_shows'] = (isset($_POST['skip_shows']) ? $_POST['skip_shows'] : $skip_shows);
 		$post_data['ip_subnet'] = (isset($_POST['ip_subnet']) ? $_POST['ip_subnet'] : $ip_subnet);
+		$post_data['debug'] = (isset($_POST['debug']) ? $_POST['debug'] : $debug);
 		$post_data['config_version'] = W2W_VERSION;
 		
 		$directory = 'language/';
@@ -172,6 +174,7 @@ if (($config_version != W2W_VERSION || $mode == 'config') && $mode != 'config_fi
 			'S_LANGUAGE_OPTIONS'	=> $s_lang_options,
 			'S_STYLE_OPTIONS'	=> $s_style_options,
 			'IP_SUBNET'			=> $ip_subnet,
+			'DEBUG'			=> ($debug) ? ' checked' : '',
 			'S_POST_ACTION' 	=> $s_post_action
 		));
 		$template = new template();

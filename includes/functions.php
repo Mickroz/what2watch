@@ -149,9 +149,9 @@ function saveImage($url, $banner, $name)
 
 function getUrl($url, $tag='getUrl')
 {
-	global $log, $error;
+	global $log, $error, $sb_api;
 
-	$log->info($tag, "Opening URL " . $url);
+	$log->debug($tag, "Opening URL " . str_replace($sb_api, 'xxx', $url));
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, $url);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -186,7 +186,7 @@ function get_slug($id)
 		$type = 'tvdb';
 		$return = 'show';
 		
-	$log->info('getSlug', sprintf($lang['GET_SLUG'], $id));
+	$log->debug('getSlug', sprintf($lang['GET_SLUG'], $id));
 	$ch = curl_init();
 
 	curl_setopt($ch, CURLOPT_URL, "https://api-v2launch.trakt.tv/search?id_type=$type&id=$id");
@@ -204,7 +204,7 @@ function get_slug($id)
 	if(curl_errno($ch))
 	{
 		$error[] = curl_error($ch);
-		$log->error($tag, curl_error($ch));
+		$log->error('getSlug', curl_error($ch));
 	}
 	curl_close($ch);
 	
@@ -286,6 +286,7 @@ function create_config_file_data($data)
 		'template_path'		=> $data['template_path'],
 		'language'			=> $data['language'],
 		'ip_subnet'			=> $data['ip_subnet'],
+		'debug'				=> $data['debug'],
 		'config_version'	=> $data['config_version'],
 	);
 
@@ -400,7 +401,8 @@ function get_submitted_data()
 		'skip_shows'		=> $_POST['skip_shows'],
 		'language'			=> $_POST['language'],
 		'template_path'		=> $_POST['template_path'],
-		'ip_subnet'		=> $_POST['ip_subnet'],
+		'ip_subnet'			=> $_POST['ip_subnet'],
+		'debug'				=> isset($_POST['debug']) ? 1 : 0,
 		'config_version'	=> $_POST['config_version'],
 	);
 }

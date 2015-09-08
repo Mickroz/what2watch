@@ -99,7 +99,7 @@ function getTraktId($slug, $season, $episode)
 {
 	global $trakt_token, $log, $lang, $error;
 	
-	$log->debug('trakt.tv', sprintf($lang['TRAKT_GET_ID'], $slug, $season, $episode));
+	$log->debug('getTraktId', sprintf($lang['TRAKT_GET_ID'], $slug, $season, $episode));
 	$ch = curl_init();
 
 	curl_setopt($ch, CURLOPT_URL, "https://api-v2launch.trakt.tv/shows/$slug/seasons/$season/episodes/$episode");
@@ -128,7 +128,7 @@ function getProgress($slug, $trakt_token)
 	
 	$tag = 'getProgress';
 	$log->debug($tag, sprintf($lang['TRAKT_GET_PROGRESS'], $slug));
-	$log->info($tag, "Opening URL https://api-v2launch.trakt.tv/shows/$slug/progress/watched");
+	$log->debug($tag, "Opening URL https://api-v2launch.trakt.tv/shows/$slug/progress/watched");
 	
 	$ch = curl_init();
 
@@ -169,7 +169,7 @@ function getShow($tvdbid)
 		$log->error($tag, sprintf($lang['SB_NO_SHOW'], $tvdbid));
 	}
 	$result_show = json_decode($show_id, true);
-	$log->debug($tag, sprintf($lang['SB_SHOW'], $result_show['data']['show_name']));
+	$log->info($tag, sprintf($lang['SB_SHOW'], $result_show['data']['show_name']));
 	// Checking which show actually has a episode downloaded
 	// and put all  tvdb id's in an array
 	// TODO grab naming pattern
@@ -188,7 +188,7 @@ function getShow($tvdbid)
 		{
 			if(++$i === $numItems && $s == 0)
 			{
-				$log->debug('getSeason', sprintf($lang['NO_SEASONS_FOUND'], $result_show['data']['show_name']));
+				$log->info('getSeason', sprintf($lang['NO_SEASONS_FOUND'], $result_show['data']['show_name']));
 			}
 			continue;
 		}
@@ -272,7 +272,7 @@ function checkSub($array, $tvdbid)
 	$find_sub = str_replace($search, $sub_ext, $array[$key]['location']);
 	if (file_exists($find_sub))
 	{
-		$log->debug('checkSub', sprintf($lang['SUBTITLE_FOUND'], $array[$key]['show_name'] . ' ' . $array[$key]['episode']));
+		$log->info('checkSub', sprintf($lang['SUBTITLE_FOUND'], $array[$key]['show_name'] . ' ' . $array[$key]['episode']));
 		$array[$key]['subbed'] = true;
 	}
 	else

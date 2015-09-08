@@ -64,7 +64,12 @@ class PHPLogger
 	 **/	
 	public function debug($tag, $message)
 	{
-		$this->writeToLog("DEBUG", $tag, $message);
+		global $debug;
+		
+		if ($debug)
+		{
+			$this->writeToLog("DEBUG", $tag, $message);
+		}
 	}
 
 	/**

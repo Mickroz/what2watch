@@ -153,6 +153,7 @@ if ($data = $cache->get('shows'))
 else
 {
 	// Lets get started with grabbing all shows from sickbeard
+	$log->info('START', $lang['START_SHOWS']);
 	$shows = getUrl($sickbeard . "/api/" . $sb_api . "/?cmd=shows&sort=name", 'getShows');
 	if (!$shows)
 	{
@@ -165,6 +166,10 @@ else
 	$current = 0;
 	foreach ($result['data'] as $show => $values)
 	{
+		if ($current >= 1)
+		{
+			$log->info('-------', $lang['SEPARATOR']);
+		}
 		$current++;
 		file_put_contents('cache/progress.txt', sprintf($lang['PROCESSING_SHOW'], $current, $total));
 		
@@ -175,14 +180,14 @@ else
 		{
 			continue;
 		}
-		$trakt = getProgress($show_id[$tvdbid]['show_slug'], $trakt_token);
+		$trakt_progress = getProgress($show_id[$tvdbid]['show_slug'], $trakt_token);
 		
-		$progress = json_decode($trakt, true);
+		$progress = json_decode($trakt_progress, true);
 		// We check here if the seasons list is empty, maybe the slug is incorrect
 		if(empty($progress['seasons']))
 		{
 			$log->error('getProgress',  sprintf($lang['TRAKT_PROGRESS_FAILED'], $show_id[$tvdbid]['show_slug']));
-			$log->debug('getProgress', sprintf($lang['DEBUG_DUMP'], $trakt));
+			$log->debug('getProgress', sprintf($lang['DEBUG_DUMP'], $trakt_progress));
 			continue;
 		}
 		// We check here if completed is 0, if so, we overwrite all next_episode values with S01E01 values
@@ -203,7 +208,7 @@ else
 			if ($progress['completed'] == $progress['aired'])
 			{
 				$log->debug('getProgress', sprintf($lang['TRAKT_NO_NEXT_EPISODE'], $show_id[$tvdbid]['show_name'], $show_id[$tvdbid]['show_slug']));
-				$log->debug('getProgress', sprintf($lang['TRAKT_PROGRESS_COMPLETED'], $progress['completed'], $progress['aired']));
+				$log->info('getProgress', sprintf($lang['TRAKT_PROGRESS_COMPLETED'], $progress['completed'], $progress['aired']));
 				continue;
 			}
 			else
@@ -238,14 +243,14 @@ else
 		
 		if (!$series[$tvdbid]['subbed'])
 		{
-			$log->debug('checkSub', sprintf($lang['NO_SUBTITLE_FOUND'], $series[$tvdbid]['show_name'] . ' ' . $series[$tvdbid]['episode']));
-			$log->info('checkSub', sprintf($lang['CHECK_FINISHED'], $series[$tvdbid]['show_name'] . ' ' . $series[$tvdbid]['episode']));
+			$log->info('checkSub', sprintf($lang['NO_SUBTITLE_FOUND'], $series[$tvdbid]['show_name'] . ' ' . $series[$tvdbid]['episode']));
+			$log->info($tag, sprintf($lang['CHECK_FINISHED'], $series[$tvdbid]['show_name'] . ' ' . $series[$tvdbid]['episode']));
 			unset($series[$tvdbid]);
 			$create_image = false;
 		}
 		else
 		{
-			$log->info('checkSub', sprintf($lang['CHECK_FINISHED'], $series[$tvdbid]['show_name'] . ' ' . $series[$tvdbid]['episode']));
+			$log->info($tag, sprintf($lang['CHECK_FINISHED'], $series[$tvdbid]['show_name'] . ' ' . $series[$tvdbid]['episode']));
 			$create_image = true;
 		}
 
@@ -276,6 +281,7 @@ else
 			}
 		}
 	}
+	$log->info('END', $lang['END_SHOWS']);
 	// Save array as json
 	$cache->put('shows', json_encode($series));
     $data = $series;

@@ -48,8 +48,8 @@ foreach ($error_log as $key => $val)
 
 if (empty($view_log))
 {
-	$info = (!empty($level) ? $level : $search);
-	$log_lines .= sprintf($lang['LOG_INFO'], $info);
+	$log_info = (!empty($level) ? $level : $search);
+	$log_lines .= sprintf($lang['LOG_INFO'], $log_info);
 }
 else
 {

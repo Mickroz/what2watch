@@ -13,10 +13,11 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
-	'NEXT_EPISODE'	=> 'Next episode',
-	'NEXT_EPISODE_START'	=> 'starting check for next episode',
-	'NEXT_EPISODE_END'	=> 'check for next episode finished',
 	'NEXT'	=> 'Next',
+	'NEXT_EPISODE'	=> 'Next episode',
+	'NEXT_EPISODE_CHECK'	=> 'checking for subs for %s',
+	'NEXT_EPISODE_END'	=> 'check for next episode finished',
+	'NEXT_EPISODE_START'	=> 'starting check for next episode',
 ));
 
 ?>

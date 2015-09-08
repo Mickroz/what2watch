@@ -34,9 +34,16 @@ function new_data($data)
 	global $log, $lang;
 	
 	$new_array = array();
+	$i = 0;
 	foreach ($data as $episode)
 	{
+		if ($i == 0)
+		{
+			$log->info('-------', $lang['SEPARATOR']);
+		}
+		$i++;
 		$log->info('nextEpisode', $lang['NEXT_EPISODE_START']);
+		$log->info('nextEpisode', sprintf($lang['NEXT_EPISODE_CHECK'], $episode['show_name'] . ' ' . $episode['season'] . 'x' . sprintf('%02d', $episode['episode_number'] + 1)));
 		$key = $episode['tvdbid'];
 
 		$next_episode = getEpisode($key, $episode['season'], $episode['episode_number'] + 1);
@@ -54,6 +61,7 @@ function new_data($data)
 		}
 		unset($new_array);
 		$log->info('nextEpisode', $lang['NEXT_EPISODE_END']);
+		$log->info('-------', $lang['SEPARATOR']);
 		
 	}
 	
