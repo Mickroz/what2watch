@@ -196,7 +196,7 @@ function getShow($tvdbid)
 		$log->debug('getSeason', sprintf($lang['SEASONS_FOUND'], $padded, $result_show['data']['show_name']));
 		$show_name[$tvdbid]['show_name'] = $result_show['data']['show_name'];
 		$show_name[$tvdbid]['location'] = $result_show['data']['location'];
-		$show_name[$tvdbid]['tvrage_id'] = $result_show['data']['tvrage_id'];
+		//$show_name[$tvdbid]['tvrage_id'] = $result_show['data']['tvrage_id'];
 	}
 	if (isset($show_name[$tvdbid]['show_name']))
 	{

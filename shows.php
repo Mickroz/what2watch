@@ -106,7 +106,7 @@ if (!empty($getnext))
 	// Put it all in a array
 	$update_serie[$key]['tvdbid'] = $key;
 	$update_serie[$key]['show_name'] = $update_show[$key]['show_name'];
-	$update_serie[$key]['tvrage_id'] = $update_show[$key]['tvrage_id'];
+	//$update_serie[$key]['tvrage_id'] = $update_show[$key]['tvrage_id'];
 	$update_serie[$key]['show_slug'] = $update_show[$key]['show_slug'];
 	$update_serie[$key]['trakt_id'] = $getnext[$key]['trakt_id'];
 	$update_serie[$key]['message'] = $getnext[$key]['show_name'] . ' ' . $getnext[$key]['season'] . 'x' . sprintf('%02d', $getnext[$key]['episode']) . ' ' . $getnext[$key]['episode_name'];
@@ -225,7 +225,7 @@ else
 		// Put it all in a array
 		$series[$tvdbid]['tvdbid'] = $tvdbid;
 		$series[$tvdbid]['show_name'] = $show_id[$tvdbid]['show_name'];
-		$series[$tvdbid]['tvrage_id'] = $show_id[$tvdbid]['tvrage_id'];
+		//$series[$tvdbid]['tvrage_id'] = $show_id[$tvdbid]['tvrage_id'];
 		$series[$tvdbid]['show_slug'] = $show_id[$tvdbid]['show_slug'];
 		$series[$tvdbid]['trakt_id'] = $progress['next_episode']['ids']['trakt'];
 		$series[$tvdbid]['message'] = $show_id[$tvdbid]['show_name'] . ' ' . $progress['next_episode']['season'] . 'x' . sprintf('%02d', $progress['next_episode']['number']) . ' ' . (!empty($progress['next_episode']['title']) ? $progress['next_episode']['title'] : $episode['data']['name']);
