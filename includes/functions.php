@@ -313,7 +313,7 @@ function create_config_file_data($data)
 	$config_data .= "// cache_life is caching time, in seconds\n";
 	$config_data_array = array(
 		'trakt_token'		=> $data['trakt_token'],
-		'trakt_expires_in'	=> time(),
+		'trakt_expires_in'	=> $data['trakt_expires_in'],
 		'trakt_refresh_token'		=> $data['trakt_refresh_token'],
 		'sickbeard'			=> $data['sickbeard'],
 		'sb_api'			=> $data['sb_api'],
