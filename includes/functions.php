@@ -18,6 +18,46 @@ if (!defined('IN_W2W'))
 	exit;
 }
 
+function check_trakt_token()
+{
+	global $trakt_expires_in, $trakt_refresh_token, $log, $lang, $error, $result_token;
+	
+	if (time() >= $trakt_expires_in)
+	{
+		$check_trakt_token = getUrl("http://www.mickroz.nl/trakt.php?refresh=$trakt_refresh_token");
+
+		$result_token = json_decode($check_trakt_token, true);
+		if (empty($result_token))
+		{
+			break;
+		}
+		$data = file('config.php'); // reads an array of lines
+		function refresh_config($data)
+		{
+			global $result_token;
+			
+			$time = time() + $result_token['expires_in'];
+			
+			if (stristr($data, '$trakt_token'))
+			{
+				return "\$trakt_token = '" . $result_token['access_token'] . "';\n";
+			}
+			if (stristr($data, '$trakt_expires_in'))
+			{
+				return "\$trakt_expires_in = '" . $time . "';\n";
+			}
+			if (stristr($data, '$trakt_refresh_token'))
+			{
+				return "\$trakt_refresh_token = '" . $result_token['refresh_token'] . "';\n";
+			}
+			return $data;
+		}
+		$data = array_map('refresh_config', $data);
+		file_put_contents('config.php', implode('', $data));
+		$log->info('trakt.tv', 'Updated trakt token, new date for refresh is ' . date('Y-m-d H:i:s', time() + $result_token['expires_in']));
+	}
+}
+
 function getFanart($cat, $location, $name, $id, $banner, $background)
 {
 	global $log, $lang, $info, $error;
@@ -273,7 +313,8 @@ function create_config_file_data($data)
 	$config_data .= "// cache_life is caching time, in seconds\n";
 	$config_data_array = array(
 		'trakt_token'		=> $data['trakt_token'],
-		'trakt_expires_in'	=> $data['trakt_expires_in'],
+		'trakt_expires_in'	=> time(),
+		'trakt_refresh_token'		=> $data['trakt_refresh_token'],
 		'sickbeard'			=> $data['sickbeard'],
 		'sb_api'			=> $data['sb_api'],
 		'cache_life' 		=> $data['cache_life'],
@@ -390,6 +431,7 @@ function get_submitted_data()
 	return array(
 		'trakt_token'		=> $_POST['trakt_token'],
 		'trakt_expires_in'	=> $_POST['trakt_expires_in'],
+		'trakt_refresh_token'		=> $_POST['trakt_refresh_token'],
 		'sickbeard'			=> $_POST['sickbeard'],
 		'sb_api'			=> $_POST['sb_api'],
 		'cache_life'		=> $_POST['cache_life'],

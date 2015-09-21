@@ -17,7 +17,7 @@ define('IN_W2W', true);
 
 $submit	= (isset($_POST['submit'])) ? true : false;
 $post_data = $lang_pack = $error = array();
-$trakt_token = $trakt_expires_in = $sickbeard = $sb_api = $cache_life = $sub_ext = $movies_folder = $language = $config_version = $web_username = $web_password = $ignore_words = $skip_shows = $ip_subnet = '';
+$trakt_token = $trakt_expires_in = $trakt_refresh_token = $sickbeard = $sb_api = $cache_life = $sub_ext = $movies_folder = $language = $config_version = $web_username = $web_password = $ignore_words = $skip_shows = $ip_subnet = '';
 $download = true;
 $template_path = 'default';
 $language = 'en';
@@ -82,6 +82,7 @@ if ((isset($_GET['access_token']) && !empty($_GET['access_token'])) && $download
 	$post_data['sb_api'] = (isset($_POST['sb_api']) ? $_POST['sb_api'] : $sb_api);
 	$post_data['trakt_token'] = (isset($_POST['trakt_token']) ? $_POST['trakt_token'] : (isset($_GET['access_token']) ? $_GET['access_token'] : $trakt_token));
 	$post_data['trakt_expires_in'] = (isset($_POST['trakt_expires_in']) ? $_POST['trakt_expires_in'] : (isset($_GET['expires_in']) ? $_GET['expires_in'] : $trakt_expires_in));
+	$post_data['trakt_refresh_token'] = (isset($_POST['trakt_refresh_token']) ? $_POST['trakt_refresh_token'] : (isset($_GET['refresh_token']) ? $_GET['refresh_token'] : $trakt_refresh_token));
 	$post_data['cache_life'] = (isset($_POST['cache_life']) ? $_POST['cache_life'] : $cache_life);
 	$post_data['sub_ext'] = (isset($_POST['sub_ext']) ? $_POST['sub_ext'] : $sub_ext);
 	$post_data['movies_folder'] = (isset($_POST['movies_folder']) ? $_POST['movies_folder'] : $movies_folder);
@@ -142,6 +143,7 @@ if ((isset($_GET['access_token']) && !empty($_GET['access_token'])) && $download
 		'SB_API'			=> $post_data['sb_api'],
 		'TRAKT_TOKEN'		=> $post_data['trakt_token'],
 		'TRAKT_EXPIRES_IN'	=> $post_data['trakt_expires_in'],
+		'TRAKT_REFRESH_TOKEN'	=> $post_data['trakt_refresh_token'],
 		'CACHE_LIFE'		=> $post_data['cache_life'],
 		'SUB_EXT'			=> $post_data['sub_ext'],
 		'MOVIES_FOLDER'		=> $post_data['movies_folder'],
@@ -162,6 +164,7 @@ if ((isset($_GET['access_token']) && !empty($_GET['access_token'])) && $download
 	$template->set_template();
 	$template->assign_vars(array(
 		'CONTENT'	=> $install->output(),
+		'META'	=>  ''
 	));
 		
 	page_header($lang['INDEX']);

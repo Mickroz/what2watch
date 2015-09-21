@@ -22,7 +22,7 @@ $submit	= (isset($_POST['submit'])) ? true : false;
 $mode = (isset($_GET['mode'])) ? $_GET['mode'] : '';
 $page = (isset($_GET['page']) ? $_GET['page'] : '');
 $post_data = $lang_pack = $error = array();
-$config = $trakt_token = $trakt_expires_in = $sickbeard = $sb_api = $cache_life = $sub_ext = $movies_folder = $language = $config_version = $web_username = $web_password = $ignore_words = $skip_shows = $ip_subnet = '';
+$config = $trakt_token = $trakt_expires_in = $trakt_refresh_token = $sickbeard = $sb_api = $cache_life = $sub_ext = $movies_folder = $language = $config_version = $web_username = $web_password = $ignore_words = $skip_shows = $ip_subnet = '';
 $download = true;
 $debug = 0;
 $template_path = 'default';
@@ -73,7 +73,8 @@ if (($config_version != W2W_VERSION || $mode == 'config') && $mode != 'config_fi
 		// Save array as json
 		$cache->put('version_check', json_encode($version));
 	}
-
+	check_trakt_token();
+	
 	if($submit)
 	{
 		if (!empty($_POST['web_username']) && empty($_POST['web_password']))
@@ -102,6 +103,7 @@ if (($config_version != W2W_VERSION || $mode == 'config') && $mode != 'config_fi
 		$post_data['sb_api'] = (isset($_POST['sb_api']) ? $_POST['sb_api'] : $sb_api);
 		$post_data['trakt_token'] = (isset($_POST['trakt_token']) ? $_POST['trakt_token'] : $trakt_token);
 		$post_data['trakt_expires_in'] = (isset($_POST['trakt_expires_in']) ? $_POST['trakt_expires_in'] : $trakt_expires_in);
+		$post_data['trakt_refresh_token'] = (isset($_POST['trakt_refresh_token']) ? $_POST['trakt_refresh_token'] : $trakt_refresh_token);
 		$post_data['cache_life'] = (isset($_POST['cache_life']) ? $_POST['cache_life'] : $cache_life);
 		$post_data['sub_ext'] = (isset($_POST['sub_ext']) ? $_POST['sub_ext'] : $sub_ext);
 		$post_data['movies_folder'] = (isset($_POST['movies_folder']) ? $_POST['movies_folder'] : $movies_folder);
@@ -162,6 +164,7 @@ if (($config_version != W2W_VERSION || $mode == 'config') && $mode != 'config_fi
 			'SB_API'			=> $post_data['sb_api'],
 			'TRAKT_TOKEN'		=> $post_data['trakt_token'],
 			'TRAKT_EXPIRES_IN'	=> $post_data['trakt_expires_in'],
+			'TRAKT_REFRESH_TOKEN'	=> $post_data['trakt_refresh_token'],
 			'CACHE_LIFE'		=> $post_data['cache_life'],
 			'SUB_EXT'			=> $post_data['sub_ext'],
 			'MOVIES_FOLDER'		=> $post_data['movies_folder'],
@@ -223,3 +226,4 @@ foreach($config as $plugin => $value)
 {
 	require_once("plugins/$plugin.php");
 }
+check_trakt_token();

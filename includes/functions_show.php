@@ -17,6 +17,7 @@ if (!defined('IN_W2W'))
 {
 	exit;
 }
+
 function trakt_show_cancel()
 {
 	global $trakt_token, $log, $lang, $error;
