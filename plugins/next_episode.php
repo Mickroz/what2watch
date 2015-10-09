@@ -53,7 +53,7 @@ function new_data($data)
 		$new_array[$key]['location'] = $next_episode['data']['location'];
 
 		// Check if there are subs downloaded for this episode
-		$check_sub_next = checkSub($new_array, $key);
+		$check_sub_next = file_exists($next_episode['data']['location']) ? checkSub($new_array, $key) : '';
 
 		if ($check_sub_next)
 		{

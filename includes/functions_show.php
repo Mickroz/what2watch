@@ -269,10 +269,14 @@ function checkSub($array, $tvdbid)
 	
 	$key = $tvdbid;
 	// Check if there are subs downloaded for this episode
-	$search = array('.mkv', '.avi', '.mpeg', '.mp4');
-	$find_sub = str_replace($search, $sub_ext, $array[$key]['location']);
+
+	$path_parts = pathinfo($array[$key]['location']);
+
+	$find_sub = $path_parts['dirname'] . '/' . $path_parts['filename'] . $sub_ext;
+
 	if (file_exists($find_sub))
 	{
+		$log->debug('checkSub', sprintf($lang['SUBTITLE_FOUND'], $find_sub));
 		$log->info('checkSub', sprintf($lang['SUBTITLE_FOUND'], $array[$key]['show_name'] . ' ' . $array[$key]['episode']));
 		$array[$key]['subbed'] = true;
 	}
