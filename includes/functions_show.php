@@ -226,7 +226,7 @@ function getEpisode($tvdbid, $season, $episode)
 	}
 	$result = json_decode($get_episode, true);
 	
-	$failures = array('failure', 'error', 'fatal', 'Skipped', 'Unknown', 'Snatched', 'Wanted', 'Unaired', 'Archived', 'Ignored');  
+	$failures = array('failure', 'error', 'fatal', 'Skipped', 'Unknown', 'Snatched', 'Wanted', 'Unaired', 'Archived', 'Ignored', '');  
 	// Remove empty results
 	if (in_array($result['result'], $failures))
 	{
@@ -268,8 +268,11 @@ function checkSub($array, $tvdbid)
 	global $sub_ext, $lang, $log, $ignore_words, $skip_shows;
 	
 	$key = $tvdbid;
+	if ($array[$key]['location'] == '')
+	{
+		return false;
+	}
 	// Check if there are subs downloaded for this episode
-
 	$path_parts = pathinfo($array[$key]['location']);
 
 	$find_sub = $path_parts['dirname'] . '/' . $path_parts['filename'] . $sub_ext;
