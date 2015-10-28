@@ -318,3 +318,54 @@ function checkSub($array, $tvdbid)
 	
 	return $array[$key]['subbed'];
 }
+
+function update_show($array)
+{
+	global $log, $cache, $lang;
+	
+	$log->debug('trakt.tv', $lang['TRAKT_UPDATE']);
+	$key = key($array);
+	$update_show = getShow($key);
+	$update_episode = getEpisode($array[$key]['tvdbid'], $array[$key]['season'], $array[$key]['episode']);
+	// Put it all in a array
+	$update_serie[$key]['tvdbid'] = $key;
+	$update_serie[$key]['show_name'] = $update_show[$key]['show_name'];
+	//$update_serie[$key]['tvrage_id'] = $update_show[$key]['tvrage_id'];
+	$update_serie[$key]['show_slug'] = $update_show[$key]['show_slug'];
+	$update_serie[$key]['trakt_id'] = $array[$key]['trakt_id'];
+	$update_serie[$key]['message'] = $array[$key]['show_name'] . ' ' . $array[$key]['season'] . 'x' . sprintf('%02d', $array[$key]['episode']) . ' ' . $array[$key]['episode_name'];
+	$update_serie[$key]['season'] = $array[$key]['season'];
+	$update_serie[$key]['episode'] = $array[$key]['season'] . 'x' . sprintf('%02d', $array[$key]['episode']);
+	$update_serie[$key]['episode_number'] = $array[$key]['episode'];
+	$update_serie[$key]['name'] = $update_episode['data']['name'];
+	$update_serie[$key]['description'] = $update_episode['data']['description'];
+	$update_serie[$key]['status'] = $update_episode['data']['status'];
+	$update_serie[$key]['location'] = $update_episode['data']['location'];
+	
+	// Check if there are subs downloaded for this episode
+	$check_sub_update = checkSub($update_serie, $key);
+	$update_serie[$key]['subbed'] = $check_sub_update;
+		
+	if (!$update_serie[$key]['subbed'])
+	{
+		$log->debug('checkSub', sprintf($lang['NO_SUBTITLE_FOUND'], $update_serie[$key]['show_name'] . ' ' . $update_serie[$key]['episode']));
+		$log->info('checkSub', sprintf($lang['CHECK_FINISHED'], $update_serie[$key]['show_name'] . ' ' . $update_serie[$key]['episode']));
+		if ($data = $cache->get('shows'))
+		{
+			$data = json_decode($data, true);
+			unset($data[$key]);
+			$cache->put('shows', json_encode($data));
+		}
+	}
+	else
+	{
+		if ($data = $cache->get('shows'))
+		{
+			$log->info('checkSub', sprintf($lang['CHECK_FINISHED'], $update_serie[$key]['show_name'] . ' ' . $update_serie[$key]['episode']));
+			$data = json_decode($data, true);
+			$update_data = array_replace($data, $update_serie);
+			$cache->put('shows', json_encode($update_data));
+		}
+		//unset($getnext,$data);
+	}
+}

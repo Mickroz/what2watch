@@ -18,10 +18,10 @@ if (!defined('IN_W2W'))
 	exit;
 }
 //include files for adding plugin functionality
-include('includes/functions_show.php');
+include_once('includes/functions_show.php');
 
 // Initial var setup
-$series = $data = $showtemplates = $getnext = $hook_before_checkin = $hook_after_checkin = array();
+$series = $data = $showtemplates = $hook_before_checkin = $hook_after_checkin = array();
 $tag = "Shows";
 $checkin = (isset($_GET['checkin'])) ? $_GET['checkin'] : '';
 $getbanner = (isset($_GET['getbanner'])) ? $_GET['getbanner'] : '';
@@ -68,6 +68,7 @@ if ($checkin)
 			$getnext[$tvdb_id]['season'] = $episode_season;
 			$getnext[$tvdb_id]['episode'] = $get_trakt_id['number'];
 			$getnext[$tvdb_id]['episode_name'] = $get_trakt_id['title'];
+			update_show($getnext);
 		}
 		else
 		{
@@ -94,55 +95,6 @@ if ($checkin)
 			));
 			$trakt = $notifier_template;
 		}
-	}
-}
-
-if (!empty($getnext))
-{
-	$log->debug('trakt.tv', $lang['TRAKT_UPDATE']);
-	$key = key($getnext);
-	$update_show = getShow($key);
-	$update_episode = getEpisode($getnext[$key]['tvdbid'], $getnext[$key]['season'], $getnext[$key]['episode']);
-	// Put it all in a array
-	$update_serie[$key]['tvdbid'] = $key;
-	$update_serie[$key]['show_name'] = $update_show[$key]['show_name'];
-	//$update_serie[$key]['tvrage_id'] = $update_show[$key]['tvrage_id'];
-	$update_serie[$key]['show_slug'] = $update_show[$key]['show_slug'];
-	$update_serie[$key]['trakt_id'] = $getnext[$key]['trakt_id'];
-	$update_serie[$key]['message'] = $getnext[$key]['show_name'] . ' ' . $getnext[$key]['season'] . 'x' . sprintf('%02d', $getnext[$key]['episode']) . ' ' . $getnext[$key]['episode_name'];
-	$update_serie[$key]['season'] = $getnext[$key]['season'];
-	$update_serie[$key]['episode'] = $getnext[$key]['season'] . 'x' . sprintf('%02d', $getnext[$key]['episode']);
-	$update_serie[$key]['episode_number'] = $getnext[$key]['episode'];
-	$update_serie[$key]['name'] = $update_episode['data']['name'];
-	$update_serie[$key]['description'] = $update_episode['data']['description'];
-	$update_serie[$key]['status'] = $update_episode['data']['status'];
-	$update_serie[$key]['location'] = $update_episode['data']['location'];
-	
-	// Check if there are subs downloaded for this episode
-	$check_sub_update = checkSub($update_serie, $key);
-	$update_serie[$key]['subbed'] = $check_sub_update;
-		
-	if (!$update_serie[$key]['subbed'])
-	{
-		$log->debug('checkSub', sprintf($lang['NO_SUBTITLE_FOUND'], $update_serie[$key]['show_name'] . ' ' . $update_serie[$key]['episode']));
-		$log->info('checkSub', sprintf($lang['CHECK_FINISHED'], $update_serie[$key]['show_name'] . ' ' . $update_serie[$key]['episode']));
-		if ($data = $cache->get('shows'))
-		{
-			$data = json_decode($data, true);
-			unset($data[$key]);
-			$cache->put('shows', json_encode($data));
-		}
-	}
-	else
-	{
-		if ($data = $cache->get('shows'))
-		{
-			$log->info('checkSub', sprintf($lang['CHECK_FINISHED'], $update_serie[$key]['show_name'] . ' ' . $update_serie[$key]['episode']));
-			$data = json_decode($data, true);
-			$update_data = array_replace($data, $update_serie);
-			$cache->put('shows', json_encode($update_data));
-		}
-		//unset($getnext,$data);
 	}
 }
 

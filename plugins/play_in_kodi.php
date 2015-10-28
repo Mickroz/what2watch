@@ -17,6 +17,7 @@ if (!defined('IN_W2W'))
 {
 	exit;
 }
+
 // Initial var setup
 // Should be named exactly like filename
 $play_in_kodi_name = 'Play in Kodi';
@@ -28,6 +29,7 @@ $play_in_kodi['config'] = array(
 	'kodiPort'	=> '',
 	'active'	=> true
 );
+
 // Grabbing config
 if ($active_plugins = @file_get_contents("plugins/active.json"))
 {
@@ -113,6 +115,7 @@ function kodi($data)
 
 if ($play_kodi)
 {
+
 	$tag = "kodi";
 	$kodi_link = $_GET['kodi_link'];
 	$log->info($tag, sprintf($lang['KODI_OPENING_URL'], $kodi_url . $kodi_link));
@@ -137,8 +140,34 @@ if ($play_kodi)
 	$return = json_decode($play, true);
 	if ($return['result'] == 'OK')
 	{
-		$error[] = sprintf($lang['KODI_PLAYING'], $data[$play_kodi]['message']);
-		header("refresh:5; url=index.php?mode=shows");
+		$call = '{
+			"jsonrpc":"2.0",
+			"method":"Player.GetItem",
+			"params": { "properties": ["title", "album", "artist", "season", "episode", "duration", "showtitle", "tvshowid", "thumbnail", "file", "fanart", "streamdetails"], "playerid": 1 },
+			"id" : "VideoGetItem"
+		}';
+		$kodi = getUrl($kodi_url . urlencode($call), 'playInKodi');
+		$result = json_decode($kodi, true);
+		if (!function_exists('getShow'))
+		{
+			include_once('includes/functions_show.php');
+		}
+		$show_id = getShow($play_kodi);
+		$get_trakt_info = getTraktId($show_id[$play_kodi]['show_slug'], $result['result']['item']['season'], $result['result']['item']['episode'] + 1);
+		$get_trakt_id = json_decode($get_trakt_info, true);
+		
+		$getnext[$play_kodi]['tvdbid'] = $play_kodi;
+		$getnext[$play_kodi]['trakt_id'] = $get_trakt_id['ids']['trakt'];
+		$getnext[$play_kodi]['show_name'] = $show_id[$play_kodi]['show_name'];
+		$getnext[$play_kodi]['season'] = $get_trakt_id['season'];
+		$getnext[$play_kodi]['episode'] = $get_trakt_id['number'];
+		$getnext[$play_kodi]['episode_name'] = $get_trakt_id['title'];
+		update_show($getnext);
+		
+		$playing = sprintf($lang['KODI_PLAYING'], $result['result']['item']['showtitle'] . ' ' . $result['result']['item']['season'] . 'x' . sprintf('%02d', $result['result']['item']['episode']) . ' ' . $result['result']['item']['title']);
+		$redirect_url = "index.php?mode=shows";
+		meta_refresh(3, $redirect_url);
+		msg_handler($playing, 'SUCCESS', 'success');
 	}
 }
 /**
