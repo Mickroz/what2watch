@@ -26,13 +26,29 @@ foreach ($error_log as $key => $val)
 	{
 		if ($level == '' || $level == 'all')
 		{
-			$view_log .= $val . "\r\n";
+			if (strpos($val, 'DEBUG') !== false)
+			{
+				$val = '<div class="debug">' . $val . "</div>";
+			}
+			elseif (strpos($val, 'ERROR') !== false)
+			{
+				$val = '<div class="error">' . $val . "</div>";
+			}
+			elseif (strpos($val, 'WARNING') !== false)
+			{
+				$val = '<div class="warning">' . $val . "</div>";
+			}
+			else
+			{
+				$val = '<div class="info">' . $val . "</div>";
+			}
+			$view_log .= $val;
 			$count++;
 			continue;
 		}
 		if (strpos($val, strtoupper($level)) !== false)
 		{
-			$view_log .= $val . "\r\n";
+			$view_log .= '<div class="' . $level . '">' . $val . "</div>";
 			$count++;
 		}
 	}
@@ -40,7 +56,23 @@ foreach ($error_log as $key => $val)
 	{
 		if (strpos($val, $search) !== false)
 		{
-			$view_log .= $val . "\r\n";
+			if (strpos($val, 'DEBUG') !== false)
+			{
+				$val = '<div class="debug">' . $val . "</div>";
+			}
+			elseif (strpos($val, 'ERROR') !== false)
+			{
+				$val = '<div class="error">' . $val . "</div>";
+			}
+			elseif (strpos($val, 'WARNING') !== false)
+			{
+				$val = '<div class="warning">' . $val . "</div>";
+			}
+			else
+			{
+				$val = '<div class="info">' . $val . "</div>";
+			}
+			$view_log .= $val;
 			$count++;
 		}
 	}

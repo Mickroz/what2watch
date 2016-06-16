@@ -1,0 +1,25 @@
+.log {
+    display: block;
+    unicode-bidi: embed;
+    font-family: monospace;
+    white-space: pre;
+	overflow-x: scroll;
+}
+
+.log .debug {
+	color: rgba(0,0,0,.5);
+	margin: 0px;
+	padding: 0px;
+}
+
+.log .warning {
+	color: rgba(240, 173, 78, 1);
+	margin: 0px;
+	padding: 0px;
+}
+
+.log .error {
+	color: rgba(217, 83, 79, 1);
+	margin: 0px;
+	padding: 0px;
+}
