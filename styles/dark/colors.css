@@ -50,13 +50,18 @@ a:hover, a:focus {
     font-family: monospace;
     white-space: pre;
 	overflow-x: scroll;
+    padding: 9.5px;
+    margin: 0 0 10px;
+    font-size: 13px;
+    line-height: 1.42857143;
+    word-break: break-all;
+    word-wrap: break-word;
 }
 .log {
 	color: #FFF;
 	background-color: #333333;
 	border-color: #333333;
 	border: 5px solid #333333;
-    overflow: hidden;
     box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.31);
 }
 
