@@ -136,8 +136,12 @@ function createImage($title, $banner, $rsr_org, $im, $got_bg)
 
 	// The text to draw
 	$text = $title;
-	// Replace path by your own font path
-	$font = 'movie.ttf';
+	
+	// Set the enviroment variable for GD
+	putenv('GDFONTPATH=' . realpath('.'));
+
+	// Name the font to be used (note the lack of the .ttf extension)
+	$font = 'movie';
 
 	// Add some shadow to the text
 	imagettftext($im, 72, 0, 19, 129, $grey, $font, $text);
