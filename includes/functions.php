@@ -29,7 +29,7 @@ function check_trakt_token()
 		$result_token = json_decode($check_trakt_token, true);
 		if (empty($result_token))
 		{
-			break;
+			return;
 		}
 		$data = file('config.php'); // reads an array of lines
 		function refresh_config($data)
