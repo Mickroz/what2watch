@@ -60,7 +60,7 @@ if (($config_version != W2W_VERSION || $mode == 'config') && $mode != 'config_fi
 	$template	= new template();
 	$template->set_template();
 	$template->assign_var('META', '');
-	$log = new PHPLogger("error.log");
+	$log = new PHPLogger("what2watch.log");
 	$cache		= new cache();
     $tag = "INSTALLER";
 	if ($version = $cache->get('version_check'))
@@ -203,7 +203,7 @@ require('includes/functions.php');
 
 
 // Instantiate some basic classes
-$log = new PHPLogger("error.log");
+$log = new PHPLogger("what2watch.log");
 $cache		= new cache();
 $template	= new template();
 $template->set_template();

@@ -32,6 +32,8 @@ class PHPLogger
 	 * @var string
 	 **/	
 	private $log_file;
+	private $threshold = 1024;
+	private $first_run = true;
 	
 	/**
 	 * Constructor
@@ -40,8 +42,14 @@ class PHPLogger
 	 **/	
 	function __construct($log_file = "error.log")
 	{
-		$this->log_file = $log_file;
+		$this->log_file = $_SERVER['DOCUMENT_ROOT'] . '/what2watch/logs/' . $log_file;
+		$this->threshold = 1024;
 
+		if (!is_dir($_SERVER['DOCUMENT_ROOT'] . '/what2watch/logs/'))
+		{
+			mkdir($_SERVER['DOCUMENT_ROOT'] . '/what2watch/logs/');
+		}
+		
 		if (!file_exists($log_file))
 		{
 			//Attempt to create log file		
@@ -55,6 +63,16 @@ class PHPLogger
 			throw new Exception("LOGGER ERROR: Can't write to log", 1);
 		}
 	}
+	
+	/** 
+	* runned the first time 
+	*/ 
+	private function firstRun() 
+	{ 
+		$this->rotate_log(); 
+		$this->flog = fopen($this->log_file,'a+'); 
+		$this->first_run = false; 
+	} 
 	
 	/**
 	 * d - Log Debug
@@ -105,6 +123,40 @@ class PHPLogger
 		$this->writeToLog("INFO", $tag, $message);		
 	}
 
+	/** 
+	* rotate log $filename adding .x to end of filename 
+	* use this to force rotate 
+	*/ 
+	public function rotate_log() 
+	{
+		$threshold_bytes = $this->threshold* 1024; 
+		$filename = $this->log_file; 
+		if( file_exists($this->log_file) && filesize($filename) >= $threshold_bytes ) 
+		{ 
+			// rotate 
+			$path_info = pathinfo($filename); 
+			$base_directory = $path_info['dirname']; 
+			$base_name = $path_info['basename']; 
+			$num_map = array(); 
+			foreach( new DirectoryIterator($base_directory) as $fInfo)
+			{ 
+				if($fInfo->isDot() || ! $fInfo->isFile()) continue; 
+				if (preg_match('/^'.$base_name.'\.?([0-9]*)$/',$fInfo->getFilename(), $matches) )
+				{ 
+					$num = $matches[1]; 
+					$file2move = $fInfo->getFilename(); 
+					if ($num == '') $num = -1; 
+					$num_map[$num] = $file2move; 
+				} 
+			} 
+			krsort($num_map); 
+			foreach($num_map as $num => $file2move)
+			{ 
+				$targetN = $num+1; 
+				rename($base_directory.DIRECTORY_SEPARATOR.$file2move,$filename.'.'.$targetN); 
+			} 
+		} 
+	} 
 	/**
 	 * writeToLog - writes out timestamped message to the log file as 
 	 * defined by the $log_file class variable.
@@ -115,7 +167,8 @@ class PHPLogger
 	 * @return void
 	 **/	
 	private function writeToLog($status, $tag, $message)
-	{		
+	{
+		if($this->first_run) $this->firstRun(); 
 		$date = date('Y-m-d H:i:s');
 		$msg = "$date $status	$tag: $message" . PHP_EOL;
 		file_put_contents($this->log_file, $msg, FILE_APPEND);

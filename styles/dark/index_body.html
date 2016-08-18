@@ -2,18 +2,23 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="What2Watch">
-    <meta name="author" content="Mickroz">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="application-name" content="What2Watch">
+	
+	<meta name="author" content="Mickroz">
 {META}
     <title>{PAGE_TITLE}</title>
 	<link rel="manifest" href="manifest.json">
-	<link rel="shortcut icon" type="image/png" sizes="192x192" href="android-touch-icon-196x196.png">
-	<link rel="shortcut icon" type="image/png" sizes="128x128" href="android-touch-icon-128x128.png">
-	<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+	<link rel="apple-touch-icon-precomposed" href="android-touch-icon-180x180.png" />
+	<link rel="icon" type="image/png" sizes="192x192" href="android-touch-icon-192x192.png">
+	<link rel="icon" type="image/x-icon" href="favicon.ico">
 
-	<link rel='stylesheet prefetch' href='http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css'>
-	<link rel="stylesheet" id="font-awesome-css" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" type="text/css" media="screen">
+	<link rel='stylesheet prefetch' href='http://netdna.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.css'>
+	<link rel="stylesheet" id="font-awesome-css" href="//netdna.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.css" type="text/css" media="screen">
 	<link rel="stylesheet" href="{STYLESHEET_LINK}" type="text/css" media="screen, handheld, projection">
 	
 <!-- Custom styles for this template -->
@@ -53,35 +58,44 @@
     <div class="navmenu navmenu-inverse navmenu-fixed-left offcanvas-sm">
       <a class="navmenu-brand visible-md visible-lg" href="/what2watch">{L_INDEX}</a>
       <ul class="nav navmenu-nav">
+	    <li>
+        	<a href="/what2watch" class="hidden-xs" /><i class="fa fa-home"></i> {L_HOME}</a>
+        	<a href="/what2watch" class="visible-xs" data-toggle="offcanvas" data-target=".navmenu" /><i class="fa fa-home"></i> {L_HOME}</a>
+        </li>
         <li{SHOWS_ACTIVE}>
-        	<a href="?mode=shows" class="hidden-xs" /><span class="glyphicon glyphicon-hd-video" aria-hidden="true"></span> {L_SHOWS}</a>
-        	<a href="?mode=shows" class="visible-xs" data-toggle="offcanvas" data-target=".navmenu" /><span class="glyphicon glyphicon-hd-video" aria-hidden="true"></span> {L_SHOWS}</a>
+        	<a href="?mode=shows" class="hidden-xs" /><i class="fa fa-television"></i> {L_SHOWS}</a>
+        	<a href="?mode=shows" class="visible-xs" data-toggle="offcanvas" data-target=".navmenu" /><i class="fa fa-television"></i> {L_SHOWS}</a>
         </li>
         <li{MOVIES_ACTIVE}>
-        	<a href="?mode=movies" class="hidden-xs" /><span class="glyphicon glyphicon-film" aria-hidden="true"></span> {L_MOVIES}</a>
-        	<a href="?mode=movies" class="visible-xs" data-toggle="offcanvas" data-target=".navmenu" /><span class="glyphicon glyphicon-film" aria-hidden="true"></span> {L_MOVIES}</a>
+        	<a href="?mode=movies" class="hidden-xs" /><i class="fa fa-film"></i> {L_MOVIES}</a>
+        	<a href="?mode=movies" class="visible-xs" data-toggle="offcanvas" data-target=".navmenu" /><i class="fa fa-film"></i> {L_MOVIES}</a>
         </li>
         <li{LOG_ACTIVE}>
-        	<a href="?mode=viewlog" class="hidden-xs" /><span class="glyphicon glyphicon-book" aria-hidden="true"></span> {L_LOG}</a>
-        	<a href="?mode=viewlog" class="visible-xs" data-toggle="offcanvas" data-target=".navmenu" /><span class="glyphicon glyphicon-book" aria-hidden="true"></span> {L_LOG}</a>
+        	<a href="?mode=viewlog" class="hidden-xs" /><i class="fa fa-file-text-o"></i> {L_LOG}</a>
+        	<a href="?mode=viewlog" class="visible-xs" data-toggle="offcanvas" data-target=".navmenu" /><i class="fa fa-file-text-o"></i> {L_LOG}</a>
         </li>
 		<li class="dropdown{DROPDOWN_ACTIVE}">
-			<a href="#" class="dropdown-toggle"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> {L_CONTROL_PANEL} <b class="caret"></b></a>
+			<a href="#" class="dropdown-toggle"><i class="fa fa-sliders"></i> {L_CONTROL_PANEL} <b class="caret"></b></a>
 				<ul class="dropdown-menu navmenu-nav">
+					<li{INFO_ACTIVE}>
+						<a href="?mode=info" class="hidden-xs" /><i class="fa fa-question"></i> {L_INFO}</a>
+						<a href="?mode=info" class="visible-xs" data-toggle="offcanvas" data-target=".navmenu" /><i class="fa fa-question"></i> {L_INFO}</a>
+					</li>
+					<li class="divider"></li>
 					<li{CONFIG_ACTIVE}>
 						<a href="?mode=config" class="hidden-xs" /><i class="fa fa-cog"></i> {L_CONFIG}</a>
 						<a href="?mode=config" class="visible-xs" data-toggle="offcanvas" data-target=".navmenu" /><i class="fa fa-cog"></i> {L_CONFIG}</a>
 					</li>
 					<li{PLUGINS_ACTIVE}>
-						<a href="?mode=plugins" class="hidden-xs" /><i class="fa fa-puzzle-piece"></i> {L_PLUGINS}</a>
-						<a href="?mode=plugins" class="visible-xs" data-toggle="offcanvas" data-target=".navmenu" /><i class="fa fa-puzzle-piece"></i> {L_PLUGINS}</a>
+						<a href="?mode=plugins" class="hidden-xs" /><i class="fa fa-plug"></i> {L_PLUGINS}</a>
+						<a href="?mode=plugins" class="visible-xs" data-toggle="offcanvas" data-target=".navmenu" /><i class="fa fa-plug"></i> {L_PLUGINS}</a>
 					</li>
 				</ul>
 		</li>
 		<li class="nav-divider"></li>
 		<li>
-			<a href="?mode=purge_cache"class="hidden-xs" /><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> {L_PURGE_CACHE}</a>
-			<a href="?mode=purge_cache" class="visible-xs" data-toggle="offcanvas" data-target=".navmenu" /><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> {L_PURGE_CACHE}</a>
+			<a href="?mode=purge_cache"class="hidden-xs" /><i class="fa fa-trash-o"></i> {L_PURGE_CACHE}</a>
+			<a href="?mode=purge_cache" class="visible-xs" data-toggle="offcanvas" data-target=".navmenu" /><i class="fa fa-trash-o"></i> {L_PURGE_CACHE}</a>
 		</li>
       </ul>
     </div>

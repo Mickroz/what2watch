@@ -1,6 +1,7 @@
 config.php
 error.log
 images/
+logs/
 cache/*.cache
 cache/*.txt
 cache/xml/

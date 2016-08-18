@@ -4,7 +4,7 @@ if (!defined('IN_W2W'))
 	exit;
 }
 
-$error_log = file('error.log', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+$error_log = file($_SERVER['DOCUMENT_ROOT'] . '/what2watch/logs/what2watch.log', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
 $log_lines = '';
 if ($submit)

@@ -96,6 +96,10 @@ switch ($mode)
 		create_config_file();
 		header('Location: index.php');
 	break;
+	
+	case 'info':
+		include('info.php');
+	break;
 
 	case 'plugins':
 		include('plugins.php');
@@ -115,9 +119,9 @@ switch ($mode)
 	break;
 	
 	case 'purge_log':
-		$lines_array = file('error.log');
+		$lines_array = file($_SERVER['DOCUMENT_ROOT'] . '/what2watch/logs/what2watch.log');
 		$new_output = "";
-		file_put_contents('error.log', $new_output);
+		file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/what2watch/logs/what2watch.log', $new_output);
 		$log->info('Log', $lang['LOG_PURGED']);
 
 		$redirect_url = $_SERVER['HTTP_REFERER'];
@@ -136,7 +140,7 @@ switch ($mode)
 		/**
 		* Finally we can output our final page.
 		*/
-		page_header($lang['INDEX']);
+		page_header($lang['INDEX'] . ' - You choose what 2 watch');
 
 		$template->set_filename('index_body.html');
 

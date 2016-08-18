@@ -281,6 +281,9 @@ function version_check()
 		$ref_commit = str_replace(array("\r", "\n"), '', $ref_commit);
 		$current_commit_minus1 = $commits[1]->sha;
 		$commit_message = $commits[0]->commit->message;
+		
+		$version['hash'] = substr($ref_commit, -7);
+		
 		if (!strcmp($current_commit_minus1, $ref_commit))
 		{
 			$version['style'] = ' style="color: #228822;"';
@@ -294,6 +297,7 @@ function version_check()
 	}
 	else
 	{
+		$version['hash'] = '';
 		$version['style'] = '';
 		$version['message'] = $lang['VERSIONCHECK_FAIL'];
 	}
@@ -566,7 +570,8 @@ function page_header($page_title = '')
 		'LOG_ACTIVE'	=> ($mode == 'viewlog' ? ' class="active"' : ''),
 		'CONFIG_ACTIVE'	=> (($mode == 'config') ? ' class="active"' : ''),
 		'PLUGINS_ACTIVE'	=> (($mode == 'plugins') ? ' class="active"' : ''),
-		'DROPDOWN_ACTIVE'	=> (($mode == 'config' || $mode == 'plugins') ? ' active' : ''),
+		'INFO_ACTIVE'	=> ($mode == 'info' ? ' class="active"' : ''),
+		'DROPDOWN_ACTIVE'	=> (($mode == 'config' || $mode == 'plugins' || $mode == 'info') ? ' active' : ''),
 		'STYLESHEET_LINK'	=> 'styles/' . $template_path . '/style.css',
 		'TEMPLATE_PATH'	=> 'styles/' . $template_path,
 		'PAGE_TITLE'	=> $page_title,
