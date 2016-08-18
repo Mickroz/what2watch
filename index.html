@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>What2watch by Mickroz</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>What2watch</h1>
+        <p>Combined overview from SickBeard and Trakt, shows you follow which currently have a new episode with a sub for it downloaded.</p>
+
+        <p class="view"><a href="https://github.com/Mickroz/what2watch">View the Project on GitHub <small>Mickroz/what2watch</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/Mickroz/what2watch/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/Mickroz/what2watch/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/Mickroz/what2watch">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h2>
+<a id="what2watch" class="anchor" href="#what2watch" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>what2watch</h2>
+
+<p>This script was created because i always had to check which episodes i had watched on trakt,
+and then see if SickBeard downloaded the next episode, and see if Auto-Sub downloaded the subs for it so i could watch it.
+With this script it collects all shows in Sickbeard, checks if there are any downloaded episodes for it, if so,
+the script will check to see what episode is next in your progress on trakt.
+If those 2 match, the script will check if there are any subs downloaded for it and if true, show the episode in the overview,
+if not, it will skip the show and continue with the next show.
+This scripts has to be run on the machine where you have your downloaded shows.</p>
+
+<h2>
+<a id="issues" class="anchor" href="#issues" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Issues</h2>
+
+<p>This script relies heavily on api calls to SickBeard and Trakt.tv, therefor it could take a while to finish if you have a lot of shows in SickBeard.
+Therefor it will cache the created array for an hour (3600) to speed things up a bit if you want to check it later.</p>
+
+<p>The second issue is that because of the open_basedir setting in php, if you get this error, you have to add the location where you store your shows to php.ini.
+Read more on this on <a href="http://php.net/manual/en/ini.core.php#ini.open-basedir">php.net</a> and <a href="http://kb.mediatemple.net/questions/514/How+do+I+set+the+path+for+open_basedir%3F#gs">here</a> on how to add the location.</p>
+
+<h2>
+<a id="todo" class="anchor" href="#todo" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Todo</h2>
+
+<ul>
+<li>[x] Add some settings to config.php</li>
+<li>[ ] Grab naming pattern from SickBeard</li>
+<li>[x] Move subs extension to config for user configurable setting</li>
+<li>[x] Save banner on disk for later usage?</li>
+</ul>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>LICENSE</h2>
+
+<p><a href="http://opensource.org/licenses/gpl-2.0.php">GNU General Public License v2</a></p>
+
+<p>thanks to <a href="https://github.com/derkens" class="user-mention">@derkens</a> for testing <g-emoji alias="grin" fallback-src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f601.png">😁</g-emoji></p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/Mickroz">Mickroz</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
