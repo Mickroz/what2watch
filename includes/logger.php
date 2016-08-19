@@ -40,7 +40,7 @@ class PHPLogger
 	 * @param String logfile - [optional] Absolute file name/path. Defaults to ubuntu apache log.
 	 * @return void
 	 **/	
-	function __construct($log_file = "error.log")
+	function __construct($log_file = "what2watch.log")
 	{
 		$this->log_file = $_SERVER['DOCUMENT_ROOT'] . '/what2watch/logs/' . $log_file;
 		$this->threshold = 1024;
@@ -50,10 +50,10 @@ class PHPLogger
 			mkdir($_SERVER['DOCUMENT_ROOT'] . '/what2watch/logs/');
 		}
 		
-		if (!file_exists($log_file))
+		if (!file_exists($_SERVER['DOCUMENT_ROOT'] . '/what2watch/logs/' . $log_file))
 		{
 			//Attempt to create log file		
-			touch($log_file);
+			touch($_SERVER['DOCUMENT_ROOT'] . '/what2watch/logs/' . $log_file);
 		}
 
 		//Make sure we'ge got permissions
