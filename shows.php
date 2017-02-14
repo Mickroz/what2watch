@@ -194,7 +194,7 @@ else
 				else
 				{
 					// We have a wrong season number, inform the user
-					$notice_msg = '<span style="color: red; font-size: small">We got a different season number, check <a href="https://trakt.tv/shows/' . $show_id[$tvdbid]['show_slug'] . '/seasons/' . $collected['next_episode']['season'] .'" target="_blank">season ' . $collected['next_episode']['season'] . '</a> on trakt</span>';
+					$notice_msg = '<br /><span style="color: red; font-size: small">We got a different season number, check <a href="https://trakt.tv/shows/' . $show_id[$tvdbid]['show_slug'] . '/seasons/' . $collected['next_episode']['season'] .'" target="_blank">season ' . $collected['next_episode']['season'] . '</a> on trakt</span>';
 				}
 			}
 		}
@@ -212,7 +212,7 @@ else
 		$series[$tvdbid]['episode'] = $progress['next_episode']['season'] . 'x' . sprintf('%02d', $progress['next_episode']['number']);
 		$series[$tvdbid]['episode_number'] = $progress['next_episode']['number'];
 		$series[$tvdbid]['name'] = (!empty($progress['next_episode']['title']) ? $progress['next_episode']['title'] : $episode['data']['name']);
-		$series[$tvdbid]['name'] = $series[$tvdbid]['name'] . '<br />' . $notice_msg;
+		$series[$tvdbid]['notice'] = $notice_msg;
 		$series[$tvdbid]['description'] = $episode['data']['description'];
 		$series[$tvdbid]['status'] = $episode['data']['status'];
 		$series[$tvdbid]['location'] = $episode['data']['location'];
