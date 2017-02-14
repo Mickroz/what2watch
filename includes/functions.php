@@ -331,14 +331,14 @@ function version_check()
 	if ($current_commits !== false)
 	{
 		$commits = json_decode($current_commits);
-		$ref_commit = file_get_contents('version');
-		$ref_commit = str_replace(array("\r", "\n"), '', $ref_commit);
-		$current_commit_minus1 = $commits[1]->sha;
+		exec('git rev-parse --verify HEAD 2> /dev/null', $git);
+		$ref_commit = $git[0];
+		$current_commit = $commits[0]->sha;
 		$commit_message = $commits[0]->commit->message;
 		
 		$version['hash'] = substr($ref_commit, -7);
 		
-		if (!strcmp($current_commit_minus1, $ref_commit))
+		if (!strcmp($current_commit, $ref_commit))
 		{
 			$version['style'] = ' style="color: #228822;"';
 			$version['message'] = $lang['VERSION_UP_TO_DATE'];
