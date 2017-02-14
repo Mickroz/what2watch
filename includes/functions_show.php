@@ -123,6 +123,39 @@ function getTraktId($slug, $season, $episode)
 	return $response;
 }
 
+function getCollected($slug, $trakt_token)
+{
+	global $log, $lang, $error;
+	
+	$tag = 'getCollected';
+	$log->debug($tag, sprintf($lang['TRAKT_GET_COLLECTED'], $slug));
+	$log->debug($tag, "Opening URL https://api-v2launch.trakt.tv/shows/$slug/progress/collection");
+	
+	$ch = curl_init();
+
+	curl_setopt($ch, CURLOPT_URL, "https://api-v2launch.trakt.tv/shows/$slug/progress/collection");
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+	curl_setopt($ch, CURLOPT_HEADER, FALSE);
+	curl_setopt($ch, CURLOPT_FAILONERROR, TRUE);
+
+	curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+		"Content-Type: application/json",
+		"Authorization: Bearer $trakt_token",
+		"trakt-api-version: 2",
+		"trakt-api-key: dfca522ce536a330d25737752dc8a26e2a5ac09e9067409669f3456db4089b7b"
+	));
+
+	$response = curl_exec($ch);
+	if(curl_errno($ch))
+	{
+		$error[] = curl_error($ch);
+		$log->error($tag, curl_error($ch));
+	}
+	curl_close($ch);
+	
+	return $response;
+}
+
 function getProgress($slug, $trakt_token)
 {
 	global $log, $lang, $error;

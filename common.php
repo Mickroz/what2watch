@@ -24,7 +24,7 @@ $page = (isset($_GET['page']) ? $_GET['page'] : '');
 $post_data = $lang_pack = $error = array();
 $config = $trakt_token = $trakt_expires_in = $trakt_refresh_token = $sickbeard = $sb_api = $cache_life = $sub_ext = $movies_folder = $language = $config_version = $web_username = $web_password = $ignore_words = $skip_shows = $ip_subnet = '';
 $download = true;
-$debug = 0;
+$skip_incomplete = $debug = $skip_not_watched = 0;
 $template_path = 'default';
 $language = 'en';
 
@@ -113,6 +113,8 @@ if (($config_version != W2W_VERSION || $mode == 'config') && $mode != 'config_fi
 		$post_data['web_password'] = (isset($_POST['web_password']) ? $_POST['web_password'] : $web_password);
 		$post_data['ignore_words'] = (isset($_POST['ignore_words']) ? $_POST['ignore_words'] : $ignore_words);
 		$post_data['skip_shows'] = (isset($_POST['skip_shows']) ? $_POST['skip_shows'] : $skip_shows);
+		$post_data['skip_incomplete'] = (isset($_POST['skip_incomplete']) ? $_POST['skip_incomplete'] : $skip_incomplete);
+		$post_data['skip_not_watched'] = (isset($_POST['skip_not_watched']) ? $_POST['skip_not_watched'] : $skip_not_watched);
 		$post_data['ip_subnet'] = (isset($_POST['ip_subnet']) ? $_POST['ip_subnet'] : $ip_subnet);
 		$post_data['debug'] = (isset($_POST['debug']) ? $_POST['debug'] : $debug);
 		$post_data['config_version'] = W2W_VERSION;
@@ -172,6 +174,8 @@ if (($config_version != W2W_VERSION || $mode == 'config') && $mode != 'config_fi
 			'WEB_PASSWORD'		=> $post_data['web_password'],
 			'IGNORE_WORDS'		=> $post_data['ignore_words'],
 			'SKIP_SHOWS'		=> $post_data['skip_shows'],
+			'SKIP_INCOMPLETE'	=> ($skip_incomplete) ? ' checked' : '',
+			'SKIP_NOT_WATCHED'	=> ($skip_not_watched) ? ' checked' : '',
 			'LANGUAGE'			=> $post_data['language'],
 			'CONFIG_VERSION'	=> $post_data['config_version'],
 			'S_LANGUAGE_OPTIONS'	=> $s_lang_options,

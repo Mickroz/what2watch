@@ -132,6 +132,7 @@ else
 		{
 			continue;
 		}
+		
 		$trakt_progress = getProgress($show_id[$tvdbid]['show_slug'], $trakt_token);
 		
 		$progress = json_decode($trakt_progress, true);
@@ -171,6 +172,32 @@ else
 			}
 		}
 		$log->info('getProgress', sprintf($lang['TRAKT_PROGRESS_SUCCESS'], $show_id[$tvdbid]['show_name'], $progress['next_episode']['season'] . 'x' . sprintf('%02d', $progress['next_episode']['number'])));
+		
+		// We check here on skip_incomplete because we need the season number
+		$notice_msg = '';
+		if ($skip_incomplete)
+		{
+			$trakt_collected = getCollected($show_id[$tvdbid]['show_slug'], $trakt_token);
+		
+			$collected = json_decode($trakt_collected, true);
+			
+			if (!empty($collected['next_episode']))
+			{
+				if ($collected['next_episode']['season'] >= $progress['next_episode']['season'] && $progress['next_episode']['number'] == 1 && $skip_not_watched)
+				{
+					continue;
+				}
+				if ($collected['next_episode']['season'] >= $progress['next_episode']['season'] || $collected['next_episode']['season'] == 0 )
+				{
+					$notice_msg = '';
+				}
+				else
+				{
+					// We have a wrong season number, inform the user
+					$notice_msg = '<span style="color: red; font-size: small">We got a different season number, check <a href="https://trakt.tv/shows/' . $show_id[$tvdbid]['show_slug'] . '/seasons/' . $collected['next_episode']['season'] .'" target="_blank">season ' . $collected['next_episode']['season'] . '</a> on trakt</span>';
+				}
+			}
+		}
 		// Grab all episode data
 		$episode = getEpisode($tvdbid, $progress['next_episode']['season'], $progress['next_episode']['number']);
 		
@@ -185,6 +212,7 @@ else
 		$series[$tvdbid]['episode'] = $progress['next_episode']['season'] . 'x' . sprintf('%02d', $progress['next_episode']['number']);
 		$series[$tvdbid]['episode_number'] = $progress['next_episode']['number'];
 		$series[$tvdbid]['name'] = (!empty($progress['next_episode']['title']) ? $progress['next_episode']['title'] : $episode['data']['name']);
+		$series[$tvdbid]['name'] = $series[$tvdbid]['name'] . '<br />' . $notice_msg;
 		$series[$tvdbid]['description'] = $episode['data']['description'];
 		$series[$tvdbid]['status'] = $episode['data']['status'];
 		$series[$tvdbid]['location'] = $episode['data']['location'];
