@@ -11,6 +11,11 @@ include('common.php');
 $mode = (isset($_GET['mode']) ? $_GET['mode'] : '');
 $error = $success = $info = $warning = array();
 $purge_cache = false;
+$user_ip = $_SERVER['REMOTE_ADDR'];
+$validated = false;
+$hash = md5($user_ip . $web_password . $random2);
+$self = $_SERVER['REQUEST_URI'];
+
 if ($version = $cache->get('version_check'))
 {
     $version = json_decode($version, true);
@@ -22,64 +27,38 @@ else
 	$cache->put('version_check', json_encode($version));
 }
 
-// Status flag:
-$LoginSuccessful = false;
+/* USER IS LOGGED IN */
+if (isset($_COOKIE[$random1 . '_l']))
+{
+	// Separate selector from validator.
+	list($selector, $validator) = explode(":", $_COOKIE[$random1 . '_l']);
+	if ($selector == $random2 && $validator == $hash)
+	{
+		$validated = true;
+	}
+}
 
 if (!empty($ip_subnet))
 {
 	if (substr($_SERVER['REMOTE_ADDR'], 0, strlen($ip_subnet)) == $ip_subnet)
 	{
-		unset($web_username);
+		$validated = true;
 	}
 }
 
-if (!empty($web_username))
-{
-	// Check username and password:
-	if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW']))
-	{
- 
-		$Username = $_SERVER['PHP_AUTH_USER'];
-		$Password = $_SERVER['PHP_AUTH_PW'];
- 
-		if ($Username == $web_username && $Password == $web_password)
-		{
-			$LoginSuccessful = true;
-		}
-	}
-}
-else
-{
-	$LoginSuccessful = true;
-}
-
+/* FORM HAS BEEN SUBMITTED */
 // Login passed successful?
-if (!$LoginSuccessful){
- 
-    /* 
-    ** The user gets here if:
-    ** 
-    ** 1. The user entered incorrect login data (three times)
-    **     --> User will see the error message from below
-    **
-    ** 2. Or the user requested the page for the first time
-    **     --> Then the 401 headers apply and the "login box" will
-    **         be shown
-    */
- 
-    // The text inside the realm section will be visible for the 
-    // user in the login box
-    header('WWW-Authenticate: Basic realm="What2Watch"');
-    header('HTTP/1.0 401 Unauthorized');
- 
-    print "Login failed!\n";
- 
-}
-else
+if (!$validated)
 {
+	$mode = 'login';
+}
 
 switch ($mode)
 {
+	case 'login':
+		include('login.php');
+	break;
+	
 	case 'shows':
 		include('shows.php');
 	break;
@@ -145,5 +124,4 @@ switch ($mode)
 		$template->set_filename('index_body.html');
 
 		page_footer();
-	}
 }

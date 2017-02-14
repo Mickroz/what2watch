@@ -18,6 +18,60 @@ if (!defined('IN_W2W'))
 	exit;
 }
 
+function random_text( $type = 'alnum', $length = 8 )
+{
+	switch ( $type ) {
+		case 'alnum':
+			$pool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+			break;
+		case 'alpha':
+			$pool = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+			break;
+		case 'hexdec':
+			$pool = '0123456789abcdef';
+			break;
+		case 'numeric':
+			$pool = '0123456789';
+			break;
+		case 'nozero':
+			$pool = '123456789';
+			break;
+		case 'distinct':
+			$pool = '2345679ACDEFHJKLMNPRSTUVWXYZ';
+			break;
+		default:
+			$pool = (string) $type;
+			break;
+	}
+
+
+	$crypto_rand_secure = function ( $min, $max ) {
+		$range = $max - $min;
+		if ( $range < 0 ) return $min; // not so random...
+		$log    = log( $range, 2 );
+		$bytes  = (int) ( $log / 8 ) + 1; // length in bytes
+		$bits   = (int) $log + 1; // length in bits
+		$filter = (int) ( 1 << $bits ) - 1; // set all lower bits to 1
+		do {
+			$rnd = hexdec( bin2hex( openssl_random_pseudo_bytes( $bytes ) ) );
+			$rnd = $rnd & $filter; // discard irrelevant bits
+		} while ( $rnd >= $range );
+		return $min + $rnd;
+	};
+
+	$token = "";
+	$max   = strlen( $pool );
+	for ( $i = 0; $i < $length; $i++ ) {
+		$token .= $pool[$crypto_rand_secure( 0, $max )];
+	}
+	return $token;
+}
+
+function generate_token($length = 20)
+{
+    return bin2hex(random_text($length));
+}
+
 function check_trakt_token()
 {
 	global $trakt_expires_in, $trakt_refresh_token, $log, $lang, $error, $result_token;
@@ -339,6 +393,8 @@ function create_config_file_data($data)
 		'ip_subnet'			=> $data['ip_subnet'],
 		'debug'				=> $data['debug'],
 		'config_version'	=> $data['config_version'],
+		'random1'			=> $data['random1'],
+		'random2'			=> $data['random2'],
 	);
 
 	foreach ($config_data_array as $key => $value)
@@ -458,6 +514,8 @@ function get_submitted_data()
 		'ip_subnet'			=> $_POST['ip_subnet'],
 		'debug'				=> isset($_POST['debug']) ? 1 : 0,
 		'config_version'	=> $_POST['config_version'],
+		'random1'			=> generate_token(14),
+		'random2'			=> generate_token(14),
 	);
 }
 

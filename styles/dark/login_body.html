@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="What2Watch">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="application-name" content="What2Watch">
+	
+	<meta name="author" content="Mickroz">
+{META}
+    <title>{PAGE_TITLE}</title>
+	<link rel="manifest" href="manifest.json">
+	<link rel="apple-touch-icon-precomposed" href="android-touch-icon-180x180.png" />
+	<link rel="icon" type="image/png" sizes="192x192" href="android-touch-icon-192x192.png">
+	<link rel="icon" type="image/x-icon" href="favicon.ico">
+
+	<link rel='stylesheet prefetch' href='http://netdna.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.css'>
+	<link rel="stylesheet" id="font-awesome-css" href="//netdna.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.css" type="text/css" media="screen">
+	<link rel="stylesheet" href="{STYLESHEET_LINK}" type="text/css" media="screen, handheld, projection">
+	
+<!-- Custom styles for this template -->
+	<link href="{TEMPLATE_PATH}/sticky-footer.css" rel="stylesheet">
+	
+    <!-- Bootstrap core CSS -->
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+	<link href="{TEMPLATE_PATH}/colors.css" rel="stylesheet">
+	<link href="{TEMPLATE_PATH}/login.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+
+    <div class="container">
+	
+      <form action="" method="POST" role="form" class="form-signin">
+        <h2 class="form-signin-heading">Please sign in</h2>
+        <label for="inputUsername" class="sr-only">Username</label>
+        <input type="text" id="inputUsername" name="username" class="form-control" placeholder="Username" value="">
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" value="" required>
+        <p class="help-block">{ERROR}</p>
+        <button type="submit" name="login" class="btn btn-lg btn-primary btn-block">Sign in</button>
+      </form>
+	  
+<div class="pushed"></div>
+    </div><!-- /.container -->
+
+  </body>
+</html>
