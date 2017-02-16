@@ -173,6 +173,16 @@ else
 		}
 		$log->info('getProgress', sprintf($lang['TRAKT_PROGRESS_SUCCESS'], $show_id[$tvdbid]['show_name'], $progress['next_episode']['season'] . 'x' . sprintf('%02d', $progress['next_episode']['number'])));
 		
+		// we only show watched shows here
+		// we do this here to skip extra trakt calls
+		if ($skip_not_watched)
+		{
+			if ($progress['next_episode']['number'] == 1)
+			{
+				continue;
+			}
+		}
+		
 		// We check here on skip_incomplete because we need the season number
 		$notice_msg = '';
 		if ($skip_incomplete)
@@ -181,11 +191,25 @@ else
 		
 			$collected = json_decode($trakt_collected, true);
 			
+			// we have found not fully collected season
 			if (!empty($collected['next_episode']))
 			{
-				if ($collected['next_episode']['season'] >= $progress['next_episode']['season'] && $progress['next_episode']['number'] == 1 && $skip_not_watched)
+				// if the collected next episode season is greater or the same as the progress next episode season
+				if ($collected['next_episode']['season'] >= $progress['next_episode']['season'])
 				{
-					continue;
+					// grab all seasons from this show from trakt for episode count
+					$trakt_seasons = getSeasons($show_id[$tvdbid]['show_slug'], $trakt_token);
+		
+					$seasons = json_decode($trakt_seasons, true);
+					// search for the key where the value of number is the season number so we can use it
+					$season_count = array_search($progress['next_episode']['season'], array_column($seasons, 'number'));
+					
+					$count_episodes = $seasons[$season_count]['episode_count'];
+					// if the collected next_episode is smaller the the episode count and its the first episode we skip the show
+					if ($collected['next_episode']['number'] < $count_episodes && $progress['next_episode']['number'] == 1)
+					{
+						continue;
+					}
 				}
 				if ($collected['next_episode']['season'] >= $progress['next_episode']['season'] || $collected['next_episode']['season'] == 0 )
 				{
@@ -198,6 +222,7 @@ else
 				}
 			}
 		}
+
 		// Grab all episode data
 		$episode = getEpisode($tvdbid, $progress['next_episode']['season'], $progress['next_episode']['number']);
 		
