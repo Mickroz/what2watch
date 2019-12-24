@@ -1,0 +1,115 @@
+<form action="{S_POST_ACTION}" method="post" class="form-horizontal">
+<h1>{L_SETUP}</h1>
+
+<div class="form-group row">
+	<label for="sickbeard" class="col-sm-2 col-form-label">{L_SICKBEARD_URL}:</label>
+	<div class="col-sm-10">
+		<input type="text" name="sickbeard" id="sickbeard" maxlength="255" value="{SICKBEARD}" class="form-control" />
+		<small class="form-text text-muted">{L_SICKBEARD_URL_EXPLAIN}</small>
+	</div>
+</div>
+
+<div class="form-group row">
+	<label for="sb_api" class="col-sm-2 col-form-label">{L_SICKBEARD_API_KEY}:</label>
+	<div class="col-sm-10">
+		<input type="text" name="sb_api" id="sb_api" maxlength="255" value="{SB_API}" class="form-control" />
+	</div>
+</div>
+
+<div class="form-group row">
+	<label for="cache_life" class="col-sm-2 col-form-label">{L_CACHE_LIFE}:</label>
+	<div class="col-sm-10">
+		<input type="text" name="cache_life" id="cache_life" maxlength="255" value="{CACHE_LIFE}" class="form-control" />
+		<small class="form-text text-muted">{L_CACHE_LIFE_EXPLAIN}</small>
+	</div>
+</div>
+
+<div class="form-group row">
+	<label for="sub_ext" class="col-sm-2 col-form-label">{L_SUBTITLE_EXTENSION}:</label>
+	<div class="col-sm-10">
+		<input type="text" name="sub_ext" id="sub_ext" maxlength="255" value="{SUB_EXT}" class="form-control" />
+		<small class="form-text text-muted">{L_SUBTITLE_EXTENSION_EXPLAIN}</small>
+	</div>
+</div>
+
+<div class="form-group row">
+	<label for="movies_folder" class="col-sm-2 col-form-label">{L_MOVIES_FOLDER}:</label>
+	<div class="col-sm-10">
+		<input type="text" name="movies_folder" id="movies_folder" maxlength="255" value="{MOVIES_FOLDER}" class="form-control" />
+		<small class="form-text text-muted">{L_MOVIES_FOLDER_EXPLAIN}</small>
+	</div>
+</div>
+
+<div class="form-group row">
+	<label for="web_username" class="col-sm-2 col-form-label">{L_HTTP_USERNAME}:</label>
+	<div class="col-sm-10">
+		<input type="text" name="web_username" id="web_username" maxlength="255" value="{WEB_USERNAME}" class="form-control" />
+		<small class="form-text text-muted">{L_HTTP_USERNAME_EXPLAIN}</small>
+	</div>
+</div>
+
+<div class="form-group row">
+	<label for="web_password" class="col-sm-2 col-form-label">{L_HTTP_PASSWORD}:</label>
+	<div class="col-sm-10">
+		<input type="password" name="web_password" id="web_password" maxlength="255" value="{WEB_PASSWORD}" class="form-control" />
+		<small class="form-text text-muted">{L_HTTP_PASSWORD_EXPLAIN}</small>
+	</div>
+</div>
+
+<div class="form-group row">
+	<label for="ip_subnet" class="col-sm-2 col-form-label">{L_IP_SUBNET}:</label>
+	<div class="col-sm-10">
+		<input type="text" name="ip_subnet" id="ip_subnet" maxlength="255" value="{IP_SUBNET}" class="form-control" />
+		<small class="form-text text-muted">{L_IP_SUBNET_EXPLAIN}</small>
+	</div>
+</div>
+
+<div class="form-group row">
+	<label for="language" class="col-sm-2 col-form-label">{L_LANGUAGE_SELECT}:</label>
+	<div class="col-sm-10">
+		<select id="language" name="language" class="form-control">{S_LANGUAGE_OPTIONS}</select>
+	</div>
+</div>
+
+<div class="form-group row">
+	<label for="template_path" class="col-sm-2 col-form-label">{L_STYLE_SELECT}:</label>
+	<div class="col-sm-10">
+		<select id="template_path" name="template_path" class="form-control">{S_STYLE_OPTIONS}</select>
+	</div>
+</div>
+
+<div class="form-group row">
+	<label for="ignore_words" class="col-sm-2 col-form-label">{L_IGNORE_WORDS}:</label>
+	<div class="col-sm-10">
+		<input type="text" name="ignore_words" id="ignore_words" maxlength="255" value="{IGNORE_WORDS}" class="form-control" />
+		<small class="form-text text-muted">{L_IGNORE_WORDS_EXPLAIN}</small>
+	</div>
+</div>
+
+<div class="form-group row">
+	<label for="skip_shows" class="col-sm-2 col-form-label">{L_SKIP_SHOWS}:</label>
+	<div class="col-sm-10">
+		<input type="text" name="skip_shows" id="skip_shows" maxlength="255" value="{SKIP_SHOWS}" class="form-control" />
+		<small class="form-text text-muted">{L_SKIP_SHOWS_EXPLAIN}</small>
+	</div>
+</div>
+<div class="form-group row">
+	<label for="debug" class="col-sm-2 col-form-label">{L_DEBUG}:</label>
+	<div class="col-sm-10">
+		<label class="checkbox-inline">
+			<input type="checkbox" name="debug" id="debug" value="1"{DEBUG}> {L_DEBUG_EXPLAIN}
+		</label>
+	</div>
+</div>
+
+<div class="form-group row">
+	<div class="col-sm-offset-2 col-sm-10">
+		<input type="hidden" name="trakt_token" value="{TRAKT_TOKEN}" />
+		<input type="hidden" name="trakt_expires_in" value="{TRAKT_EXPIRES_IN}" />
+		<input type="hidden" name="trakt_refresh_token" value="{TRAKT_REFRESH_TOKEN}" />
+		<input type="hidden" name="config_version" value="{CONFIG_VERSION}" />
+		<button type="submit" name="submit" class="btn btn-primary"/>{L_CREATE_CONFIG}</button>
+	</div>
+</div>
+</form>
+<div class="pushed"></div>

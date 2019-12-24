@@ -1,0 +1,136 @@
+div img {
+	max-width: 100%;
+	height: auto;
+}
+pre, .pushed {
+	margin-bottom: 60px !important;
+}
+
+.navmenu-default .navmenu-nav > li > a, .navbar-default .navbar-offcanvas .navmenu-nav > li > a {font-size: 18px;}
+.panel-default > .panel-heading {font-size: 16px;}
+.panel-default > .panel-heading span {font-size: 14px;}
+.center {
+     text-align: center;
+}
+
+.back-to-top {
+	background: none;
+	margin: 0;
+	position: fixed;
+	bottom: 10px;
+	right: 15px;
+	opacity: 0.8;
+    filter: alpha(opacity=80);
+	z-index: 100;
+	display: none;
+	text-decoration: none;
+	color: #000000;
+}
+
+.back-to-top i {
+  font-size: 48px;
+}
+
+.card-footer span {
+	text-align: right;
+  width: 350px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+/* -------------------------= Responsive Grid System
+ * -------------------------------------------------------------------------------------------------- */
+
+/*= GROUPING  ======================================================================== */
+	.gridrow:before,
+	.gridrow:after {
+	    content:"";
+	    display:table;
+	}
+	.gridrow:after {
+	    clear:both;
+	}
+	.gridrow {
+      clear: both;
+		  padding: 0px;
+		  margin: 0 auto;
+	    zoom:1; /* For IE 6/7 (trigger hasLayout) */
+	}
+
+/*= GRID COLUMN SETUP   =============================================================== */
+	.col, .colmob {
+		display: block;
+		float:left;
+		margin: 1% 0 1% 1.6%;
+	}
+	.colmob {
+		margin: 1% 0 1% 0%;
+	}
+	.colnomarg {
+		display: block;
+		float:left;
+		margin: 0 auto;
+	}
+	.col:first-child { margin-left: 0; } /* all browsers except IE6 and lower */
+
+	/*  REMOVE MARGINS AS ALL GO FULL WIDTH AT 480 PIXELS */
+	@media only screen and (max-width: 640px) {
+		.col { 
+			margin: 1% 0 1% 0%;
+		}
+	}
+
+/*= MAIN GRID CONTAINER SETUP   =============================================================== */
+		.gridcontent, .gridcontent950, .gridcontent645, .gridcontent770, .gridcontent1100, .gridcontent1300{
+			clear: both;
+			width: 100%; /* 1000px / 1250px */
+			/*max-width: 960px;*/
+			margin: 0 auto;
+			padding: 1em 0px;
+			position: relative;
+		}
+		.gridcontent645{ max-width: 645px; }
+		.gridcontent950{ max-width: 950px; }
+		.gridcontent1100{ max-width: 1100px; }
+		.gridcontent1300{ max-width: 1300px; }
+		.gridcontent770{ max-width: 770px; }
+		.gridcontentnopad{
+			clear: both;
+			width: 80%; /* 1000px / 1250px */
+			/*max-width: 960px;*/
+			margin: 0 auto;
+			/*padding: 1em 0px;*/
+			position: relative;
+		}
+		.fullgridcontent {
+			clear: both;
+			width: auto;
+			margin: 0 auto;
+			position: relative;
+		}
+
+		 
+
+/*= GRID OF TWO   ======================================================================== */
+	.span_2_of_2 { width: 100%; }
+	.span_1_of_2 { width: 49.2%; }
+	.span_1_of_2mob { width: 48%; }
+	.span_2_of_2mob { width: 96%; }
+	.span_1_of_2nomarg { width: 50%; }
+	.span_1_of_2land { width: 45%; }
+
+	/*  GO FULL WIDTH AT LESS THAN 480 PIXELS */
+	@media only screen and (max-width: 640px) {
+		.span_2_of_2 { width: 100%; }
+		.span_1_of_2, .span_1_of_2nomarg { width: 100%; }
+	}
+//tablet
+	@media only screen and (max-width: 990px) {
+    .hidden-tablet { display:none; }
+    .visible-tablet { display:block; }
+}
+//mobile
+	@media only screen and (max-width: 640px) {
+    .hidden-mobile { display:none; }
+    .visible-mobile { display:block; }
+}

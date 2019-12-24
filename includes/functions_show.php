@@ -26,7 +26,7 @@ function trakt_show_cancel()
 	
 	$ch = curl_init();
 
-	curl_setopt($ch, CURLOPT_URL, "https://api-v2launch.trakt.tv/checkin");
+	curl_setopt($ch, CURLOPT_URL, "https://api.trakt.tv/checkin");
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 	curl_setopt($ch, CURLOPT_HEADER, FALSE);
 
@@ -57,7 +57,7 @@ function trakt_show_checkin($trakt_id, $message)
 	
 	$ch = curl_init();
 
-	curl_setopt($ch, CURLOPT_URL, "https://api-v2launch.trakt.tv/checkin");
+	curl_setopt($ch, CURLOPT_URL, "https://api.trakt.tv/checkin");
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 	curl_setopt($ch, CURLOPT_HEADER, FALSE);
 
@@ -103,7 +103,7 @@ function getTraktId($slug, $season, $episode)
 	$log->debug('getTraktId', sprintf($lang['TRAKT_GET_ID'], $slug, $season, $episode));
 	$ch = curl_init();
 
-	curl_setopt($ch, CURLOPT_URL, "https://api-v2launch.trakt.tv/shows/$slug/seasons/$season/episodes/$episode");
+	curl_setopt($ch, CURLOPT_URL, "https://api.trakt.tv/shows/$slug/seasons/$season/episodes/$episode");
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 	curl_setopt($ch, CURLOPT_HEADER, FALSE);
 
@@ -129,11 +129,11 @@ function getSeasons($slug, $trakt_token)
 
 	$tag = 'getSeasons';
 	$log->debug($tag, sprintf($lang['TRAKT_GET_COLLECTED'], $slug));
-	$log->debug($tag, "Opening URL https://api-v2launch.trakt.tv/shows/$slug/seasons?extended=full");
+	$log->debug($tag, "Opening URL https://api.trakt.tv/shows/$slug/seasons?extended=full");
 	
 	$ch = curl_init();
 
-	curl_setopt($ch, CURLOPT_URL, "https://api-v2launch.trakt.tv/shows/$slug/seasons?extended=full");
+	curl_setopt($ch, CURLOPT_URL, "https://api.trakt.tv/shows/$slug/seasons?extended=full");
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 	curl_setopt($ch, CURLOPT_HEADER, FALSE);
 	curl_setopt($ch, CURLOPT_FAILONERROR, TRUE);
@@ -162,11 +162,11 @@ function getCollected($slug, $trakt_token)
 	
 	$tag = 'getCollected';
 	$log->debug($tag, sprintf($lang['TRAKT_GET_COLLECTED'], $slug));
-	$log->debug($tag, "Opening URL https://api-v2launch.trakt.tv/shows/$slug/progress/collection");
+	$log->debug($tag, "Opening URL https://api.trakt.tv/shows/$slug/progress/collection");
 	
 	$ch = curl_init();
 
-	curl_setopt($ch, CURLOPT_URL, "https://api-v2launch.trakt.tv/shows/$slug/progress/collection");
+	curl_setopt($ch, CURLOPT_URL, "https://api.trakt.tv/shows/$slug/progress/collection");
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 	curl_setopt($ch, CURLOPT_HEADER, FALSE);
 	curl_setopt($ch, CURLOPT_FAILONERROR, TRUE);
@@ -195,11 +195,11 @@ function getProgress($slug, $trakt_token)
 	
 	$tag = 'getProgress';
 	$log->debug($tag, sprintf($lang['TRAKT_GET_PROGRESS'], $slug));
-	$log->debug($tag, "Opening URL https://api-v2launch.trakt.tv/shows/$slug/progress/watched");
+	$log->debug($tag, "Opening URL https://api.trakt.tv/shows/$slug/progress/watched");
 	
 	$ch = curl_init();
 
-	curl_setopt($ch, CURLOPT_URL, "https://api-v2launch.trakt.tv/shows/$slug/progress/watched");
+	curl_setopt($ch, CURLOPT_URL, "https://api.trakt.tv/shows/$slug/progress/watched");
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 	curl_setopt($ch, CURLOPT_HEADER, FALSE);
 	curl_setopt($ch, CURLOPT_FAILONERROR, TRUE);

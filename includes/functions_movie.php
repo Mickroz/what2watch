@@ -24,7 +24,7 @@ function trakt_movie_checkin($imdb_id, $message)
 	
 	$ch = curl_init();
 
-	curl_setopt($ch, CURLOPT_URL, "https://api-v2launch.trakt.tv/checkin");
+	curl_setopt($ch, CURLOPT_URL, "https://api.trakt.tv/checkin");
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 	curl_setopt($ch, CURLOPT_HEADER, FALSE);
 

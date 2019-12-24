@@ -287,7 +287,7 @@ function get_slug($id)
 	$log->debug('getSlug', sprintf($lang['GET_SLUG'], $id));
 	$ch = curl_init();
 
-	curl_setopt($ch, CURLOPT_URL, "https://api-v2launch.trakt.tv/search?id_type=$type&id=$id");
+	curl_setopt($ch, CURLOPT_URL, "https://api.trakt.tv/search?id_type=$type&id=$id");
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 	curl_setopt($ch, CURLOPT_HEADER, FALSE);
 	curl_setopt($ch, CURLOPT_FAILONERROR, TRUE);
@@ -637,10 +637,10 @@ function page_header($page_title = '')
 		'STYLESHEET_LINK'	=> 'styles/' . $template_path . '/style.css',
 		'TEMPLATE_PATH'	=> 'styles/' . $template_path,
 		'PAGE_TITLE'	=> $page_title,
-		'ERROR'		=> (sizeof($error)) ? strtr($notifier, array('{TYPE}' => 'danger', '{MESSAGE_TITLE}' => $lang['ERROR'], '{MESSAGE_TEXT}' => implode('<br />', $error))) : '',
-		'SUCCESS'	=> (sizeof($success)) ? strtr($notifier, array('{TYPE}' => 'success', '{MESSAGE_TITLE}' => $lang['SUCCESS'], '{MESSAGE_TEXT}' => implode('<br />', $success))) : '',
-		'INFORMATION'		=> (sizeof($info)) ? strtr($notifier, array('{TYPE}' => 'info', '{MESSAGE_TITLE}' => $lang['INFORMATION'], '{MESSAGE_TEXT}' => implode('<br />', $info))) : '',
-		'WARNING'	=> (sizeof($warning)) ? strtr($notifier, array('{TYPE}' => 'warning', '{MESSAGE_TITLE}' => $lang['WARNING'], '{MESSAGE_TEXT}' => implode('<br />', $warning))) : '',
+		'ERROR'		=> (!empty($error) && sizeof ($error) > 0) ? strtr($notifier, array('{TYPE}' => 'danger', '{MESSAGE_TITLE}' => $lang['ERROR'], '{MESSAGE_TEXT}' => implode('<br />', $error))) : '',
+		'SUCCESS'	=> (!empty($success) && sizeof ($success) > 0) ? strtr($notifier, array('{TYPE}' => 'success', '{MESSAGE_TITLE}' => $lang['SUCCESS'], '{MESSAGE_TEXT}' => implode('<br />', $success))) : '',
+		'INFORMATION'		=> (!empty($info) && sizeof ($info) > 0) ? strtr($notifier, array('{TYPE}' => 'info', '{MESSAGE_TITLE}' => $lang['INFORMATION'], '{MESSAGE_TEXT}' => implode('<br />', $info))) : '',
+		'WARNING'	=> (!empty($warning) && sizeof ($warning) > 0) ? strtr($notifier, array('{TYPE}' => 'warning', '{MESSAGE_TITLE}' => $lang['WARNING'], '{MESSAGE_TEXT}' => implode('<br />', $warning))) : '',
 		'VERSION'	=> '<p' . $version['style'] . '><strong>' . $version['message'] . '</strong></p>',
 		'TRAKT'		=> (isset($trakt)) ? $trakt : '',
 	));
