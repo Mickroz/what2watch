@@ -238,7 +238,7 @@ else
 		$series[$tvdbid]['episode_number'] = $progress['next_episode']['number'];
 		$series[$tvdbid]['name'] = (!empty($progress['next_episode']['title']) ? $progress['next_episode']['title'] : $episode['data']['name']);
 		$series[$tvdbid]['notice'] = $notice_msg;
-		$series[$tvdbid]['description'] = (!empty($episode['data']['description']) ? $episode['data']['description'] : 'No description available at this time');
+		$series[$tvdbid]['description'] = (!empty($episode['data']['description']) ? $episode['data']['description'] : tvdb_get_episode_description($tvdbid, $progress['next_episode']['season'], $progress['next_episode']['number']));
 		$series[$tvdbid]['status'] = $episode['data']['status'];
 		$series[$tvdbid]['location'] = $episode['data']['location'];
 	
@@ -350,7 +350,7 @@ foreach ($data as $show)
 	$row->set_filename('list_shows_row.html');
 	if ($i == $divider)
 	{
-		$row->assign_var('BREAK', '</div><div class="col span_1_of_2">');
+		$row->assign_var('BREAK', '</div><div class="col-sm-6">');
 	}
 	else
 	{

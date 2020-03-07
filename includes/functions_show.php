@@ -435,3 +435,126 @@ function update_show($array)
 		//unset($getnext,$data);
 	}
 }
+
+function tvdb_get_token()
+{
+	global $log, $error;
+	
+	$ch = curl_init();
+
+	curl_setopt($ch, CURLOPT_URL, 'https://api.thetvdb.com/login');
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($ch, CURLOPT_POST, 1);
+	curl_setopt($ch, CURLOPT_POSTFIELDS, "{\n  \"apikey\": \"FEE77D5126632344\"\n}");
+
+	$headers = array();
+	$headers[] = 'Content-Type: application/json';
+	$headers[] = 'Accept: application/json';
+	curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+	$result = curl_exec($ch);
+	if(curl_errno($ch))
+	{
+		$error[] = curl_error($ch);
+		$log->error($tag, curl_error($ch));
+	}
+	curl_close($ch);
+	$result_token = json_decode($result, true);
+	$data = file('config.php'); // reads an array of lines
+	function refresh_config1($data)
+	{
+		global $result_token;
+		
+		if (stristr($data, '$tvdb_token'))
+		{
+			return "\$tvdb_token = '" . $result_token['token'] . "';\n";
+		}
+		return $data;
+	}
+	$data = array_map('refresh_config1', $data);
+	file_put_contents('config.php', implode('', $data));
+}
+
+function tvdb_refresh_token()
+{
+	global $tvdb_token, $log, $error;
+	
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, 'https://api.thetvdb.com/refresh_token');
+	
+	$headers = array();
+	$headers[] = 'Content-Type: application/json';
+	$headers[] = "Authorization: Bearer $tvdb_token";
+	curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+	$result = curl_exec($ch);
+	if(curl_errno($ch))
+	{
+		$error[] = curl_error($ch);
+		$log->error($tag, curl_error($ch));
+	}
+	curl_close($ch);
+	$result_token = json_decode($result, true);
+	$data = file('config.php'); // reads an array of lines
+	function refresh_config2($data)
+	{
+		global $result_token;
+		
+		if (stristr($data, '$tvdb_token'))
+		{
+			return "\$tvdb_token = '" . $result_token['token'] . "';\n";
+		}
+		return $data;
+	}
+	$data = array_map('refresh_config2', $data);
+	file_put_contents('config.php', implode('', $data));
+}
+
+function tvdb_get_episode_description($tvdbid, $season, $episode)
+{
+	global $tvdb_token, $log, $error;
+	
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, "https://api.thetvdb.com/series/$tvdbid/episodes/query?airedSeason=$season&airedEpisode=$episode");
+	
+	$headers = array();
+	$headers[] = 'Content-Type: application/json';
+	$headers[] = "Authorization: Bearer $tvdb_token";
+	curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+	$result = curl_exec($ch);
+	if(curl_errno($ch))
+	{
+		$error[] = curl_error($ch);
+		$log->error($tag, curl_error($ch));
+	}
+	curl_close($ch);
+	$array = json_decode($result, true);
+	return $array['data'][0]['overview'];
+}
+
+function tvdb_get_episode($id)
+{
+	global $tvdb_token, $log, $error;
+	
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, "https://api.thetvdb.com/episodes/$id");
+	
+	$headers = array();
+	$headers[] = 'Content-Type: application/json';
+	$headers[] = "Authorization: Bearer $tvdb_token";
+	curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+	$result = curl_exec($ch);
+	if(curl_errno($ch))
+	{
+		$error[] = curl_error($ch);
+		$log->error($tag, curl_error($ch));
+	}
+	curl_close($ch);
+	$array = json_decode($result, true);
+	return $array;
+}

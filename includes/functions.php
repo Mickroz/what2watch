@@ -374,6 +374,7 @@ function create_config_file_data($data)
 	$config_data .= "// sickbeard should be with http:// and port\n";
 	$config_data .= "// cache_life is caching time, in seconds\n";
 	$config_data_array = array(
+		'tvdb_token'		=> $data['tvdb_token'],
 		'trakt_token'		=> $data['trakt_token'],
 		'trakt_expires_in'	=> $data['trakt_expires_in'],
 		'trakt_refresh_token'		=> $data['trakt_refresh_token'],
@@ -495,6 +496,7 @@ function create_config_file()
 function get_submitted_data()
 {
 	return array(
+		'tvdb_token'		=> '',
 		'trakt_token'		=> $_POST['trakt_token'],
 		'trakt_expires_in'	=> $_POST['trakt_expires_in'],
 		'trakt_refresh_token'		=> $_POST['trakt_refresh_token'],
