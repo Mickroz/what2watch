@@ -238,7 +238,7 @@ else
 		$series[$tvdbid]['episode_number'] = $progress['next_episode']['number'];
 		$series[$tvdbid]['name'] = (!empty($progress['next_episode']['title']) ? $progress['next_episode']['title'] : $episode['data']['name']);
 		$series[$tvdbid]['notice'] = $notice_msg;
-		$series[$tvdbid]['description'] = $episode['data']['description'];
+		$series[$tvdbid]['description'] = (!empty($episode['data']['description']) ? $episode['data']['description'] : 'No description available at this time');
 		$series[$tvdbid]['status'] = $episode['data']['status'];
 		$series[$tvdbid]['location'] = $episode['data']['location'];
 	
