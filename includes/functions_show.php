@@ -426,6 +426,7 @@ function update_show($array)
 	$update_serie[$key]['description'] = $update_episode['data']['description'];
 	$update_serie[$key]['status'] = $update_episode['data']['status'];
 	$update_serie[$key]['location'] = $update_episode['data']['location'];
+	$update_serie[$key]['banner'] = 'images/' . $key . '.banner.jpg?' . filemtime(CACHE_IMAGES . '/' . $key . '.banner.jpg');
 	
 	// Check if there are subs downloaded for this episode
 	$check_sub_update = checkSub($update_serie, $key);
