@@ -103,11 +103,20 @@
 </div>
 
 <div class="form-group row">
+	<label for="log_filesize" class="col-sm-2 col-form-label">{L_LOG_FILESIZE}:</label>
+	<div class="col-sm-10">
+		<input type="text" name="log_filesize" id="log_filesize" maxlength="255" value="{LOG_FILESIZE}" class="form-control" />
+		<small class="form-text text-muted">{L_LOG_FILESIZE_EXPLAIN}</small>
+	</div>
+</div>
+
+<div class="form-group row">
 	<div class="col-sm-offset-2 col-sm-10">
 		<input type="hidden" name="trakt_token" value="{TRAKT_TOKEN}" />
 		<input type="hidden" name="trakt_expires_in" value="{TRAKT_EXPIRES_IN}" />
 		<input type="hidden" name="trakt_refresh_token" value="{TRAKT_REFRESH_TOKEN}" />
 		<input type="hidden" name="config_version" value="{CONFIG_VERSION}" />
+		<input type="hidden" name="tvdb_token" value="{TVDB_TOKEN}" />
 		<button type="submit" name="submit" class="btn btn-primary"/>{L_CREATE_CONFIG}</button>
 	</div>
 </div>

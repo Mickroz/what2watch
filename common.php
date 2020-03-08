@@ -22,11 +22,12 @@ $submit	= (isset($_POST['submit'])) ? true : false;
 $mode = (isset($_GET['mode'])) ? $_GET['mode'] : '';
 $page = (isset($_GET['page']) ? $_GET['page'] : '');
 $post_data = $lang_pack = $error = array();
-$config = $trakt_token = $trakt_expires_in = $trakt_refresh_token = $sickbeard = $sb_api = $cache_life = $sub_ext = $movies_folder = $language = $config_version = $web_username = $web_password = $ignore_words = $skip_shows = $ip_subnet = '';
+$config = $trakt_token = $trakt_expires_in = $trakt_refresh_token = $sickbeard = $sb_api = $cache_life = $sub_ext = $movies_folder = $language = $config_version = $web_username = $web_password = $ignore_words = $skip_shows = $ip_subnet = $tvdb_token = '';
 $download = true;
 $skip_incomplete = $debug = $skip_not_watched = 0;
 $template_path = 'default';
 $language = 'en';
+$log_filesize = 1024;
 
 if (file_exists('config.php'))
 {
@@ -42,6 +43,16 @@ if (!defined('W2W_INSTALLED') && $mode != 'config_file')
 if (!defined('W2W_VERSION'))
 {
 	include('includes/constants.php');
+}
+
+if (empty($tvdb_token))
+{
+	include('includes/functions_show.php');
+	$thetvdb_api = tvdb_get_token();
+	if (array_key_exists("token", $thetvdb_api))
+	{
+		$tvdb_token = $thetvdb_api['token'];
+	}
 }
 if (($config_version != W2W_VERSION || $mode == 'config') && $mode != 'config_file')
 {
@@ -74,7 +85,7 @@ if (($config_version != W2W_VERSION || $mode == 'config') && $mode != 'config_fi
 		$cache->put('version_check', json_encode($version));
 	}
 	check_trakt_token();
-	
+
 	if($submit)
 	{
 		if (!empty($_POST['web_username']) && empty($_POST['web_password']))
@@ -117,6 +128,8 @@ if (($config_version != W2W_VERSION || $mode == 'config') && $mode != 'config_fi
 		$post_data['skip_not_watched'] = (isset($_POST['skip_not_watched']) ? $_POST['skip_not_watched'] : $skip_not_watched);
 		$post_data['ip_subnet'] = (isset($_POST['ip_subnet']) ? $_POST['ip_subnet'] : $ip_subnet);
 		$post_data['debug'] = (isset($_POST['debug']) ? $_POST['debug'] : $debug);
+		$post_data['log_filesize'] = (isset($_POST['log_filesize']) ? $_POST['log_filesize'] : $log_filesize);
+		$post_data['tvdb_token'] = (isset($_POST['tvdb_token']) ? $_POST['tvdb_token'] : $tvdb_token);
 		$post_data['config_version'] = W2W_VERSION;
 		
 		$directory = 'language/';
@@ -182,6 +195,8 @@ if (($config_version != W2W_VERSION || $mode == 'config') && $mode != 'config_fi
 			'S_STYLE_OPTIONS'	=> $s_style_options,
 			'IP_SUBNET'			=> $ip_subnet,
 			'DEBUG'			=> ($debug) ? ' checked' : '',
+			'LOG_FILESIZE'			=> $post_data['log_filesize'],
+			'TVDB_TOKEN'			=> $post_data['tvdb_token'],
 			'S_POST_ACTION' 	=> $s_post_action
 		));
 		$template = new template();

@@ -42,8 +42,9 @@ class PHPLogger
 	 **/	
 	function __construct($log_file = "what2watch.log")
 	{
+		global $log_filesize;
 		$this->log_file = $_SERVER['DOCUMENT_ROOT'] . '/what2watch/logs/' . $log_file;
-		$this->threshold = 1024;
+		$this->threshold = (int) $log_filesize;
 
 		if (!is_dir($_SERVER['DOCUMENT_ROOT'] . '/what2watch/logs/'))
 		{

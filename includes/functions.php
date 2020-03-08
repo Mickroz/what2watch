@@ -86,7 +86,7 @@ function check_trakt_token()
 			return;
 		}
 		$data = file('config.php'); // reads an array of lines
-		function refresh_config($data)
+		function refresh_trakt_config($data)
 		{
 			global $result_token;
 			
@@ -106,7 +106,7 @@ function check_trakt_token()
 			}
 			return $data;
 		}
-		$data = array_map('refresh_config', $data);
+		$data = array_map('refresh_trakt_config', $data);
 		file_put_contents('config.php', implode('', $data));
 		$log->info('trakt.tv', 'Updated trakt token, new date for refresh is ' . date('Y-m-d H:i:s', time() + $result_token['expires_in']));
 	}
@@ -396,6 +396,7 @@ function create_config_file_data($data)
 		'config_version'	=> $data['config_version'],
 		'random1'			=> $data['random1'],
 		'random2'			=> $data['random2'],
+		'log_filesize'		=> $data['log_filesize'],
 	);
 
 	foreach ($config_data_array as $key => $value)
@@ -496,7 +497,7 @@ function create_config_file()
 function get_submitted_data()
 {
 	return array(
-		'tvdb_token'		=> '',
+		'tvdb_token'		=> $_POST['tvdb_token'],
 		'trakt_token'		=> $_POST['trakt_token'],
 		'trakt_expires_in'	=> $_POST['trakt_expires_in'],
 		'trakt_refresh_token'		=> $_POST['trakt_refresh_token'],
@@ -518,6 +519,7 @@ function get_submitted_data()
 		'config_version'	=> $_POST['config_version'],
 		'random1'			=> generate_token(14),
 		'random2'			=> generate_token(14),
+		'log_filesize'	=> $_POST['log_filesize'],
 	);
 }
 

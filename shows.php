@@ -26,6 +26,7 @@ $tag = "Shows";
 $checkin = (isset($_GET['checkin'])) ? $_GET['checkin'] : '';
 $getbanner = (isset($_GET['getbanner'])) ? $_GET['getbanner'] : '';
 $getfanart = (isset($_GET['getfanart'])) ? $_GET['getfanart'] : '';
+$filetime = '';
 
 if ($getbanner)
 {
@@ -241,7 +242,13 @@ else
 		$series[$tvdbid]['description'] = (!empty($episode['data']['description']) ? $episode['data']['description'] : tvdb_get_episode_description($tvdbid, $progress['next_episode']['season'], $progress['next_episode']['number']));
 		$series[$tvdbid]['status'] = $episode['data']['status'];
 		$series[$tvdbid]['location'] = $episode['data']['location'];
-		$series[$tvdbid]['banner'] = 'images/' . $tvdbid . '.banner.jpg?' . filemtime(CACHE_IMAGES . '/' . $tvdbid . '.banner.jpg');
+		
+		if (file_exists(CACHE_IMAGES . '/' . $tvdbid . '.banner.jpg'))
+		{
+			$filetime = filemtime(CACHE_IMAGES . '/' . $tvdbid . '.banner.jpg');
+		}
+		
+		$series[$tvdbid]['banner'] = 'images/' . $tvdbid . '.banner.jpg?' . $filetime;
 
 		// Check if there are subs downloaded for this episode
 		$check_sub = checkSub($series, $tvdbid);

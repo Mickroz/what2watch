@@ -17,10 +17,11 @@ define('IN_W2W', true);
 
 $submit	= (isset($_POST['submit'])) ? true : false;
 $post_data = $lang_pack = $error = array();
-$trakt_token = $trakt_expires_in = $trakt_refresh_token = $sickbeard = $sb_api = $cache_life = $sub_ext = $movies_folder = $language = $config_version = $web_username = $web_password = $ignore_words = $skip_shows = $ip_subnet = '';
+$trakt_token = $trakt_expires_in = $trakt_refresh_token = $sickbeard = $sb_api = $cache_life = $sub_ext = $movies_folder = $language = $config_version = $web_username = $web_password = $ignore_words = $skip_shows = $ip_subnet = $tvdb_token = '';
 $download = true;
 $template_path = 'default';
 $language = 'en';
+$log_filesize = 1024;
 
 if (file_exists('config.php'))
 {
@@ -58,6 +59,15 @@ else
 	// Save array as json
 	$cache->put('version_check', json_encode($version));
 }
+if (empty($tvdb_token))
+{
+	include('include/functions_show.php');
+	$thetvdb_api = tvdb_get_token();
+	if (array_key_exists("token", $thetvdb_api))
+	{
+		$tvdb_token = $thetvdb_api['token'];
+	}
+}
 
 if ($submit)
 {
@@ -94,6 +104,8 @@ if ((isset($_GET['access_token']) && !empty($_GET['access_token'])) && $download
 	$post_data['skip_shows'] = (isset($_POST['skip_shows']) ? $_POST['skip_shows'] : $skip_shows);
 	$post_data['ip_subnet'] = (isset($_POST['ip_subnet']) ? $_POST['ip_subnet'] : $ip_subnet);
 	$post_data['debug'] = (isset($_POST['debug']) ? $_POST['debug'] : $debug);
+	$post_data['log_filesize'] = (isset($_POST['log_filesize']) ? $_POST['log_filesize'] : $log_filesize);
+	$post_data['tvdb_token'] = (isset($_POST['tvdb_token']) ? $_POST['tvdb_token'] : $tvdb_token);
 	$post_data['config_version'] = W2W_VERSION;
 		
 	$directory = 'language/';
@@ -157,6 +169,8 @@ if ((isset($_GET['access_token']) && !empty($_GET['access_token'])) && $download
 		'S_STYLE_OPTIONS'	=> $s_style_options,
 		'IP_SUBNET'			=> $ip_subnet,
 		'DEBUG'			=> ($debug) ? ' checked' : '',
+		'LOG_FILESIZE'			=> $post_data['log_filesize'],
+		'TVDB_TOKEN'			=> $post_data['tvdb_token'],
 		'S_POST_ACTION' 	=> $s_post_action
 	));
 	
