@@ -323,7 +323,7 @@ function getBanner($tvdbid)
 {
 	$banner = $tvdbid . '.banner.jpg';
 	unlink(CACHE_IMAGES . '/' . $banner);
-	global $tvdb_token, $log, $error;
+	global $tvdb_token, $log, $error, $cache;
 	
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, "https://api.thetvdb.com/series/$tvdbid");
@@ -346,6 +346,17 @@ function getBanner($tvdbid)
 	$url = 'https://artworks.thetvdb.com/banners/' . $array['data']['banner'];
 	
 	saveImage($url, $banner, $result['series']['SeriesName']);
+	
+	if (file_exists(CACHE_IMAGES . '/' . $tvdbid . '.banner.jpg'))
+	{
+		$filetime = filemtime(CACHE_IMAGES . '/' . $tvdbid . '.banner.jpg');
+	}
+	if ($data = $cache->get('shows'))
+	{
+		$data = json_decode($data, true);
+		$data[$tvdbid]['banner'] = 'images/' . $tvdbid . '.banner.jpg?' . $filetime;
+		$cache->put('shows', json_encode($data));
+	}
 }
 
 function checkSub($array, $tvdbid)
@@ -408,6 +419,7 @@ function update_show($array)
 {
 	global $log, $cache, $lang;
 	
+	$filetime = '';
 	$log->debug('trakt.tv', $lang['TRAKT_UPDATE']);
 	$key = key($array);
 	$update_show = getShow($key);
@@ -426,7 +438,13 @@ function update_show($array)
 	$update_serie[$key]['description'] = $update_episode['data']['description'];
 	$update_serie[$key]['status'] = $update_episode['data']['status'];
 	$update_serie[$key]['location'] = $update_episode['data']['location'];
-	$update_serie[$key]['banner'] = 'images/' . $key . '.banner.jpg?' . filemtime(CACHE_IMAGES . '/' . $key . '.banner.jpg');
+	
+	if (file_exists(CACHE_IMAGES . '/' . $key . '.banner.jpg'))
+	{
+		$filetime = filemtime(CACHE_IMAGES . '/' . $key . '.banner.jpg');
+	}
+
+	$update_serie[$key]['banner'] = 'images/' . $key . '.banner.jpg?' . $filetime;
 	
 	// Check if there are subs downloaded for this episode
 	$check_sub_update = checkSub($update_serie, $key);
