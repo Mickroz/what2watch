@@ -323,9 +323,28 @@ function getBanner($tvdbid)
 {
 	$banner = $tvdbid . '.banner.jpg';
 	unlink(CACHE_IMAGES . '/' . $banner);
-	$result = readXml("http://thetvdb.com/api/FEE77D5126632344/series/$tvdbid/");
-	$url = 'http://thetvdb.com/banners/' . $result['series']['banner'];
-				
+	global $tvdb_token, $log, $error;
+	
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, "https://api.thetvdb.com/series/$tvdbid");
+	
+	$headers = array();
+	$headers[] = 'Content-Type: application/json';
+	$headers[] = "Authorization: Bearer $tvdb_token";
+	curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+	$result = curl_exec($ch);
+	if(curl_errno($ch))
+	{
+		$error[] = curl_error($ch);
+		$log->error($tag, curl_error($ch));
+	}
+	curl_close($ch);
+	$array = json_decode($result, true);
+
+	$url = 'https://artworks.thetvdb.com/banners/' . $array['data']['banner'];
+	
 	saveImage($url, $banner, $result['series']['SeriesName']);
 }
 

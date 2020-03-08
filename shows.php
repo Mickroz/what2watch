@@ -241,7 +241,8 @@ else
 		$series[$tvdbid]['description'] = (!empty($episode['data']['description']) ? $episode['data']['description'] : tvdb_get_episode_description($tvdbid, $progress['next_episode']['season'], $progress['next_episode']['number']));
 		$series[$tvdbid]['status'] = $episode['data']['status'];
 		$series[$tvdbid]['location'] = $episode['data']['location'];
-	
+		$series[$tvdbid]['banner'] = 'images/' . $tvdbid . '.banner.jpg?' . filemtime(CACHE_IMAGES . '/' . $tvdbid . '.banner.jpg');
+
 		// Check if there are subs downloaded for this episode
 		$check_sub = checkSub($series, $tvdbid);
 		$series[$tvdbid]['subbed'] = $check_sub;
