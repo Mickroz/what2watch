@@ -9,11 +9,9 @@
 #</IfModule>
 
 <Files "config.php">
-Order Allow,Deny
-Deny from All
+Require all denied
 </Files>
 
 <Files "common.php">
-Order Allow,Deny
-Deny from All
+Require all denied
 </Files>
