@@ -63,10 +63,6 @@ switch ($mode)
 		include('shows.php');
 	break;
 	
-	case 'movies':
-		include('movies.php');
-	break;
-	
 	case 'viewlog':
 		include('log.php');
 	break;

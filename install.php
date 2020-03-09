@@ -95,7 +95,6 @@ if ((isset($_GET['access_token']) && !empty($_GET['access_token'])) && $download
 	$post_data['trakt_refresh_token'] = (isset($_POST['trakt_refresh_token']) ? $_POST['trakt_refresh_token'] : (isset($_GET['refresh_token']) ? $_GET['refresh_token'] : $trakt_refresh_token));
 	$post_data['cache_life'] = (isset($_POST['cache_life']) ? $_POST['cache_life'] : $cache_life);
 	$post_data['sub_ext'] = (isset($_POST['sub_ext']) ? $_POST['sub_ext'] : $sub_ext);
-	$post_data['movies_folder'] = (isset($_POST['movies_folder']) ? $_POST['movies_folder'] : $movies_folder);
 	$post_data['language'] = (isset($_POST['language']) ? $_POST['language'] : $language);
 	$post_data['template_path'] = (isset($_POST['template_path']) ? $_POST['template_path'] : $template_path);
 	$post_data['web_username'] = (isset($_POST['web_username']) ? $_POST['web_username'] : $web_username);
@@ -158,7 +157,6 @@ if ((isset($_GET['access_token']) && !empty($_GET['access_token'])) && $download
 		'TRAKT_REFRESH_TOKEN'	=> $post_data['trakt_refresh_token'],
 		'CACHE_LIFE'		=> $post_data['cache_life'],
 		'SUB_EXT'			=> $post_data['sub_ext'],
-		'MOVIES_FOLDER'		=> $post_data['movies_folder'],
 		'WEB_USERNAME'		=> $post_data['web_username'],
 		'WEB_PASSWORD'		=> $post_data['web_password'],
 		'IGNORE_WORDS'		=> $post_data['ignore_words'],

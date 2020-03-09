@@ -382,7 +382,6 @@ function create_config_file_data($data)
 		'sb_api'			=> $data['sb_api'],
 		'cache_life' 		=> $data['cache_life'],
 		'sub_ext'			=> $data['sub_ext'],
-		'movies_folder'		=> $data['movies_folder'],
 		'web_username'		=> $data['web_username'],
 		'web_password'		=> $data['web_password'],
 		'ignore_words'		=> $data['ignore_words'],
@@ -505,7 +504,6 @@ function get_submitted_data()
 		'sb_api'			=> $_POST['sb_api'],
 		'cache_life'		=> $_POST['cache_life'],
 		'sub_ext'			=> $_POST['sub_ext'],
-		'movies_folder'		=> $_POST['movies_folder'],
 		'web_username'		=> $_POST['web_username'],
 		'web_password'		=> $_POST['web_password'],
 		'ignore_words'		=> $_POST['ignore_words'],
@@ -632,7 +630,6 @@ function page_header($page_title = '')
 	// The following assigns all _common_ variables that may be used at any point in a template.
 	$template->assign_vars(array(
 		'SHOWS_ACTIVE'	=> ($mode == 'shows' ? ' class="active"' : ''),
-		'MOVIES_ACTIVE'	=> ($mode == 'movies' ? ' class="active"' : ''),
 		'LOG_ACTIVE'	=> ($mode == 'viewlog' ? ' class="active"' : ''),
 		'CONFIG_ACTIVE'	=> (($mode == 'config') ? ' class="active"' : ''),
 		'PLUGINS_ACTIVE'	=> (($mode == 'plugins') ? ' class="active"' : ''),

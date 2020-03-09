@@ -22,7 +22,7 @@ $submit	= (isset($_POST['submit'])) ? true : false;
 $mode = (isset($_GET['mode'])) ? $_GET['mode'] : '';
 $page = (isset($_GET['page']) ? $_GET['page'] : '');
 $post_data = $lang_pack = $error = array();
-$config = $trakt_token = $trakt_expires_in = $trakt_refresh_token = $sickbeard = $sb_api = $cache_life = $sub_ext = $movies_folder = $language = $config_version = $web_username = $web_password = $ignore_words = $skip_shows = $ip_subnet = $tvdb_token = '';
+$config = $trakt_token = $trakt_expires_in = $trakt_refresh_token = $sickbeard = $sb_api = $cache_life = $sub_ext = $language = $config_version = $web_username = $web_password = $ignore_words = $skip_shows = $ip_subnet = $tvdb_token = '';
 $download = true;
 $skip_incomplete = $debug = $skip_not_watched = 0;
 $template_path = 'default';
@@ -117,7 +117,6 @@ if (($config_version != W2W_VERSION || $mode == 'config') && $mode != 'config_fi
 		$post_data['trakt_refresh_token'] = (isset($_POST['trakt_refresh_token']) ? $_POST['trakt_refresh_token'] : $trakt_refresh_token);
 		$post_data['cache_life'] = (isset($_POST['cache_life']) ? $_POST['cache_life'] : $cache_life);
 		$post_data['sub_ext'] = (isset($_POST['sub_ext']) ? $_POST['sub_ext'] : $sub_ext);
-		$post_data['movies_folder'] = (isset($_POST['movies_folder']) ? $_POST['movies_folder'] : $movies_folder);
 		$post_data['language'] = (isset($_POST['language']) ? $_POST['language'] : $language);
 		$post_data['template_path'] = (isset($_POST['template_path']) ? $_POST['template_path'] : $template_path);
 		$post_data['web_username'] = (isset($_POST['web_username']) ? $_POST['web_username'] : $web_username);
@@ -182,7 +181,6 @@ if (($config_version != W2W_VERSION || $mode == 'config') && $mode != 'config_fi
 			'TRAKT_REFRESH_TOKEN'	=> $post_data['trakt_refresh_token'],
 			'CACHE_LIFE'		=> $post_data['cache_life'],
 			'SUB_EXT'			=> $post_data['sub_ext'],
-			'MOVIES_FOLDER'		=> $post_data['movies_folder'],
 			'WEB_USERNAME'		=> $post_data['web_username'],
 			'WEB_PASSWORD'		=> $post_data['web_password'],
 			'IGNORE_WORDS'		=> $post_data['ignore_words'],

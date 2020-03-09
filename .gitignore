@@ -4,5 +4,4 @@ images/
 logs/
 cache/*.cache
 cache/*.txt
-cache/xml/
 plugins/active.json
