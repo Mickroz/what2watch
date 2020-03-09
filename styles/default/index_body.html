@@ -27,12 +27,17 @@
     <link href="{TEMPLATE_PATH}/offcanvas.css" rel="stylesheet">
 	<link href="{TEMPLATE_PATH}/sticky-footer-navbar.css" rel="stylesheet">
 	<link href="{TEMPLATE_PATH}/colors.css" rel="stylesheet">
+	<link href="{TEMPLATE_PATH}/dark-mode.css" rel="stylesheet">
 	
   </head>
 
   <body class="d-flex flex-column h-100">
   <div id="loading-indicator">
-		<span>{L_LOADINGINDICATOR}</span>
+	<div class="d-flex align-items-center">
+		<div class="spinner-border spinner-border-sm text-success" role="status" aria-hidden="true"></div>
+			<strong>&nbsp;{L_LOADINGINDICATOR}</strong>
+		</div>
+	</div>
 	<div id="processing"></div>
     <script>
         var time = 0;
@@ -53,7 +58,7 @@
     </script>
 	</div>
 <header>
-<nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
+<nav class="navbar navbar-expand-md fixed-top navbar-light bg-light">
   <button class="navbar-toggler" type="button" data-toggle="offcanvas" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -86,6 +91,16 @@
     </ul>
   </div>
 </nav>
+<div class="nav-link float-right">
+
+          <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="darkSwitch">
+            <label class="custom-control-label" for="darkSwitch">Dark Mode</label>
+          </div>
+
+          <script src="{TEMPLATE_PATH}/dark-mode-switch.min.js"></script>
+
+        </div>
 </header>
     <main role="main" class="flex-shrink-0">
 <div class="container">

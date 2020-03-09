@@ -9,8 +9,6 @@ if (!defined('IN_W2W'))
 	exit;
 }
 
-include('includes/functions_show.php');
-
 /**
 * Loads our layout template, settings its title and content.
 */
