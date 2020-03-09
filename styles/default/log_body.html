@@ -3,18 +3,18 @@
 <form method="post" action="?mode=viewlog" id="searchform" class="form-inline">
 <div class="input-group">
 	<input type="text" name="message" id="message" maxlength="255" class="form-control" placeholder="{L_SEARCH_FOR}">
-	<span class="input-group-btn">
-		<button class="btn btn-default" type="submit" name="submit">{L_SEARCH} <span class="glyphicon glyphicon-search aria-hidden="true""></span></button>
-	</span>
+	<div class="input-group-append">
+		<button class="btn btn-outline-secondary" type="submit" name="submit">{L_SEARCH} <span class="glyphicon glyphicon-search aria-hidden="true""></span></button>
+	</div>
 </div>
 </form>
 <br />
-<div class="panel panel-default">
-  <div class="panel-body center">
-    <strong>{LEVEL}</strong>
-  </div>
-</div>
 
-<div class="log">
-{CONTENT}
+<div class="card">
+	<div class="card-header center">
+		 <strong>{LEVEL}</strong>
+	</div>
+	<div class="card-body log">
+		{CONTENT}
+	</div>
 </div>
