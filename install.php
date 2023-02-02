@@ -188,7 +188,8 @@ if ((isset($_GET['access_token']) && !empty($_GET['access_token'])) && $download
 
 if (empty($_GET['access_token']))
 {
-	$url = "http://www.mickroz.nl/trakt.php";
+	// CHANGE THIS TO YOUR OWN URL
+	$url = "http://www.link.to/trakt.php";
 
 	$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 	$params = array(

@@ -32,11 +32,12 @@ function trakt_show_cancel()
 
 	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
 
+	// CHANGE THIS API KEY TO YOUR OWN
 	curl_setopt($ch, CURLOPT_HTTPHEADER, array(
 		"Content-Type: application/json",
 		"Authorization: Bearer $trakt_token",
 		"trakt-api-version: 2",
-		"trakt-api-key: dfca522ce536a330d25737752dc8a26e2a5ac09e9067409669f3456db4089b7b"
+		"trakt-api-key: 1234567890"
 	));
 
 	$response = curl_exec($ch);

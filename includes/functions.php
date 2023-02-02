@@ -78,7 +78,8 @@ function check_trakt_token()
 	
 	if (time() >= $trakt_expires_in)
 	{
-		$check_trakt_token = getUrl("http://www.mickroz.nl/trakt.php?refresh=$trakt_refresh_token");
+		// CHANGE THIS URL TO YOUR OWN
+		$check_trakt_token = getUrl("http://www.link.to/trakt.php?refresh=$trakt_refresh_token");
 
 		$result_token = json_decode($check_trakt_token, true);
 		if (empty($result_token))
@@ -120,7 +121,8 @@ function getFanart($cat, $location, $name, $id, $banner, $background)
 	$cat_banner = ($cat == 'tv' ? 'tvbanner' : 'moviebanner');
 	$cat_bg = ($cat == 'tv' ? 'showbackground' : 'moviebackground');
 	$grabbed = false;
-	$fanart = getUrl("http://webservice.fanart.tv/v3/$cat/$id?api_key=b28b14e9be662e027cfbc7c3dd600405", $tag);
+	// CHANGE THIS API KEY TO YOUR OWN
+	$fanart = getUrl("http://webservice.fanart.tv/v3/$cat/$id?api_key=1234567890", $tag);
 
 	$result = json_decode($fanart, true);
 
